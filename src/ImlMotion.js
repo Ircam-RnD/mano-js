@@ -2,6 +2,11 @@ import * as Xmm from 'xmm-client';
 
 const docVersion = '1.0.0';
 
+/**
+ * Class representing a gesture model, able to train its own model from examples
+ * and to perform the classification and / or regression depending on the chosen
+ * algorithm for the gesture modelling.
+ */
 class ImlMotion {
   constructor(type) {
     // RapidMix config object
@@ -10,9 +15,8 @@ class ImlMotion {
   }
 
   /**
-   * @param {JSON} trainingSet - RapidMix compliant JSON
-   *
-   * @return {Promise} - resolve on the train model (allow async / ajax)
+   * @param {JSON} trainingSet - RapidMix compliant JSON formatted training set.
+   * @return {Promise} - resolve on the train model (allow async / ajax).
    */
   train(trainingSet) {
     // REST request / response - RapidMix
