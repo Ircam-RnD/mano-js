@@ -1,0 +1,43 @@
+{
+  "name": "iml-motion",
+  "version": "1.0.0",
+  "description": "set of classes targeted at gesture modelling and recognition",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "bundle": "node ./bin/runner --bundle",
+    "transpile": "node ./bin/runner --transpile",
+    "doc": "jsdoc -c conf.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/Ircam-RnD/iml-motion.git"
+  },
+  "license": "GPL-3.0",
+  "dependencies": {
+    "babel-runtime": "^6.25.0",
+    "xmm-client": "github:ircam-rnd/xmm-client"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-tape-runner": "^2.0.1",
+    "browserify": "^14.4.0",
+    "chalk": "^2.1.0",
+    "fs-extra": "^4.0.1",
+    "jsdoc": "^3.5.4",
+    "jsdoc-template": "github:ircam-jstools/jsdoc-template",
+    "klaw": "2.0.0",
+    "np": "^2.16.0",
+    "tape": "^4.8.0",
+    "uglify-js": "^3.0.27",
+    "watch": "^1.0.2",
+    "waves-lfo": "^1.1.1"
+  }
+}
