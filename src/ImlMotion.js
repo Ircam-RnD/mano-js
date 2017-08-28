@@ -1,6 +1,17 @@
 import * as Xmm from 'xmm-client';
+import { rapidMixDocVersion } from './variables';
 
-const docVersion = '1.0.0';
+const defaultXmmConfig = {
+  gaussians: 1,
+  absoluteRegularization: 0.01,
+  relativeRegularization: 0.01,
+  covarianceMode: 'full',
+  hierarchical: true,
+  states: 1,
+  transitionMode: 'leftright',
+  regressionEstimator: 'full',
+  likelihoodWindow: 10,
+};
 
 /**
  * Class representing a gesture model, able to train its own model from examples
@@ -12,6 +23,17 @@ class ImlMotion {
     // RapidMix config object
     this.config = null;
     this.apiEndPoint = 'como.ircam.fr/api';
+
+    const windowSize = defaultXmmConfig.likelihoodWindow;
+    switch (type) {
+      case 'hhmm':
+        this._decoder = new Xmm.HhmmDecoder(windowSize);
+        break;
+      case 'gmm':
+      default:
+        this._decoder = new Xmm.GmmDecoder(windowSize);
+        break;
+    }
   }
 
   /**
@@ -20,52 +42,62 @@ class ImlMotion {
    */
   train(trainingSet) {
     // REST request / response - RapidMix
+    return new Promise((resolve, reject) => {
+      Xmm.train({
+        comoUrl: this.apiEndPoint,
+        configuration: this._config,
+        trainingSet: trainingSet,
+      }, (err, model) => {
+        if (!err) {
+          resolve(model);
+        } else {
+          throw new Error('an error occured while training the model');
+        }
+      })
+    });
   }
 
   /**
-   * @param {Float32Array|Array} vector - input vector for decoding
-   * @return {Object} 
+   * @param {Float32Array|Array} vector - Input vector for decoding.
+   * @return {Object} - 
    */
   run(vector) {
-
+    return this._decoder.filter(vector);
   }
 
   /**
-   * @param {Object} config - RapidMix configuration object or payload
+   * @param {Object} config - RapidMix configuration object or payload.
    * // configuration ?
    */
   setConfig(config) {
     if (!config.docType) {
-      config = {
+      this._config = {
         docType: 'rapid-mix:configuration',
-        docVersion: docVersion,
-        payload: Object.assign({}, defaultConfig, config),
+        docVersion: rapidMixDocVersion,
+        payload: Object.assign({}, defaultXmmConfig, config),
       };
     }
-    // ...    
-
-    this.config = rapidMixConfigObject  
   }
 
   /**
-   * @return {Object} - RapidMix Configuration object
+   * @return {Object} - RapidMix Configuration object.
    */
   getConfig() {
-    return this.config; // 
+    return this._config;
   }
 
   /**
-   * @param {Object} model - RapidMix Model object
+   * @param {Object} model - RapidMix Model object.
    */
   setModel(model) {
-
+    this._decoder.setModel(model);
   }
 
   /**
-   * @return {Object} - current RapidMix Model object
+   * @return {Object} - Current RapidMix Model object.
    */
   getModel() {
-
+    return this._decoder.getModel();
   }
 }
 
