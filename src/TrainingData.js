@@ -27,20 +27,6 @@ class TrainingData {
   }
 
   /**
-   * Adds a new element to the current recording (if recording is active).
-   * @param {Float32Array|Array} inputVector - The input element.
-   * @param {Float32Array|Array} outputVector - The output element (used for regression).
-   */
-  addElement(inputVector, outputVector = null) {
-    this._checkDimensions(inputVector, outputVector);
-
-    if (this.currentExample) {
-      this.currentExample.inputData.push(inputVector);
-      this.currentExample.outputData.push(outputVector);
-    }
-  }
-
-  /**
    * Starts recording a new example.
    * @param {String} label - The label of the example to be recorded.
    */
@@ -52,6 +38,23 @@ class TrainingData {
     });
 
     this.currentExample = this.examples[this.examples.length - 1];
+  }
+
+  /**
+   * Adds a new element to the current recording (if recording is active).
+   * @param {Float32Array|Array} inputVector - The input element.
+   * @param {Float32Array|Array} outputVector - The output element (used for regression).
+   */
+  addElement(inputVector, outputVector = null) {
+    this._checkDimensions(inputVector, outputVector);
+
+    if (this.currentExample) {
+      this.currentExample.inputData.push(inputVector);
+
+      if (this.outputDimension > 0) {
+        this.currentExample.outputData.push(outputVector);
+      }
+    }
   }
 
   /**

@@ -1,5 +1,5 @@
 const rapidMixDocVersion = '1.0.0';
-const rapidMixDefaultLabel = 'defaultLabel';
+const rapidMixDefaultLabel = '';
 
 export {
   rapidMixDocVersion,

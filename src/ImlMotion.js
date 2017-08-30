@@ -1,5 +1,9 @@
-import * as Xmm from 'xmm-client';
-import { rapidMixDocVersion } from './variables';
+import { XMLHttpRequest as XHR }    from 'xmlhttprequest';
+import * as Xmm                     from 'xmm-client';
+import { rapidMixToXmmTrainingSet } from './translators';
+import { rapidMixDocVersion }       from './variables';
+
+const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
 const defaultXmmConfig = {
   gaussians: 1,
@@ -21,17 +25,19 @@ const defaultXmmConfig = {
 class ImlMotion {
   constructor(type) {
     // RapidMix config object
-    this.config = null;
-    this.apiEndPoint = 'como.ircam.fr/api';
+    this.setConfig();
+    this.apiEndPoint = 'https://como.ircam.fr/api/v1/train';
 
     const windowSize = defaultXmmConfig.likelihoodWindow;
     switch (type) {
       case 'hhmm':
         this._decoder = new Xmm.HhmmDecoder(windowSize);
+        this._config.payload.modelType = 'hhmm';
         break;
       case 'gmm':
       default:
         this._decoder = new Xmm.GmmDecoder(windowSize);
+        this._config.payload.modelType = 'gmm';
         break;
     }
   }
@@ -43,17 +49,21 @@ class ImlMotion {
   train(trainingSet) {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
-      Xmm.train({
-        comoUrl: this.apiEndPoint,
-        configuration: this._config,
-        trainingSet: trainingSet,
-      }, (err, model) => {
-        if (!err) {
+      const xmmSet = rapidMixToXmmTrainingSet(trainingSet);
+      const trainData = {
+        url: this.apiEndPoint,
+        configuration: this._config.payload,
+        dataset: xmmSet,        
+      };
+      console.log(trainData);
+
+      Xmm.train(trainData, (code, model) => {
+        if (!code) {
           resolve(model);
         } else {
-          throw new Error('an error occured while training the model');
+          throw new Error(`an error occured while training the model - response : ${code}`);
         }
-      })
+      });
     });
   }
 
@@ -69,7 +79,7 @@ class ImlMotion {
    * @param {Object} config - RapidMix configuration object or payload.
    * // configuration ?
    */
-  setConfig(config) {
+  setConfig(config = {}) {
     if (!config.docType) {
       this._config = {
         docType: 'rapid-mix:configuration',

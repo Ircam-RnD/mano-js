@@ -1,0 +1,11 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var rapidMixDocVersion = '1.0.0';
+var rapidMixDefaultLabel = '';
+
+exports.rapidMixDocVersion = rapidMixDocVersion;
+exports.rapidMixDefaultLabel = rapidMixDefaultLabel;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInZhcmlhYmxlcy5qcyJdLCJuYW1lcyI6WyJyYXBpZE1peERvY1ZlcnNpb24iLCJyYXBpZE1peERlZmF1bHRMYWJlbCJdLCJtYXBwaW5ncyI6Ijs7Ozs7QUFBQSxJQUFNQSxxQkFBcUIsT0FBM0I7QUFDQSxJQUFNQyx1QkFBdUIsRUFBN0I7O1FBR0VELGtCLEdBQUFBLGtCO1FBQ0FDLG9CLEdBQUFBLG9CIiwiZmlsZSI6InZhcmlhYmxlcy5qcyIsInNvdXJjZXNDb250ZW50IjpbImNvbnN0IHJhcGlkTWl4RG9jVmVyc2lvbiA9ICcxLjAuMCc7XG5jb25zdCByYXBpZE1peERlZmF1bHRMYWJlbCA9ICcnO1xuXG5leHBvcnQge1xuICByYXBpZE1peERvY1ZlcnNpb24sXG4gIHJhcGlkTWl4RGVmYXVsdExhYmVsXG59OyJdfQ==
