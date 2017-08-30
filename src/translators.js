@@ -1,10 +1,7 @@
 import * as Xmm from 'xmm-client';
 
 const xmmToRapidMixTrainingSet = xmmSet => {
-  // const pm = new Xmm.PhraseMaker();
-  // const sm = new Xmm.SetMaker();
-
-  // sm.setConfig()
+  // TODO
   return null;
 }
 

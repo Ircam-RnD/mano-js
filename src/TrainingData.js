@@ -1,4 +1,4 @@
-import { rapidMixDocVersion, rapidMixDefaultLabel } from './variables';
+import { rapidMixDocVersion, rapidMixDefaultLabel } from './constants';
 
 // source : https://stackoverflow.com/questions/15251879/how-to-check-if-a-variable-is-a-typed-array-in-javascript
 const isArray = v => {
