@@ -1,5 +1,7 @@
 'use strict';
 
+import _Object$defineProperty from 'babel-runtime/core-js/object/define-property';
+import _Object$keys from 'babel-runtime/core-js/object/keys';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -40,5 +42,18 @@ Object.defineProperty(exports, 'ImlMotion', {
   }
 });
 
+var _translators = require('./translators');
+
+_Object$keys(_translators).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+
+  _Object$defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _translators[key];
+    }
+  });
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbImRlZmF1bHQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O3VEQUFTQSxPOzs7Ozs7Ozs7aURBQ0FBLE87Ozs7Ozs7OztzREFDQUEsTzs7Ozs7Ozs7OzhDQUNBQSxPIiwiZmlsZSI6ImluZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IHsgZGVmYXVsdCBhcyBQcmVQcm9jZXNzaW5nQ2hhaW4gfSAgZnJvbSAnLi9QcmVQcm9jZXNzaW5nQ2hhaW4nO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBUcmFpbmluZ0RhdGEgfSAgICAgICAgZnJvbSAnLi9UcmFpbmluZ0RhdGEnO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBUcmFpbmluZ1NldFJlYWRlciB9ICAgZnJvbSAnLi9UcmFpbmluZ1NldFJlYWRlcic7XG5leHBvcnQgeyBkZWZhdWx0IGFzIEltbE1vdGlvbiB9ICAgICAgICAgICBmcm9tICcuL0ltbE1vdGlvbic7XG4iXX0=
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRyYW5zbGF0b3JzLmpzIl0sIm5hbWVzIjpbImRlZmF1bHQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7dURBQVNBLE87Ozs7Ozs7OztpREFDQUEsTzs7Ozs7Ozs7O3NEQUNBQSxPOzs7Ozs7Ozs7OENBQ0FBLE87Ozs7OztBQUNUO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEiLCJmaWxlIjoidHJhbnNsYXRvcnMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgeyBkZWZhdWx0IGFzIFByZVByb2Nlc3NpbmdDaGFpbiB9ICBmcm9tICcuL1ByZVByb2Nlc3NpbmdDaGFpbic7XG5leHBvcnQgeyBkZWZhdWx0IGFzIFRyYWluaW5nRGF0YSB9ICAgICAgICBmcm9tICcuL1RyYWluaW5nRGF0YSc7XG5leHBvcnQgeyBkZWZhdWx0IGFzIFRyYWluaW5nU2V0UmVhZGVyIH0gICBmcm9tICcuL1RyYWluaW5nU2V0UmVhZGVyJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgSW1sTW90aW9uIH0gICAgICAgICAgIGZyb20gJy4vSW1sTW90aW9uJztcbmV4cG9ydCAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZyb20gJy4vdHJhbnNsYXRvcnMnO1xuIl19

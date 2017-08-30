@@ -11,7 +11,7 @@
     "bundle": "node ./bin/runner --bundle",
     "transpile": "node ./bin/runner --transpile",
     "doc": "jsdoc -c conf.json",
-    "test": "babel-tape-runner test/*.js"
+    "test": "babel-tape-runner test/*_tests.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "jsdoc-template": "github:ircam-jstools/jsdoc-template",
     "klaw": "2.0.0",
     "np": "^2.16.0",
+    "tap-spec": "^4.1.1",
     "tape": "^4.8.0",
     "uglify-js": "^3.0.28",
     "watch": "^1.0.2"

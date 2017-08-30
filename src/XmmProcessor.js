@@ -1,5 +1,9 @@
-import * as Xmm from 'xmm-client';
-import { rapidMixDocVersion } from './constants';
+import { XMLHttpRequest as XHR }    from 'xmlhttprequest';
+import * as Xmm                     from 'xmm-client';
+import { rapidMixToXmmTrainingSet } from './translators';
+import { rapidMixDocVersion }       from './variables';
+
+const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
 const defaultXmmConfig = {
   gaussians: 1,
@@ -23,7 +27,7 @@ class XmmProcessor {
     apiEndPoint = 'como.ircam.fr/api',
   } = {}) {
     // RapidMix config object
-    this.config = null;
+    this.setConfig();
     this.apiEndPoint = apiEndPoint;
 
     const windowSize = defaultXmmConfig.likelihoodWindow;
@@ -31,10 +35,12 @@ class XmmProcessor {
     switch (type) {
       case 'hhmm':
         this._decoder = new Xmm.HhmmDecoder(windowSize);
+        this._config.payload.modelType = 'hhmm';
         break;
       case 'gmm':
       default:
         this._decoder = new Xmm.GmmDecoder(windowSize);
+        this._config.payload.modelType = 'gmm';
         break;
     }
   }
@@ -46,17 +52,40 @@ class XmmProcessor {
   train(trainingSet) {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
-      Xmm.train({
-        comoUrl: this.apiEndPoint,
-        configuration: this._config,
-        trainingSet: trainingSet,
-      }, (err, model) => {
-        if (!err) {
-          resolve(model);
-        } else {
-          throw new Error('an error occured while training the model');
+      const url = data['url'] ? data['url'] : 'https://como.ircam.fr/api/v1/train';
+      const xhr = isNode() ? new XHR() : new XMLHttpRequest();
+
+      xhr.open('post', url, true);
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      const errorMsg = 'an error occured while training the model. ';
+
+      if (isNode()) { // XMLHttpRequest module only supports xhr v1
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              resolve(xhr.responseText);
+            } else {
+              throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
+            }
+          }
         }
-      })
+      } else { // use xhr v2
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          } else {
+            throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+          }
+        }
+        xhr.onerror = function() {
+          throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+        }
+      }
+
+      xhr.send(JSON.stringify(data));
     });
   }
 
@@ -72,7 +101,7 @@ class XmmProcessor {
    * @param {Object} config - RapidMix configuration object or payload.
    * // configuration ?
    */
-  setConfig(config) {
+  setConfig(config = {}) {
     if (!config.docType) {
       this._config = {
         docType: 'rapid-mix:configuration',
