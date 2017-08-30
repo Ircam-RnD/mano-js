@@ -18,13 +18,16 @@ const defaultXmmConfig = {
  * and to perform the classification and / or regression depending on the chosen
  * algorithm for the gesture modelling.
  */
-class ImlMotion {
-  constructor(type) {
+class XmmProcessor {
+  constructor(type, {
+    apiEndPoint = 'como.ircam.fr/api',
+  } = {}) {
     // RapidMix config object
     this.config = null;
-    this.apiEndPoint = 'como.ircam.fr/api';
+    this.apiEndPoint = apiEndPoint;
 
     const windowSize = defaultXmmConfig.likelihoodWindow;
+
     switch (type) {
       case 'hhmm':
         this._decoder = new Xmm.HhmmDecoder(windowSize);
@@ -101,4 +104,4 @@ class ImlMotion {
   }
 }
 
-export default ImlMotion;
+export default XmmProcessor;
