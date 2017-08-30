@@ -1,5 +1,5 @@
 import * as Xmm from 'xmm-client';
-import { rapidMixDocVersion } from './variables';
+import { rapidMixDocVersion } from './constants';
 
 const defaultXmmConfig = {
   gaussians: 1,
@@ -59,7 +59,7 @@ class ImlMotion {
 
   /**
    * @param {Float32Array|Array} vector - Input vector for decoding.
-   * @return {Object} - 
+   * @return {Object} -
    */
   run(vector) {
     return this._decoder.filter(vector);
