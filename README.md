@@ -12,17 +12,16 @@ imlMotion.setConfig({
   // ...
 });
 
-const preprocessing = new Preprocessing({
-  callback: (frame) => trainingData.addElement(frame.data),
-});
+const sensors = new PreProcessedSensors();
+sensors.addListener(data => trainingData.addElement(data));
 
 $start.addListener('click', () => {
-  preprocessing.start();
+  sensors.start();
   trainingData.startRecording('label');
 });
 
 $stop.addListener('click', () => {
-  preprocessing.stop();
+  sensors.stop();
   trainingData.stopRecording();
 
   // training set is RapidMix compliant
