@@ -52,21 +52,40 @@ class XmmProcessor {
   train(trainingSet) {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
-      const xmmSet = rapidMixToXmmTrainingSet(trainingSet);
-      const trainData = {
-        url: this.apiEndPoint,
-        configuration: this._config.payload,
-        dataset: xmmSet,        
-      };
-      console.log(trainData);
+      const url = data['url'] ? data['url'] : 'https://como.ircam.fr/api/v1/train';
+      const xhr = isNode() ? new XHR() : new XMLHttpRequest();
 
-      Xmm.train(trainData, (code, model) => {
-        if (!code) {
-          resolve(model);
-        } else {
-          throw new Error(`an error occured while training the model - response : ${code}`);
+      xhr.open('post', url, true);
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      const errorMsg = 'an error occured while training the model. ';
+
+      if (isNode()) { // XMLHttpRequest module only supports xhr v1
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              resolve(xhr.responseText);
+            } else {
+              throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
+            }
+          }
         }
-      });
+      } else { // use xhr v2
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          } else {
+            throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+          }
+        }
+        xhr.onerror = function() {
+          throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+        }
+      }
+
+      xhr.send(JSON.stringify(data));
     });
   }
 
