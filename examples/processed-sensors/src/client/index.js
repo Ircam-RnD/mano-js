@@ -3,34 +3,18 @@ import * as controllers from 'basic-controllers';
 
 const logger = new lfo.sink.Logger({ time: false, data: true });
 
-const muteDisplayCoefs = [1, 1, 1, 1, 1, 1];
+const muteDisplayCoefs = [0, 0, 0, 0, 0, 0, 0, 0];
 
 /**
- * from Phone (motion-input):
- *
- * 0 - acc x
- * 1 - acc y
- * 2 - acc z
- * 3 - yaw      => deg / s
- * 4 - pitch
- * 6 - roll
+ * Phone
  */
+
 const socketReceive = new lfo.source.SocketReceive({ port: 5010 });
 socketReceive.processStreamParams({
   frameType: 'vector',
-  frameSize: 6,
-  frameRate: 0,
+  frameSize: 8,
+  frameRate: 1 / 0.02,
 });
-
-// normalize for display
-const multiplier = new lfo.operator.Multiplier({ factor: [
-  1 / 9.81,
-  1 / 9.81,
-  1 / 9.81,
-  1 / 360,
-  1 / 360,
-  1 / 360,
-]});
 
 // filter display output
 const phoneMuteDisplay = new lfo.operator.Multiplier({ factor: muteDisplayCoefs });
@@ -42,26 +26,18 @@ const phoneDisplay = new lfo.sink.BpfDisplay({
   duration: 5,
 });
 
-socketReceive.connect(multiplier);
-
-multiplier.connect(phoneMuteDisplay);
+socketReceive.connect(phoneMuteDisplay);
 phoneMuteDisplay.connect(phoneDisplay);
 
+
 /**
- * from R-ioT:
- *
- * 0 - acc x
- * 1 - acc y
- * 2 - acc z
- * 3 - roll
- * 4 - pitch
- * 5 - yaw
+ * R-ioT
  */
 
 const riotSocketReceive = new lfo.source.SocketReceive({ port: 5011 });
 riotSocketReceive.processStreamParams({
   frameType: 'vector',
-  frameSize: 6,
+  frameSize: 8,
   frameRate: 0,
 });
 
@@ -81,26 +57,46 @@ riotMuteDisplay.connect(riotDisplay);
 // CONTROLS
 // ---------------------------------------------------------------
 
-const toggleAcc = new controllers.Toggle({
-  label: 'display acc',
-  active: true,
+const toggleIntensityNorm = new controllers.Toggle({
+  label: 'IntensityNorm',
+  active: false,
   container: '#controls',
   callback: value => {
     const factor = value ? 1 : 0;
     muteDisplayCoefs[0] = factor;
-    muteDisplayCoefs[1] = factor;
-    muteDisplayCoefs[2] = factor;
   }
 });
 
-const toggleGyro = new controllers.Toggle({
-  label: 'display gyros',
-  active: true,
+const toggleIntensityBoost = new controllers.Toggle({
+  label: 'IntensityBoost',
+  active: false,
   container: '#controls',
   callback: value => {
     const factor = value ? 1 : 0;
+    muteDisplayCoefs[1] = factor;
+  }
+});
+
+const toggleBandpassXYZ = new controllers.Toggle({
+  label: 'BandpassXYZ',
+  active: false,
+  container: '#controls',
+  callback: value => {
+    const factor = value ? 1 : 0;
+    muteDisplayCoefs[2] = factor;
     muteDisplayCoefs[3] = factor;
     muteDisplayCoefs[4] = factor;
+  }
+});
+
+const toggleOrientation = new controllers.Toggle({
+  label: 'Orientation',
+  active: false,
+  container: '#controls',
+  callback: value => {
+    const factor = value ? 1 : 0;
     muteDisplayCoefs[5] = factor;
+    muteDisplayCoefs[6] = factor;
+    muteDisplayCoefs[7] = factor;
   }
 });

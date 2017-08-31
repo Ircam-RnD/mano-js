@@ -74,7 +74,7 @@ portfinder.getPortPromise()
     });
 
     const riotEventIn = new lfo.source.EventIn({
-      frameSize: 6,
+      frameSize: 8,
       frameRate: 0,
       frameType: 'vector',
     });

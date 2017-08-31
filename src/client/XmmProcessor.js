@@ -24,7 +24,9 @@ const defaultXmmConfig = {
  * algorithm for the gesture modelling.
  */
 class XmmProcessor {
-  constructor(type, apiEndPoint = 'https://como.ircam.fr/api/v1/train') {
+  constructor(type, {
+    apiEndPoint = 'https://como.ircam.fr/api/v1/train',
+  } = {}) {
     // RapidMix config object
     this.apiEndPoint = apiEndPoint;
     this._config = {};

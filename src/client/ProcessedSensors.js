@@ -7,9 +7,6 @@ import * as lfoMotion from 'lfo-motion';
  *
  * output :
  * - IntensityNorm
- * - IntensityX
- * - IntensityY
- * - IntensityZ
  * - IntensityNormBoost
  * - BandPass AccX
  * - BandPass AccY
@@ -38,10 +35,14 @@ class ProcessedSensors {
     const accSelect = new lfo.operator.Select({ indexes: [0, 1, 2] });
 
     // intensity
-    const intensity = new lfoMotion.operator.Intensity();
+    const intensity = new lfoMotion.operator.Intensity({
+      feedback: 0.7,
+      gain: 0.07
+    });
+
+    const intensityNormSelect = new lfo.operator.Select({ index: 0 });
 
     // boost
-    const intensityNormSelect = new lfo.operator.Select({ index: 0 });
     const intensityClip = new lfo.operator.Clip({ min: 0, max: 1 });
     const intensityPower = new lfo.operator.Power({ exponent: 0.25 });
     const powerClip = new lfo.operator.Clip({ min: 0.15, max: 1 });
@@ -52,7 +53,8 @@ class ProcessedSensors {
       outputMax: 1,
     });
 
-    // biquad
+    // bandpass
+    const normalizeAcc = new lfo.operator.Multiplier({ factor: 1 / 9.81 });
     const bandpass = new lfo.operator.Biquad({
       type: 'bandpass',
       q: 1,
@@ -64,28 +66,30 @@ class ProcessedSensors {
 
     // merge and output
     const merger = new lfo.operator.Merger({
-      frameSizes: [4, 1, 3, 3],
+      frameSizes: [1, 1, 3, 3],
     });
 
-    const bridge = new lfo.sink.Brigde({
+    const bridge = new lfo.sink.Bridge({
       processFrame: this._emit,
       finalizeStream: this._emit,
     });
 
     motionInput.connect(sampler);
+    // for intensity and bandpass
+    sampler.connect(accSelect);
     // intensity branch
-    sampler.connect(select);
-    select.connect(intensity);
-    intensity.connect(merger);
-    // boost branch
+    accSelect.connect(intensity);
     intensity.connect(intensityNormSelect);
+    intensityNormSelect.connect(merger);
+    // boost branch
     intensityNormSelect.connect(intensityClip);
     intensityClip.connect(intensityPower);
     intensityPower.connect(powerClip);
     powerClip.connect(powerScale);
     powerScale.connect(merger);
     // biquad branch
-    select.connect(bandpass);
+    accSelect.connect(normalizeAcc);
+    normalizeAcc.connect(bandpass);
     bandpass.connect(merger);
     // orientation
     sampler.connect(orientation);
