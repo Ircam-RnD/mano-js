@@ -11,7 +11,7 @@ test('basic tests', (t) => {
   }
   trainingData.stopRecording();
 
-  // console.log(JSON.stringify(trainingData.getTrainingSet().payload, null, 2));
+  console.log(JSON.stringify(trainingData.getTrainingSet(), null, 2));
   const set = trainingData.getTrainingSet().payload;
 
   t.equal(set.inputDimension, 3, 'trainingData should have guessed its input dimension');

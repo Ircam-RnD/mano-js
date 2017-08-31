@@ -11,7 +11,7 @@ const rapidMixToXmmTrainingSet = rmSet => {
   const phraseMaker = new Xmm.PhraseMaker({
     bimodal: payload.outputDimension > 0,
     dimension: payload.inputDimension + payload.outputDimension,
-    dimensionInput: payload.outputDimension > 0 ? payload.inputDimension : 0,
+    dimensionInput: (payload.outputDimension > 0) ? payload.inputDimension : 0,
   });
   const setMaker = new Xmm.SetMaker();
 
