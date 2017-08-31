@@ -49,7 +49,7 @@ a RapidMix compliant training set.</p></div>
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="TrainingData"><span class="type-signature"></span>new TrainingData<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TrainingData"><span class="type-signature"></span>new TrainingData<span class="signature">(inputDimension<span class="signature-attributes">opt</span>, outputDimension<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -61,6 +61,116 @@ a RapidMix compliant training set.</p></div>
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>inputDimension</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>The input dimension
+(if null, the input dimension will be guessed from the first recorded element).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>outputDimension</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>The output dimension.
+(if null, the output dimension will be guessed from the first recorded element).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -96,7 +206,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line5">line 5</a>
+        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -178,6 +288,8 @@ a RapidMix compliant training set.</p></div>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -206,6 +318,10 @@ a RapidMix compliant training set.</p></div>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The input element.</p></td>
         </tr>
@@ -231,6 +347,12 @@ a RapidMix compliant training set.</p></div>
 
             
 
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
             
 
             <td class="description last"><p>The output element (used for regression).</p></td>
@@ -274,7 +396,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line13">line 13</a>
+        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -352,7 +474,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line35">line 35</a>
+        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -515,7 +637,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line21">line 21</a>
+        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -553,7 +675,7 @@ a RapidMix compliant training set.</p></div>
 
 
 <div class="description">
-    <p>Stops the current recording.</p>
+    <p>Ends the current example recording.</p>
 </div>
 
 
@@ -597,7 +719,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line28">line 28</a>
+        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -639,14 +761,14 @@ a RapidMix compliant training set.</p></div>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ImlMotion.html">ImlMotion</a></li><li><a href="TrainingData.html">TrainingData</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
     
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Aug 28 2017 18:25:20 GMT+0200 (CEST)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Thu Aug 31 2017 10:31:21 GMT+0200 (CEST)
     
 </footer>
 

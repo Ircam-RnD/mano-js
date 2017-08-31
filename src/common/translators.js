@@ -6,33 +6,32 @@ const xmmToRapidMixTrainingSet = xmmSet => {
 }
 
 const rapidMixToXmmTrainingSet = rmSet => {
-  const s = rmSet.payload;
+  const payload = rmSet.payload;
 
-  const pm = new Xmm.PhraseMaker({
-    bimodal: s.outputDimension > 0,
-    dimension: s.inputDimension + s.outputDimension,
-    dimensionInput: s.inputDimension,
+  const phraseMaker = new Xmm.PhraseMaker({
+    bimodal: payload.outputDimension > 0,
+    dimension: payload.inputDimension + payload.outputDimension,
+    dimensionInput: payload.inputDimension,
   });
-  const sm = new Xmm.SetMaker();
+  const setMaker = new Xmm.SetMaker();
 
-  for (let i in s.data) {
-    pm.reset();
-    pm.setConfig({ label: s.data[i].label });
+  for (let i in payload.data) {
+    phraseMaker.reset();
+    phraseMaker.setConfig({ label: payload.data[i].label });
 
-    for (let j in s.data[i].inputData) {
-      let v = s.data[i].inputData[j];
+    for (let j = 0; j < payload.data[i].inputData.length; j++) {
+      let vector = payload.data[i].inputData[j];
 
-      if (s.outputDimension > 0) {
-        v = v.concat(s.data[i].outputData[j]);
-      }
+      if (payload.outputDimension > 0)
+        vector = vector.concat(payload.data[i].outputData[j]);
 
-      pm.addObservation(v);
+      phraseMaker.addObservation(vector);
     }
 
-    sm.addPhrase(pm.getPhrase());
+    setMaker.addPhrase(phraseMaker.getPhrase());
   }
 
-  return sm.getTrainingSet();
+  return setMaker.getTrainingSet();
 }
 
 export { xmmToRapidMixTrainingSet, rapidMixToXmmTrainingSet };
