@@ -2,7 +2,7 @@
   "name": "iml-motion",
   "version": "1.0.0",
   "description": "set of classes targeted at gesture modelling and recognition",
-  "main": "index.js",
+  "main": "dist/index.js",
   "directories": {
     "doc": "docs",
     "test": "test"
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/Ircam-RnD/iml-motion.git"
+    "url": "https://github.com/Ircam-RnD/iml-motion"
   },
   "license": "GPL-3.0",
   "dependencies": {

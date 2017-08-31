@@ -1,17 +1,15 @@
 'use strict';
 
-import _Object$defineProperty from 'babel-runtime/core-js/object/define-property';
-import _Object$keys from 'babel-runtime/core-js/object/keys';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _PreProcessingChain = require('./PreProcessingChain');
+var _PreProcessedSensors = require('./PreProcessedSensors');
 
-Object.defineProperty(exports, 'PreProcessingChain', {
+Object.defineProperty(exports, 'PreProcessedSensors', {
   enumerable: true,
   get: function get() {
-    return _interopRequireDefault(_PreProcessingChain).default;
+    return _interopRequireDefault(_PreProcessedSensors).default;
   }
 });
 
@@ -33,27 +31,29 @@ Object.defineProperty(exports, 'TrainingSetReader', {
   }
 });
 
-var _ImlMotion = require('./ImlMotion');
+var _XmmProcessor = require('./XmmProcessor');
 
-Object.defineProperty(exports, 'ImlMotion', {
+Object.defineProperty(exports, 'XmmProcessor', {
   enumerable: true,
   get: function get() {
-    return _interopRequireDefault(_ImlMotion).default;
+    return _interopRequireDefault(_XmmProcessor).default;
   }
 });
 
 var _translators = require('./translators');
 
-_Object$keys(_translators).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-
-  _Object$defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _translators[key];
-    }
-  });
+Object.defineProperty(exports, 'rapidMixToXmmTrainingSet', {
+  enumerable: true,
+  get: function get() {
+    return _translators.rapidMixToXmmTrainingSet;
+  }
+});
+Object.defineProperty(exports, 'xmmToRapidMixTrainingSet', {
+  enumerable: true,
+  get: function get() {
+    return _translators.xmmToRapidMixTrainingSet;
+  }
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRyYW5zbGF0b3JzLmpzIl0sIm5hbWVzIjpbImRlZmF1bHQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7dURBQVNBLE87Ozs7Ozs7OztpREFDQUEsTzs7Ozs7Ozs7O3NEQUNBQSxPOzs7Ozs7Ozs7OENBQ0FBLE87Ozs7OztBQUNUO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEiLCJmaWxlIjoidHJhbnNsYXRvcnMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgeyBkZWZhdWx0IGFzIFByZVByb2Nlc3NpbmdDaGFpbiB9ICBmcm9tICcuL1ByZVByb2Nlc3NpbmdDaGFpbic7XG5leHBvcnQgeyBkZWZhdWx0IGFzIFRyYWluaW5nRGF0YSB9ICAgICAgICBmcm9tICcuL1RyYWluaW5nRGF0YSc7XG5leHBvcnQgeyBkZWZhdWx0IGFzIFRyYWluaW5nU2V0UmVhZGVyIH0gICBmcm9tICcuL1RyYWluaW5nU2V0UmVhZGVyJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgSW1sTW90aW9uIH0gICAgICAgICAgIGZyb20gJy4vSW1sTW90aW9uJztcbmV4cG9ydCAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZyb20gJy4vdHJhbnNsYXRvcnMnO1xuIl19
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRyYW5zbGF0b3JzLmpzIl0sIm5hbWVzIjpbImRlZmF1bHQiLCJyYXBpZE1peFRvWG1tVHJhaW5pbmdTZXQiLCJ4bW1Ub1JhcGlkTWl4VHJhaW5pbmdTZXQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O3dEQUFTQSxPOzs7Ozs7Ozs7aURBQ0FBLE87Ozs7Ozs7OztzREFDQUEsTzs7Ozs7Ozs7O2lEQUNBQSxPOzs7Ozs7Ozs7d0JBRVBDLHdCOzs7Ozs7d0JBQ0FDLHdCIiwiZmlsZSI6InRyYW5zbGF0b3JzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IHsgZGVmYXVsdCBhcyBQcmVQcm9jZXNzZWRTZW5zb3JzIH0gZnJvbSAnLi9QcmVQcm9jZXNzZWRTZW5zb3JzJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgVHJhaW5pbmdEYXRhIH0gICAgICAgIGZyb20gJy4vVHJhaW5pbmdEYXRhJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgVHJhaW5pbmdTZXRSZWFkZXIgfSAgIGZyb20gJy4vVHJhaW5pbmdTZXRSZWFkZXInO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBYbW1Qcm9jZXNzb3IgfSAgICAgICAgZnJvbSAnLi9YbW1Qcm9jZXNzb3InO1xuZXhwb3J0IHtcbiAgcmFwaWRNaXhUb1htbVRyYWluaW5nU2V0LFxuICB4bW1Ub1JhcGlkTWl4VHJhaW5pbmdTZXRcbn0gZnJvbSAnLi90cmFuc2xhdG9ycyc7XG4iXX0=
