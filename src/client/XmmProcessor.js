@@ -1,7 +1,7 @@
 import { XMLHttpRequest as XHR } from 'xmlhttprequest';
 import * as Xmm from 'xmm-client';
-import { rapidMixToXmmTrainingSet } from './translators';
-import { rapidMixDocVersion } from './variables';
+import { rapidMixToXmmTrainingSet } from '../common/translators';
+import { rapidMixDocVersion } from '../common/constants';
 
 const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
