@@ -21,14 +21,18 @@ import * as lfoMotion from 'lfo-motion';
  * @todo - define which parameters should be exposed.
  */
 class ProcessedSensors {
-  constructor() {
+  constructor({
+    frameRate = 1 / 0.02,
+  } = {}) {
+    this.frameRate = frameRate;
+
     this._emit = this._emit.bind(this);
 
     // create the lfo graph
     const motionInput = new lfoMotion.source.MotionInput();
 
     const sampler = new lfoMotion.operator.Sampler({
-      frameRate: 1 / 0.02,
+      frameRate: frameRate,
     });
 
     const accSelect = new lfo.operator.Select({ indexes: [0, 1, 2] });
@@ -89,21 +93,27 @@ class ProcessedSensors {
 
     merger.connect(bridge);
 
+    this._motionInput = motionInput;
+
     this._listeners = new Set();
+  }
+
+  init() {
+    return this._motionInput.init();
   }
 
   /**
    * Start listening to the sensors
    */
   start() {
-    motionInput.start();
+    this._motionInput.start();
   }
 
   /**
    * Stop listening to the sensors
    */
   stop() {
-    motionInput.stop();
+    this._motionInput.stop();
   }
 
   /**
