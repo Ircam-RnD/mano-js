@@ -2,7 +2,7 @@
   "name": "iml-motion",
   "version": "1.0.0",
   "description": "set of classes targeted at gesture modelling and recognition",
-  "main": "dist/index.js",
+  "main": "",
   "directories": {
     "doc": "docs",
     "test": "test"
