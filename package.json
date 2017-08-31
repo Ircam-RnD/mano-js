@@ -9,9 +9,11 @@
   },
   "scripts": {
     "bundle": "node ./bin/runner --bundle",
-    "transpile": "node ./bin/runner --transpile",
     "doc": "jsdoc -c conf.json",
-    "test": "babel-tape-runner test/*_tests.js | tap-spec"
+    "prewatch": "npm run transpile",
+    "transpile": "node ./bin/runner --transpile",
+    "test": "babel-tape-runner test/*_tests.js | tap-spec",
+    "watch": "node ./bin/runner --watch"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "lfo-motion": "github:ircam-rnd/lfo-motion",
+    "taffydb": "^2.7.3",
     "waves-lfo": "^1.1.1",
     "xmm-client": "github:ircam-rnd/xmm-client"
   },
