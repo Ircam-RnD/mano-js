@@ -11,12 +11,13 @@ const defaultXmmConfig = {
   absoluteRegularization: 0.01,
   relativeRegularization: 0.01,
   covarianceMode: 'full',
-  hierarchical: true,
-  states: 1,
-  transitionMode: 'leftright',
-  regressionEstimator: 'full',
-  likelihoodWindow: 10,
+  // hierarchical: true,
+  // states: 1,
+  // transitionMode: 'leftright',
+  // regressionEstimator: 'full',
 };
+
+const defaultLikelihoodWindow = 10;
 
 /**
  * Class representing a gesture model, able to train its own model from examples
@@ -29,8 +30,8 @@ class XmmProcessor {
   } = {}) {
     // RapidMix config object
     this.apiEndPoint = apiEndPoint;
-    this._config = {};
-    this.setConfig(defaultXmmConfig); // doesn't call _updateDecoder
+    this._config = defaultXmmConfig;
+    this._likelihoodWindow = defaultLikelihoodWindow;
     this._modelType = type || 'gmm';
     this._updateDecoder();
   }
@@ -122,6 +123,16 @@ class XmmProcessor {
       }
     }
 
+    if (config.modelType && knownTargets.xmm.indexOf(config.modelType) > 0) {
+      const val = config.modelType;
+      const newModel = (val === 'gmr') ? 'gmm' : ((val === 'hhmr') ? 'hhmm' : val);
+
+      if (newModel !== this._modelType) {
+        this._modelType = newModel;
+        this._updateDecoder();
+      }
+    }      
+
     for (let key in Object.keys(config)) {
       const val = config[key];
 
@@ -129,14 +140,17 @@ class XmmProcessor {
           (key === 'absoluteRegularization' && typeof val === 'number' && val > 0) ||
           (key === 'relativeRegularization' && typeof val === 'number' && val > 0) ||
           (key === 'covarianceMode' && typeof val === 'string' &&
-            ['full', 'diagonal'].indexOf(val) > 0) ||
-          (key === 'hierarchical' && typeof val === 'boolean') ||
-          (key === 'states' && Number.isInteger(val) && val > 0) ||
-          (key === 'transitionMode' && typeof val === 'string' &&
-            ['leftright', 'ergodic'].indexOf(val) > 0) ||
-          (key === 'regressionEstimator' && typeof val === 'string' &&
-            ['full', 'windowed', 'likeliest'].indexOf(val) > 0)) {
+            ['full', 'diagonal'].indexOf(val) > 0)) {
         this._config[key] = val;
+      } else if (this.modelType === 'hhmm') {
+        if ((key === 'hierarchical' && typeof val === 'boolean') ||
+            (key === 'states' && Number.isInteger(val) && val > 0) ||
+            (key === 'transitionMode' && typeof val === 'string' &&
+              ['leftright', 'ergodic'].indexOf(val) > 0) ||
+            (key === 'regressionEstimator' && typeof val === 'string' &&
+              ['full', 'windowed', 'likeliest'].indexOf(val) > 0)) {
+          this._config[key] = val;
+        }
       } else if (key === 'likelihoodWindow' && Number.isInteger(val) && val > 0) {
         this._likelihoodWindow = val;
       } else if (key === 'modelType' && knownTargets.xmm.indexOf(val) > 0) {

@@ -17,7 +17,7 @@ test('basic tests', (t) => {
   t.equal(set.inputDimension, 3, 'trainingData should have guessed its input dimension');
   t.equal(set.outputDimension, 0, 'trainingData should have guessed its output dimensions');
 
-  const processor = new XmmProcessor('gmm', 'http://localhost:8000/train');
+  const processor = new XmmProcessor('gmm', { apiEndPoint: 'http://localhost:8000/train' });
   
   processor.train(trainingData.getTrainingSet())
     .then(model => {
