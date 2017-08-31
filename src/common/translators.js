@@ -1,4 +1,7 @@
 import * as Xmm from 'xmm-client';
+import { rapidMixDocVersion } from './constants';
+
+/* * * * * * * * * * * * * * * TrainingSet * * * * * * * * * * * * * * * * * */
 
 const xmmToRapidMixTrainingSet = xmmSet => {
   // TODO
@@ -34,4 +37,30 @@ const rapidMixToXmmTrainingSet = rmSet => {
   return setMaker.getTrainingSet();
 }
 
-export { xmmToRapidMixTrainingSet, rapidMixToXmmTrainingSet };
+/* * * * * * * * * * * * * * * * * Model * * * * * * * * * * * * * * * * * * */
+
+const xmmToRapidMixModel = xmmModel => {
+  const modelType = xmmModel.configuration.default_parameters.states ? 'hhmm' : 'gmm';
+
+  return {
+    docType: 'rapid-mix:model',
+    docVersion: rapidMixDocVersion,
+    target: {
+      name: 'xmm:${modelType}',
+      version: '1.0.0'
+    },
+    payload: xmmModel,
+  }
+};
+
+const rapidMixToXmmModel = rmModel => {
+  // TODO
+  return null;
+};
+
+export {
+  xmmToRapidMixTrainingSet,
+  rapidMixToXmmTrainingSet,
+  xmmToRapidMixModel,
+  rapidMixToXmmModel,
+};
