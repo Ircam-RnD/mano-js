@@ -33,8 +33,8 @@ class TrainingData {
   startRecording(label = null) {
     this.examples.push({
       label: label ? label : rapidMixDefaultLabel,
-      inputData: [],
-      outputData: []
+      input: [],
+      output: []
     });
 
     this.currentExample = this.examples[this.examples.length - 1];
@@ -49,10 +49,10 @@ class TrainingData {
     this._checkDimensions(inputVector, outputVector);
 
     if (this.currentExample) {
-      this.currentExample.inputData.push(inputVector);
+      this.currentExample.input.push(inputVector);
 
       if (this.outputDimension > 0) {
-        this.currentExample.outputData.push(outputVector);
+        this.currentExample.output.push(outputVector);
       }
     }
   }
@@ -69,7 +69,7 @@ class TrainingData {
    */
   getTrainingSet() {
     return {
-      docType: 'rapidmix:training-data',
+      docType: 'rapid-mix:training-set',
       docVersion: rapidMixDocVersion,
       payload: {
         inputDimension: this.inputDimension,

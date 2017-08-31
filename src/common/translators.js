@@ -19,11 +19,11 @@ const rapidMixToXmmTrainingSet = rmSet => {
     phraseMaker.reset();
     phraseMaker.setConfig({ label: payload.data[i].label });
 
-    for (let j = 0; j < payload.data[i].inputData.length; j++) {
-      let vector = payload.data[i].inputData[j];
+    for (let j = 0; j < payload.data[i].input.length; j++) {
+      let vector = payload.data[i].input[j];
 
       if (payload.outputDimension > 0)
-        vector = vector.concat(payload.data[i].outputData[j]);
+        vector = vector.concat(payload.data[i].output[j]);
 
       phraseMaker.addObservation(vector);
     }

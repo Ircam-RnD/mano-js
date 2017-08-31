@@ -1,6 +1,6 @@
 import test from 'tape';
-import TrainingData from '../src/TrainingData';
-import ImlMotion from '../src/ImlMotion';
+import TrainingData from '../src/client/TrainingData';
+import XmmProcessor from '../src/client/XmmProcessor';
 
 test('basic tests', (t) => {
 
@@ -17,9 +17,9 @@ test('basic tests', (t) => {
   t.equal(set.inputDimension, 3, 'trainingData should have guessed its input dimension');
   t.equal(set.outputDimension, 0, 'trainingData should have guessed its output dimensions');
 
-  const iml = new ImlMotion(); // default : gmm
+  const processor = new XmmProcessor('gmm', 'http://localhost:8000/train');
   
-  iml.train(trainingData.getTrainingSet())
+  processor.train(trainingData.getTrainingSet())
     .then(model => {
       console.log('model updated');
     })

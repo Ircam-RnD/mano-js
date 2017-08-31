@@ -7,7 +7,6 @@ const path = require('path');
 const transpiler = require('./transpiler');
 const watch = require('watch');
 
-
 const cwd = process.cwd();
 
 /* --------------------------------------------------------------------------
@@ -20,6 +19,11 @@ const srcRegExp = new RegExp('^' + srcDir);
 const distDir = path.join(cwd, '.');
 const distRegExp = new RegExp('^' + srcDir);
 
+const clientEntryPoint = path.join(cwd, 'src', 'client', 'index.js');
+
+var umdTarget = path.join(cwd, pkg.name + '.umd.js');
+var minTarget = path.join(cwd, pkg.name + '.min.js');
+
 const watchOptions = {
   ignoreDotFiles: true,
   ignoreUnreadableDir: true,
@@ -28,6 +32,12 @@ const watchOptions = {
 };
 
 const babelOptions = JSON.parse(fs.readFileSync(path.join(cwd, '.babelrc')));
+
+var browserifyOptions = {
+  debug: true,
+  fullPaths: false,
+  standalone: pkg.standalone,
+};
 
 /* --------------------------------------------------------------------------
  * High-Level logic
@@ -93,6 +103,10 @@ function __transpile(srcDirectory, distDirectory, babelOptions) {
     .catch(err => console.error(err.stack));
 }
 
+function __bundle(srcDirectory, distDir, babelOptions, browserifyOptions) {
+
+}
+
 /* --------------------------------------------------------------------------
  * Parse commands
  * -------------------------------------------------------------------------- */
@@ -108,6 +122,10 @@ switch (command) {
 
   case '--transpile':
     __transpile(srcDir, distDir, babelOptions);
+    break;
+
+  case '--bundle':
+    __bundle(srcDir, distDir, babelOptions, browserifyOptions);
     break;
 }
 
