@@ -1,7 +1,5 @@
 'use strict';
 
-import _Object$defineProperty from 'babel-runtime/core-js/object/define-property';
-import _Object$keys from 'babel-runtime/core-js/object/keys';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -44,16 +42,18 @@ Object.defineProperty(exports, 'XmmProcessor', {
 
 var _translators = require('./translators');
 
-_Object$keys(_translators).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-
-  _Object$defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _translators[key];
-    }
-  });
+Object.defineProperty(exports, 'rapidMixToXmmTrainingSet', {
+  enumerable: true,
+  get: function get() {
+    return _translators.rapidMixToXmmTrainingSet;
+  }
+});
+Object.defineProperty(exports, 'xmmToRapidMixTrainingSet', {
+  enumerable: true,
+  get: function get() {
+    return _translators.xmmToRapidMixTrainingSet;
+  }
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRyYW5zbGF0b3JzLmpzIl0sIm5hbWVzIjpbImRlZmF1bHQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7d0RBQVNBLE87Ozs7Ozs7OztpREFDQUEsTzs7Ozs7Ozs7O3NEQUNBQSxPOzs7Ozs7Ozs7aURBQ0FBLE87Ozs7OztBQUNUO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEiLCJmaWxlIjoidHJhbnNsYXRvcnMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgeyBkZWZhdWx0IGFzIFByZVByb2Nlc3NlZFNlbnNvcnMgfSBmcm9tICcuL1ByZVByb2Nlc3NlZFNlbnNvcnMnO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBUcmFpbmluZ0RhdGEgfSAgICAgICAgZnJvbSAnLi9UcmFpbmluZ0RhdGEnO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBUcmFpbmluZ1NldFJlYWRlciB9ICAgZnJvbSAnLi9UcmFpbmluZ1NldFJlYWRlcic7XG5leHBvcnQgeyBkZWZhdWx0IGFzIFhtbVByb2Nlc3NvciB9ICAgICAgICBmcm9tICcuL1htbVByb2Nlc3Nvcic7XG5leHBvcnQgKiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmcm9tICcuL3RyYW5zbGF0b3JzJztcbiJdfQ==
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRyYW5zbGF0b3JzLmpzIl0sIm5hbWVzIjpbImRlZmF1bHQiLCJyYXBpZE1peFRvWG1tVHJhaW5pbmdTZXQiLCJ4bW1Ub1JhcGlkTWl4VHJhaW5pbmdTZXQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O3dEQUFTQSxPOzs7Ozs7Ozs7aURBQ0FBLE87Ozs7Ozs7OztzREFDQUEsTzs7Ozs7Ozs7O2lEQUNBQSxPOzs7Ozs7Ozs7d0JBRVBDLHdCOzs7Ozs7d0JBQ0FDLHdCIiwiZmlsZSI6InRyYW5zbGF0b3JzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IHsgZGVmYXVsdCBhcyBQcmVQcm9jZXNzZWRTZW5zb3JzIH0gZnJvbSAnLi9QcmVQcm9jZXNzZWRTZW5zb3JzJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgVHJhaW5pbmdEYXRhIH0gICAgICAgIGZyb20gJy4vVHJhaW5pbmdEYXRhJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgVHJhaW5pbmdTZXRSZWFkZXIgfSAgIGZyb20gJy4vVHJhaW5pbmdTZXRSZWFkZXInO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBYbW1Qcm9jZXNzb3IgfSAgICAgICAgZnJvbSAnLi9YbW1Qcm9jZXNzb3InO1xuZXhwb3J0IHtcbiAgcmFwaWRNaXhUb1htbVRyYWluaW5nU2V0LFxuICB4bW1Ub1JhcGlkTWl4VHJhaW5pbmdTZXRcbn0gZnJvbSAnLi90cmFuc2xhdG9ycyc7XG4iXX0=
