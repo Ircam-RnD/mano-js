@@ -1,5 +1,5 @@
-export { default as PreProcessingChain }  from './PreProcessingChain';
+export { default as PreProcessedSensors } from './PreProcessedSensors';
 export { default as TrainingData }        from './TrainingData';
 export { default as TrainingSetReader }   from './TrainingSetReader';
-export { default as ImlMotion }           from './ImlMotion';
+export { default as XmmProcessor }        from './XmmProcessor';
 export *                                  from './translators';
