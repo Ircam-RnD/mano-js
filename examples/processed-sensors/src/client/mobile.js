@@ -1,20 +1,30 @@
 import * as lfo from 'waves-lfo/client';
 import * as controllers from 'basic-controllers'
-import MotionInput from '../../../../dist/source/MotionInput';
+import ProcessedSensors from '../../../../dist/ProcessedSensors';
 
-const motionInput = new MotionInput();
+const processedSensors = new ProcessedSensors();
+
+const eventIn = new lfo.source.EventIn({
+  frameRate: processedSensors.frameRate,
+  frameSize: 8,
+  frameType: 'vector',
+});
+
 const onOff = new lfo.operator.OnOff({ state: 'on' });
 const socketSend = new lfo.sink.SocketSend({ port: 5000 });
 const logger = new lfo.sink.Logger({ time: false, data: true });
 
-motionInput.connect(onOff);
+eventIn.connect(onOff);
 onOff.connect(socketSend);
 
-motionInput
-  .init()
-  .then(() => motionInput.start())
-  .catch(err => console.log(err.stack));
-
+Promise.all([eventIn.init(), processedSensors.init()])
+  .then(() => {
+    processedSensors.addListener(frame => eventIn.processFrame(frame));
+    // start graphs
+    processedSensors.start();
+    eventIn.start();
+  })
+  .catch(err => console.error(err.stack));
 
 // ---------------------------------------------------------------
 // CONTROLS
