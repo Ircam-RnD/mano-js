@@ -1,7 +1,8 @@
 import { XMLHttpRequest as XHR } from 'xmlhttprequest';
 import * as Xmm from 'xmm-client';
-import { rapidMixToXmmTrainingSet } from '../common/translators';
 import { rapidMixDocVersion } from '../common/constants';
+import { rapidMixToXmmTrainingSet } from '../common/translators';
+import { knownTargets } from '../common/validators';
 
 const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
@@ -17,6 +18,8 @@ const defaultXmmConfig = {
   likelihoodWindow: 10,
 };
 
+// const defaultLikelihoodWindow = 10;
+
 /**
  * Class representing a gesture model, able to train its own model from examples
  * and to perform the classification and / or regression depending on the chosen
@@ -24,25 +27,28 @@ const defaultXmmConfig = {
  */
 class XmmProcessor {
   constructor(type, {
-    apiEndPoint = 'como.ircam.fr/api',
+    apiEndPoint = 'https://como.ircam.fr/api/v1/train',
   } = {}) {
     // RapidMix config object
-    this.setConfig();
     this.apiEndPoint = apiEndPoint;
+    this._config = {};
+    this.setConfig(defaultXmmConfig);
+    // this._config = defaultXmmConfig;
+    // this._likelihoodWindow = defaultLikelihoodWindow;
+    this._modelType = type || 'gmm';
+    this._updateDecoder();
+  }
 
-    const windowSize = defaultXmmConfig.likelihoodWindow;
-
-    switch (type) {
+  _updateDecoder() {
+    switch (this._modelType) {
       case 'hhmm':
-        this._decoder = new Xmm.HhmmDecoder(windowSize);
-        this._config.payload.modelType = 'hhmm';
+        this._decoder = new Xmm.HhmmDecoder(this._likelihoodWindow);
         break;
       case 'gmm':
       default:
-        this._decoder = new Xmm.GmmDecoder(windowSize);
-        this._config.payload.modelType = 'gmm';
+        this._decoder = new Xmm.GmmDecoder(this._likelihoodWindow);
         break;
-    }
+    }    
   }
 
   /**
@@ -52,10 +58,15 @@ class XmmProcessor {
   train(trainingSet) {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
-      const url = data['url'] ? data['url'] : 'https://como.ircam.fr/api/v1/train';
+      const trainingData = {
+        docType: 'rapid-mix:rest-api-request',
+        docVersion: '1.0.0',
+        configuration: this.getConfig(),
+        trainingSet: trainingSet
+      };
       const xhr = isNode() ? new XHR() : new XMLHttpRequest();
 
-      xhr.open('post', url, true);
+      xhr.open('post', this.apiEndPoint, true);
       xhr.responseType = 'json';
       xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
       xhr.setRequestHeader('Content-Type', 'application/json');
@@ -66,7 +77,7 @@ class XmmProcessor {
         xhr.onreadystatechange = function() {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-              resolve(xhr.responseText);
+              resolve(JSON.parse(xhr.responseText).data);
             } else {
               throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
             }
@@ -75,7 +86,7 @@ class XmmProcessor {
       } else { // use xhr v2
         xhr.onload = function() {
           if (xhr.status === 200) {
-            resolve(xhr.response);
+            resolve(JSON.parse(xhr.response).data);
           } else {
             throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
           }
@@ -85,13 +96,13 @@ class XmmProcessor {
         }
       }
 
-      xhr.send(JSON.stringify(data));
+      xhr.send(JSON.stringify(trainingData));
     });
   }
 
   /**
    * @param {Float32Array|Array} vector - Input vector for decoding.
-   * @return {Object} -
+   * @return {Object} results - An object containing the decoding results.
    */
   run(vector) {
     return this._decoder.filter(vector);
@@ -102,12 +113,48 @@ class XmmProcessor {
    * // configuration ?
    */
   setConfig(config = {}) {
-    if (!config.docType) {
-      this._config = {
-        docType: 'rapid-mix:configuration',
-        docVersion: rapidMixDocVersion,
-        payload: Object.assign({}, defaultXmmConfig, config),
-      };
+    // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
+    if (config.docType === 'rapid-mix:configuration' && config.docVersion && config.payload &&
+        config.target && config.target.name && config.target.name.split(':')[0] === 'xmm') {
+      const target = config.target.name.split(':');
+      config = config.payload;
+      if (target.length > 1 && knownTargets.xmm.indexOf(target[1]) > 0) {
+        if (this._modelType !== target[1]) {
+          this._modelType = target[1];
+          this._updateDecoder();
+        }
+      }
+    }
+
+    if (config.modelType && knownTargets.xmm.indexOf(config.modelType) > 0) {
+      const val = config.modelType;
+      const newModel = (val === 'gmr') ? 'gmm' : ((val === 'hhmr') ? 'hhmm' : val);
+
+      if (newModel !== this._modelType) {
+        this._modelType = newModel;
+        this._updateDecoder();
+      }
+    }      
+
+    for (let key of Object.keys(config)) {
+      const val = config[key];
+      // console.log(['full', 'diagonal'].indexOf(val));
+
+      if ((key === 'gaussians' && Number.isInteger(val) && val > 0) ||
+          (key === 'absoluteRegularization' && typeof val === 'number' && val > 0) ||
+          (key === 'relativeRegularization' && typeof val === 'number' && val > 0) ||
+          (key === 'covarianceMode' && typeof val === 'string' &&
+            ['full', 'diagonal'].indexOf(val) > -1) ||
+          (key === 'hierarchical' && typeof val === 'boolean') ||
+          (key === 'states' && Number.isInteger(val) && val > 0) ||
+          (key === 'transitionMode' && typeof val === 'string' &&
+            ['leftright', 'ergodic'].indexOf(val) > -1) ||
+          (key === 'regressionEstimator' && typeof val === 'string' &&
+            ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
+        this._config[key] = val;
+      } else if (key === 'likelihoodWindow' && Number.isInteger(val) && val > 0) {
+        this._likelihoodWindow = val;
+      }
     }
   }
 
@@ -115,7 +162,15 @@ class XmmProcessor {
    * @return {Object} - RapidMix Configuration object.
    */
   getConfig() {
-    return this._config;
+    return {
+      docType: 'rapid-mix:configuration',
+      docVersion: rapidMixDocVersion,
+      target: {
+        name: `xmm:${this._modelType}`,
+        version: '1.0.0'
+      },
+      payload: this._config,
+    };      
   }
 
   /**

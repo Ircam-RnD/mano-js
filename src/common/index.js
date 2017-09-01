@@ -1,5 +1,8 @@
 export {
-  rapidMixDocVersion,
   rapidMixToXmmTrainingSet,
-  xmmToRapidMixTrainingSet
+  xmmToRapidMixTrainingSet,
+  xmmToRapidMixModel,
+  rapidMixToXmmModel,
 } from './translators';
+
+export { rapidMixDocVersion } from './constants';

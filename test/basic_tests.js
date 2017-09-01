@@ -1,6 +1,6 @@
 import test from 'tape';
-import TrainingData from '../src/TrainingData';
-import ImlMotion from '../src/ImlMotion';
+import TrainingData from '../src/client/TrainingData';
+import XmmProcessor from '../src/client/XmmProcessor';
 
 test('basic tests', (t) => {
 
@@ -11,17 +11,18 @@ test('basic tests', (t) => {
   }
   trainingData.stopRecording();
 
-  // console.log(JSON.stringify(trainingData.getTrainingSet().payload, null, 2));
+  // console.log(JSON.stringify(trainingData.getTrainingSet(), null, 2));
   const set = trainingData.getTrainingSet().payload;
 
   t.equal(set.inputDimension, 3, 'trainingData should have guessed its input dimension');
   t.equal(set.outputDimension, 0, 'trainingData should have guessed its output dimensions');
 
-  const iml = new ImlMotion(); // default : gmm
+  const processor = new XmmProcessor('gmm', { apiEndPoint: 'http://localhost:8000/train' });
   
-  iml.train(trainingData.getTrainingSet())
+  processor.train(trainingData.getTrainingSet())
     .then(model => {
-      console.log('model updated');
+      // console.log('model updated');
+      console.log(model);
     })
     .catch(err => {
       console.error(err);

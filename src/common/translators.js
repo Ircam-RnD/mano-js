@@ -1,4 +1,7 @@
 import * as Xmm from 'xmm-client';
+import { rapidMixDocVersion } from './constants';
+
+/* * * * * * * * * * * * * * * TrainingSet * * * * * * * * * * * * * * * * * */
 
 const xmmToRapidMixTrainingSet = xmmSet => {
   // TODO
@@ -11,7 +14,7 @@ const rapidMixToXmmTrainingSet = rmSet => {
   const phraseMaker = new Xmm.PhraseMaker({
     bimodal: payload.outputDimension > 0,
     dimension: payload.inputDimension + payload.outputDimension,
-    dimensionInput: payload.inputDimension,
+    dimensionInput: (payload.outputDimension > 0) ? payload.inputDimension : 0,
   });
   const setMaker = new Xmm.SetMaker();
 
@@ -19,11 +22,11 @@ const rapidMixToXmmTrainingSet = rmSet => {
     phraseMaker.reset();
     phraseMaker.setConfig({ label: payload.data[i].label });
 
-    for (let j = 0; j < payload.data[i].inputData.length; j++) {
-      let vector = payload.data[i].inputData[j];
+    for (let j = 0; j < payload.data[i].input.length; j++) {
+      let vector = payload.data[i].input[j];
 
       if (payload.outputDimension > 0)
-        vector = vector.concat(payload.data[i].outputData[j]);
+        vector = vector.concat(payload.data[i].output[j]);
 
       phraseMaker.addObservation(vector);
     }
@@ -34,4 +37,30 @@ const rapidMixToXmmTrainingSet = rmSet => {
   return setMaker.getTrainingSet();
 }
 
-export { xmmToRapidMixTrainingSet, rapidMixToXmmTrainingSet };
+/* * * * * * * * * * * * * * * * * Model * * * * * * * * * * * * * * * * * * */
+
+const xmmToRapidMixModel = xmmModel => {
+  const modelType = xmmModel.configuration.default_parameters.states ? 'hhmm' : 'gmm';
+
+  return {
+    docType: 'rapid-mix:model',
+    docVersion: rapidMixDocVersion,
+    target: {
+      name: 'xmm:${modelType}',
+      version: '1.0.0'
+    },
+    payload: xmmModel,
+  }
+};
+
+const rapidMixToXmmModel = rmModel => {
+  // TODO
+  return null;
+};
+
+export {
+  xmmToRapidMixTrainingSet,
+  rapidMixToXmmTrainingSet,
+  xmmToRapidMixModel,
+  rapidMixToXmmModel,
+};

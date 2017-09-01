@@ -6,12 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _translators = require('./translators');
 
-Object.defineProperty(exports, 'rapidMixDocVersion', {
-  enumerable: true,
-  get: function get() {
-    return _translators.rapidMixDocVersion;
-  }
-});
 Object.defineProperty(exports, 'rapidMixToXmmTrainingSet', {
   enumerable: true,
   get: function get() {
@@ -24,4 +18,25 @@ Object.defineProperty(exports, 'xmmToRapidMixTrainingSet', {
     return _translators.xmmToRapidMixTrainingSet;
   }
 });
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRyYW5zbGF0b3JzLmpzIl0sIm5hbWVzIjpbInJhcGlkTWl4RG9jVmVyc2lvbiIsInJhcGlkTWl4VG9YbW1UcmFpbmluZ1NldCIsInhtbVRvUmFwaWRNaXhUcmFpbmluZ1NldCJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7d0JBQ0VBLGtCOzs7Ozs7d0JBQ0FDLHdCOzs7Ozs7d0JBQ0FDLHdCIiwiZmlsZSI6InRyYW5zbGF0b3JzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IHtcbiAgcmFwaWRNaXhEb2NWZXJzaW9uLFxuICByYXBpZE1peFRvWG1tVHJhaW5pbmdTZXQsXG4gIHhtbVRvUmFwaWRNaXhUcmFpbmluZ1NldFxufSBmcm9tICcuL3RyYW5zbGF0b3JzJzsiXX0=
+Object.defineProperty(exports, 'xmmToRapidMixModel', {
+  enumerable: true,
+  get: function get() {
+    return _translators.xmmToRapidMixModel;
+  }
+});
+Object.defineProperty(exports, 'rapidMixToXmmModel', {
+  enumerable: true,
+  get: function get() {
+    return _translators.rapidMixToXmmModel;
+  }
+});
+
+var _constants = require('./constants');
+
+Object.defineProperty(exports, 'rapidMixDocVersion', {
+  enumerable: true,
+  get: function get() {
+    return _constants.rapidMixDocVersion;
+  }
+});
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInZhbGlkYXRvcnMuanMiXSwibmFtZXMiOlsicmFwaWRNaXhUb1htbVRyYWluaW5nU2V0IiwieG1tVG9SYXBpZE1peFRyYWluaW5nU2V0IiwieG1tVG9SYXBpZE1peE1vZGVsIiwicmFwaWRNaXhUb1htbU1vZGVsIiwicmFwaWRNaXhEb2NWZXJzaW9uIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozt3QkFDRUEsd0I7Ozs7Ozt3QkFDQUMsd0I7Ozs7Ozt3QkFDQUMsa0I7Ozs7Ozt3QkFDQUMsa0I7Ozs7Ozs7OztzQkFHT0Msa0IiLCJmaWxlIjoidmFsaWRhdG9ycy5qcyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCB7XG4gIHJhcGlkTWl4VG9YbW1UcmFpbmluZ1NldCxcbiAgeG1tVG9SYXBpZE1peFRyYWluaW5nU2V0LFxuICB4bW1Ub1JhcGlkTWl4TW9kZWwsXG4gIHJhcGlkTWl4VG9YbW1Nb2RlbCxcbn0gZnJvbSAnLi90cmFuc2xhdG9ycyc7XG5cbmV4cG9ydCB7IHJhcGlkTWl4RG9jVmVyc2lvbiB9IGZyb20gJy4vY29uc3RhbnRzJzsiXX0=
