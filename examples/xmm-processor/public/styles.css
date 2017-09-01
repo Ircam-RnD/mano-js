@@ -1,0 +1,49 @@
+html {
+  font-size: 62.5%;
+  font-family: monospace;
+}
+
+body {
+  margin: 20px;
+}
+
+#wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+h2 {
+  margin: 8px 0 4px;
+}
+
+p {
+  font-family: monospace;
+  white-space: pre;
+  font-size: 1.4rem;
+}
+
+canvas {
+  outline: 1px solid #cdcdcd;
+}
+
+#wrapper .inner-wrapper {
+  width: 420px;
+  float: left;
+  margin: 0 20px 0 1px;
+}
+
+.steelblue {
+  color: steelblue;
+}
+.green {
+  color: green;
+}
+.orange {
+  color: orange;
+}
