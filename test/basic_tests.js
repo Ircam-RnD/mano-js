@@ -6,7 +6,7 @@ import XmmProcessor from '../src/client/XmmProcessor';
 const trainingData = new TrainingData();
 
 /////////// model
-const processor = new XmmProcessor('gmm', { apiEndPoint: 'http://localhost:8000/train' });
+const processor = new XmmProcessor({ url: 'http://localhost:8000/train' });
 
 /////////// test function
 const tryitout = (t, n) => {

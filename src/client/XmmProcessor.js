@@ -148,7 +148,7 @@ class XmmProcessor {
       }
     }
 
-    if (config.modelType && knownTargets.xmm.indexOf(config.modelType) > 0) {
+    if (config.modelType && knownTargets['xmm'].indexOf(config.modelType) > -1) {
       const val = config.modelType;
       const newModel = (val === 'gmr') ? 'gmm' : ((val === 'hhmr') ? 'hhmm' : val);
 

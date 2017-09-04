@@ -38,9 +38,6 @@ module.exports.delete = function(file) {
       }
     });
   });
-
-  // @todo - bundle
-  // @todo - uglify
 };
 
 /**
@@ -59,12 +56,12 @@ module.exports.bundle = function(src, dist, browserifyOptions) {
         return reject(err);
       })
       .on('end', () => {
-        return resolve([src, dist]);
+        // return resolve([src, dist]);
       })
       .pipe(writeStream);
 
     writeStream.on('finish', () => {
-      // return resolve([src, dist]);
+      return resolve([src, dist]);
     });
   });
 }
@@ -74,9 +71,10 @@ module.exports.bundle = function(src, dist, browserifyOptions) {
  */
 module.exports.uglify = function(src, dist) {
   return new Promise((resolve, reject) => {
-    var result = uglify.minify(src.abs);
-    console.log(result);
-    fse.outputFile(dist.abs, result.code, function(err) { 
+    const code = fse.readFileSync(src.abs, 'utf8');
+    const result = uglify.minify(code);
+
+    fse.outputFile(dist.abs, result.code, err => { 
       if (err) {
         return reject(err.message);
       } else {
