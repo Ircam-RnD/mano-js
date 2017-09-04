@@ -37,7 +37,7 @@ class ProcessedSensors {
     // intensity
     const intensity = new lfoMotion.operator.Intensity({
       feedback: 0.7,
-      gain: 0.07
+      gain: 0.07,
     });
 
     const intensityNormSelect = new lfo.operator.Select({ index: 0 });
@@ -103,7 +103,12 @@ class ProcessedSensors {
   }
 
   init() {
-    return this._motionInput.init();
+    const promise = this._motionInput.init();
+    promise.then(() => {
+      this.frameRate = this._motionInput.streamParams.frameRate;
+    });
+
+    return promise;
   }
 
   /**

@@ -2,7 +2,14 @@
 
 > classes targeted at gesture modelling and recognition
 
+## Todos
 
+- define minimal set of parameters that should be exposed
+- doc
+- minimal example
+- release (lfo, lfo-motion, iml-motion)
+
+## Examples
 
 ```js
 const trainingData = new TrainingData();
