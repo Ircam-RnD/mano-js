@@ -18,8 +18,6 @@ const defaultXmmConfig = {
   likelihoodWindow: 10,
 };
 
-// const defaultLikelihoodWindow = 10;
-
 /**
  * Class representing a gesture model, able to train its own model from examples
  * and to perform the classification and / or regression depending on the chosen
@@ -32,9 +30,8 @@ class XmmProcessor {
     // RapidMix config object
     this.apiEndPoint = apiEndPoint;
     this._config = {};
+    this._decoder = null;
     this.setConfig(defaultXmmConfig);
-    // this._config = defaultXmmConfig;
-    // this._likelihoodWindow = defaultLikelihoodWindow;
     this._modelType = type || 'gmm';
     this._updateDecoder();
   }
@@ -48,7 +45,7 @@ class XmmProcessor {
       default:
         this._decoder = new Xmm.GmmDecoder(this._likelihoodWindow);
         break;
-    }    
+    }
   }
 
   /**
@@ -74,24 +71,28 @@ class XmmProcessor {
       const errorMsg = 'an error occured while training the model. ';
 
       if (isNode()) { // XMLHttpRequest module only supports xhr v1
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) { 
             if (xhr.status === 200) {
-              resolve(JSON.parse(xhr.responseText).data);
+              const response = JSON.parse(xhr.responseText).data;
+              this._decoder.setModel(response.model.payload);
+              resolve(response);
             } else {
               throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
             }
           }
         }
       } else { // use xhr v2
-        xhr.onload = function() {
+        xhr.onload = () => {
           if (xhr.status === 200) {
-            resolve(JSON.parse(xhr.response).data);
+            const response = JSON.parse(xhr.response).data;
+            this._decoder.setModel(response.model.payload);
+            resolve(response);
           } else {
             throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
           }
         }
-        xhr.onerror = function() {
+        xhr.onerror = () => {
           throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
         }
       }
@@ -154,6 +155,9 @@ class XmmProcessor {
         this._config[key] = val;
       } else if (key === 'likelihoodWindow' && Number.isInteger(val) && val > 0) {
         this._likelihoodWindow = val;
+        if (this._decoder !== null) {
+          this._decoder.setLikelihoodWindow(this._likelihoodWindow);
+        }
       }
     }
   }

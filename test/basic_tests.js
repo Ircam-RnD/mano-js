@@ -2,32 +2,53 @@ import test from 'tape';
 import TrainingData from '../src/client/TrainingData';
 import XmmProcessor from '../src/client/XmmProcessor';
 
+/////////// training set
+const trainingData = new TrainingData();
+
+/////////// model
+const processor = new XmmProcessor('gmm', { apiEndPoint: 'http://localhost:8000/train' });
+
+/////////// test function
+const tryitout = (t, n) => {
+  for (let i = 0; i < n; i++) {
+    const likeliest = processor.run([i, i, i]).likeliest;
+    t.equal(likeliest, i < 10 ? 'up' : 'down', `labels should match : ${likeliest}`);
+  }
+}
+
 test('basic tests', (t) => {
 
-  const trainingData = new TrainingData();
+  t.plan(20);
+
+  /* * * * * * * * * create training set * * * * * * * * * */
+
   trainingData.startRecording('up');
   for (let i = 0; i < 10; i++) {
-    trainingData.addElement([ i, i, i]);
+    trainingData.addElement([i, i, i]);
   }
   trainingData.stopRecording();
 
-  // console.log(JSON.stringify(trainingData.getTrainingSet(), null, 2));
-  const set = trainingData.getTrainingSet().payload;
+  trainingData.startRecording('down');
+  for (let i = 0; i < 10; i++) {
+    const j = 20 - i;
+    trainingData.addElement([j, j, j]);
+  }
+  trainingData.stopRecording();
 
-  t.equal(set.inputDimension, 3, 'trainingData should have guessed its input dimension');
-  t.equal(set.outputDimension, 0, 'trainingData should have guessed its output dimensions');
+  /* * * * * * * * * train and test model * * * * * * * * */
 
-  const processor = new XmmProcessor('gmm', { apiEndPoint: 'http://localhost:8000/train' });
-  
+  processor.setConfig({
+    likelihoodWindow: 1, // default value is 10, set to 1 to pass the tests (no smoothing)
+  });
+
   processor.train(trainingData.getTrainingSet())
-    .then(model => {
-      // console.log('model updated');
-      console.log(model);
+    .then(response => {
+      tryitout(t, 20);
     })
     .catch(err => {
       console.error(err);
     });
 
 
-  t.end();
+  // t.end();
 });
