@@ -8,12 +8,13 @@ let state = 'stop';
 
 const socket = sio();
 const trainingData = new TrainingData(8);
-const xmmProcessor = new XmmProcessor();
+const xmmProcessor = new XmmProcessor('gmm', { apiEndPoint: '/train' });
 
 socket.on('stop', () => {
   state = 'stop';
   trainingData.stopRecording();
-  xmmProcessor.train(trainingData.getTrainingSet());
+  const trainingSet = trainingData.getTrainingSet();
+  xmmProcessor.train(trainingSet);
 });
 
 socket.on('record', label => {
@@ -22,19 +23,23 @@ socket.on('record', label => {
   // xmmProcessor.train(trainingSet);
 });
 
-socket.on('play', () => {
-  state = 'play';
-});
+socket.on('play', () => state = 'play');
 
-// trainSet producer
 
 const socketReceive = new lfo.source.SocketReceive({ port: 5010 });
 const bridge = new lfo.sink.Bridge({
   processFrame: frame => {
+    const data = [];
+
+    // cast from Float32Array to Array (xmm-client requirement for now)
+    for (let i = 0; i < frame.data.length; i++)
+      data[i] = frame.data[i];
+
     if (state === 'record') {
-      trainingData.addElement(frame.data);
+      trainingData.addElement(data);
     } else if (state === 'play') {
-      console.log('todo'); // const res = xmmProcessor.run(frame.data);
+      const res = xmmProcessor.run(data);
+      console.log(res);
     }
   }
 });

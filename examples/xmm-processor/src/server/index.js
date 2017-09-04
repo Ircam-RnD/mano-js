@@ -1,5 +1,6 @@
 import 'source-map-support/register';
 import http from 'http';
+import bodyParser from 'body-parser';
 import chalk from 'chalk';
 import connect from 'connect';
 import connectRoute from 'connect-route';
@@ -9,11 +10,12 @@ import serveStatic from 'serve-static';
 import serveFavicon from 'serve-favicon';
 import template from 'ejs-template';
 import osc from 'osc';
-import sio from 'socket.io'
+import sio from 'socket.io';
+import xmm from 'xmm-node';
 // not very clean but...
 import { getTranspiler } from '../../bin/runner';
 import * as lfo from 'waves-lfo/node';
-
+import * as translators from '../../../../common/translators';
 
 const cwd = process.cwd();
 portfinder.basePort = 3000;
@@ -28,6 +30,7 @@ portfinder.getPortPromise()
       basedir: path.join(cwd, 'src', 'client'),
       autoreload: true,
     }));
+    app.use(bodyParser.json());
 
     app.use(connectRoute(router => {
       const serve = (name, req, res) => {
@@ -42,6 +45,31 @@ portfinder.getPortPromise()
       };
 
       router.get('/', (req, res, next) => serve('index', req, res));
+
+      // xmm api end point
+      router.post('/train', (req, res, next) => {
+        const body = req.body;
+        const config = body.configuration;
+        const algo = config.target.name.split(':')[1];
+        const trainingSet = translators.rapidMixToXmmTrainingSet(body.trainingSet);
+
+        const _xmm = new xmm(algo, config.payload);
+        _xmm.setTrainingSet(trainingSet);
+        _xmm.train((err, model) => {
+          if (err)
+            console.error(err.stack);
+
+          console.log(model);
+          const rapidModel = translators.xmmToRapidMixModel(model);
+          // console.log(rapidModel);
+
+          // res.status(200);
+          // res.json(rapidModel);
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(rapidModel));
+        });
+      });
+
       router.get('/:name', (req, res, next) => serve(req.params.name, req, res));
     }));
 

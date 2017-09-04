@@ -14,6 +14,7 @@
   "dependencies": {
     "babel-runtime": "^6.25.0",
     "basic-controllers": "github:ircam-jstools/basic-controllers",
+    "body-parser": "^1.17.2",
     "connect-route": "^0.1.5",
     "ejs-template": "^0.1.0",
     "osc": "^2.2.0",
@@ -22,7 +23,8 @@
     "source-map-support": "^0.4.15",
     "three": "^0.86.0",
     "uws": "^8.14.1",
-    "waves-lfo": "^1.1.1"
+    "waves-lfo": "^1.1.1",
+    "xmm-node": "github:ircam-rnd/xmm-node"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
