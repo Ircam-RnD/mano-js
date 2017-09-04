@@ -3,11 +3,15 @@ import { rapidMixDocVersion } from './constants';
 
 /* * * * * * * * * * * * * * * TrainingSet * * * * * * * * * * * * * * * * * */
 
+/** @private */
 const xmmToRapidMixTrainingSet = xmmSet => {
   // TODO
   return null;
 }
 
+/**
+ * Convert a RapidMix training set Object to an XMM training Object.
+ */
 const rapidMixToXmmTrainingSet = rmSet => {
   const payload = rmSet.payload;
 
@@ -43,6 +47,9 @@ const rapidMixToXmmTrainingSet = rmSet => {
 
 /* * * * * * * * * * * * * * * * * Model * * * * * * * * * * * * * * * * * * */
 
+/**
+ * Convert a XMM model Object to a RapidMix training Object.
+ */
 const xmmToRapidMixModel = xmmModel => {
   const modelType = xmmModel.configuration.default_parameters.states ? 'hhmm' : 'gmm';
 
@@ -57,14 +64,15 @@ const xmmToRapidMixModel = xmmModel => {
   }
 };
 
+/** @private */
 const rapidMixToXmmModel = rmModel => {
   // TODO
   return null;
 };
 
 export {
-  xmmToRapidMixTrainingSet,
+  // xmmToRapidMixTrainingSet,
   rapidMixToXmmTrainingSet,
   xmmToRapidMixModel,
-  rapidMixToXmmModel,
+  // rapidMixToXmmModel,
 };

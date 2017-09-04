@@ -1,4 +1,36 @@
-import { XMLHttpRequest as XHR } from 'xmlhttprequest';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Documentation - Source: client/XmmProcessor.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/overrides.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <!-- if home page assume a title is already present in README -->
+    
+    <h1 class="page-title">Source: client/XmmProcessor.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { XMLHttpRequest as XHR } from 'xmlhttprequest';
 import * as Xmm from 'xmm-client';
 import { rapidMixDocVersion } from '../common/constants';
 import { rapidMixToXmmTrainingSet } from '../common/translators';
@@ -136,11 +168,11 @@ class XmmProcessor {
    */
   setConfig(config = {}) {
     // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
-    if (config.docType === 'rapid-mix:configuration' && config.docVersion && config.payload &&
-        config.target && config.target.name && config.target.name.split(':')[0] === 'xmm') {
+    if (config.docType === 'rapid-mix:configuration' &amp;&amp; config.docVersion &amp;&amp; config.payload &amp;&amp;
+        config.target &amp;&amp; config.target.name &amp;&amp; config.target.name.split(':')[0] === 'xmm') {
       const target = config.target.name.split(':');
       config = config.payload;
-      if (target.length > 1 && knownTargets.xmm.indexOf(target[1]) > 0) {
+      if (target.length > 1 &amp;&amp; knownTargets.xmm.indexOf(target[1]) > 0) {
         if (this._modelType !== target[1]) {
           this._modelType = target[1];
           this._updateDecoder();
@@ -148,7 +180,7 @@ class XmmProcessor {
       }
     }
 
-    if (config.modelType && knownTargets.xmm.indexOf(config.modelType) > 0) {
+    if (config.modelType &amp;&amp; knownTargets.xmm.indexOf(config.modelType) > 0) {
       const val = config.modelType;
       const newModel = (val === 'gmr') ? 'gmm' : ((val === 'hhmr') ? 'hhmm' : val);
 
@@ -161,19 +193,19 @@ class XmmProcessor {
     for (let key of Object.keys(config)) {
       const val = config[key];
 
-      if ((key === 'gaussians' && Number.isInteger(val) && val > 0) ||
-          (key === 'absoluteRegularization' && typeof val === 'number' && val > 0) ||
-          (key === 'relativeRegularization' && typeof val === 'number' && val > 0) ||
-          (key === 'covarianceMode' && typeof val === 'string' &&
+      if ((key === 'gaussians' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) ||
+          (key === 'absoluteRegularization' &amp;&amp; typeof val === 'number' &amp;&amp; val > 0) ||
+          (key === 'relativeRegularization' &amp;&amp; typeof val === 'number' &amp;&amp; val > 0) ||
+          (key === 'covarianceMode' &amp;&amp; typeof val === 'string' &amp;&amp;
             ['full', 'diagonal'].indexOf(val) > -1) ||
-          (key === 'hierarchical' && typeof val === 'boolean') ||
-          (key === 'states' && Number.isInteger(val) && val > 0) ||
-          (key === 'transitionMode' && typeof val === 'string' &&
+          (key === 'hierarchical' &amp;&amp; typeof val === 'boolean') ||
+          (key === 'states' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) ||
+          (key === 'transitionMode' &amp;&amp; typeof val === 'string' &amp;&amp;
             ['leftright', 'ergodic'].indexOf(val) > -1) ||
-          (key === 'regressionEstimator' && typeof val === 'string' &&
+          (key === 'regressionEstimator' &amp;&amp; typeof val === 'string' &amp;&amp;
             ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
         this._config[key] = val;
-      } else if (key === 'likelihoodWindow' && Number.isInteger(val) && val > 0) {
+      } else if (key === 'likelihoodWindow' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) {
         this._likelihoodWindow = val;
 
         if (this._decoder !== null) {
@@ -220,3 +252,28 @@ class XmmProcessor {
 }
 
 export default XmmProcessor;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rapidMixToXmmTrainingSet">rapidMixToXmmTrainingSet</a></li><li><a href="global.html#xmmToRapidMixModel">xmmToRapidMixModel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Sep 04 2017 18:05:40 GMT+0200 (CEST)
+    
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

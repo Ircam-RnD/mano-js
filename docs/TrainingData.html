@@ -34,8 +34,7 @@
     
         <h2>TrainingData</h2>
         
-            <div class="class-description"><p>Class performing the recording and formatting of input examples, able to generate
-a RapidMix compliant training set.</p></div>
+            <div class="class-description"><p>Recording and format input examples, generate a RapidMix compliant training set.</p></div>
         
     
 </header>
@@ -124,8 +123,8 @@ a RapidMix compliant training set.</p></div>
                 </td>
             
 
-            <td class="description last"><p>The input dimension
-(if null, the input dimension will be guessed from the first recorded element).</p></td>
+            <td class="description last"><p>Input dimension
+ (if <code>null</code>, is guessed from the first recorded element)</p></td>
         </tr>
 
     
@@ -164,8 +163,8 @@ a RapidMix compliant training set.</p></div>
                 </td>
             
 
-            <td class="description last"><p>The output dimension.
-(if null, the output dimension will be guessed from the first recorded element).</p></td>
+            <td class="description last"><p>Output dimension.
+ (if <code>null</code>, is guessed from the first recorded element).</p></td>
         </tr>
 
     
@@ -206,7 +205,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line12">line 12</a>
+        <a href="client_TrainingData.js.html">client/TrainingData.js</a>, <a href="client_TrainingData.js.html#line26">line 26</a>
     </li></ul></dd>
     
 
@@ -229,6 +228,18 @@ a RapidMix compliant training set.</p></div>
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>import { ProcessedSensors, TrainingData } from 'iml-motion';
+
+const processedSensors = new ProcessedSensors();
+const trainingData = new TrainingData(8);
+
+processedSensors.addListener(trainingData.addElement);
+processedSensors.init()
+  .then(() => processedSensors.start());</code></pre>
 
 
 
@@ -262,7 +273,7 @@ a RapidMix compliant training set.</p></div>
 
 
 <div class="description">
-    <p>Adds a new element to the current recording (if recording is active).</p>
+    <p>Add an element to the current recording (if recording is active)</p>
 </div>
 
 
@@ -323,7 +334,7 @@ a RapidMix compliant training set.</p></div>
                 </td>
             
 
-            <td class="description last"><p>The input element.</p></td>
+            <td class="description last"><p>Input element</p></td>
         </tr>
 
     
@@ -355,7 +366,7 @@ a RapidMix compliant training set.</p></div>
                 </td>
             
 
-            <td class="description last"><p>The output element (used for regression).</p></td>
+            <td class="description last"><p>Output element (for regression)</p></td>
         </tr>
 
     
@@ -396,7 +407,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line48">line 48</a>
+        <a href="client_TrainingData.js.html">client/TrainingData.js</a>, <a href="client_TrainingData.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -432,6 +443,10 @@ a RapidMix compliant training set.</p></div>
     
 
 
+
+<div class="description">
+    <p>Return the rapidMix compliant training set in JSON format</p>
+</div>
 
 
 
@@ -474,7 +489,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line70">line 70</a>
+        <a href="client_TrainingData.js.html">client/TrainingData.js</a>, <a href="client_TrainingData.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -502,7 +517,7 @@ a RapidMix compliant training set.</p></div>
         
 <div class="param-desc">
     <ul>
-<li>RapidMix compliant JSON formatted training set.</li>
+<li>Training set.</li>
 </ul>
 </div>
 
@@ -536,7 +551,7 @@ a RapidMix compliant training set.</p></div>
 
 
 <div class="description">
-    <p>Starts recording a new example.</p>
+    <p>Start recording a new example</p>
 </div>
 
 
@@ -596,7 +611,7 @@ a RapidMix compliant training set.</p></div>
                 </td>
             
 
-            <td class="description last"><p>The label of the example to be recorded.</p></td>
+            <td class="description last"><p>Label of the example to be recorded.</p></td>
         </tr>
 
     
@@ -637,7 +652,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line33">line 33</a>
+        <a href="client_TrainingData.js.html">client/TrainingData.js</a>, <a href="client_TrainingData.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -675,7 +690,7 @@ a RapidMix compliant training set.</p></div>
 
 
 <div class="description">
-    <p>Ends the current example recording.</p>
+    <p>Stop the current recording example</p>
 </div>
 
 
@@ -719,7 +734,7 @@ a RapidMix compliant training set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TrainingData.js.html">TrainingData.js</a>, <a href="TrainingData.js.html#line63">line 63</a>
+        <a href="client_TrainingData.js.html">client/TrainingData.js</a>, <a href="client_TrainingData.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -761,14 +776,14 @@ a RapidMix compliant training set.</p></div>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rapidMixToXmmTrainingSet">rapidMixToXmmTrainingSet</a></li><li><a href="global.html#xmmToRapidMixModel">xmmToRapidMixModel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
     
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Thu Aug 31 2017 10:31:21 GMT+0200 (CEST)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Sep 04 2017 18:05:41 GMT+0200 (CEST)
     
 </footer>
 

@@ -2,12 +2,8 @@
   "name": "iml-motion",
   "version": "1.0.0",
   "description": "set of classes targeted at gesture modelling and recognition",
-  "main": "",
+  "main": "client/index.js",
   "standalone": "imlMotion",
-  "directories": {
-    "doc": "docs",
-    "test": "test"
-  },
   "scripts": {
     "bundle": "node ./bin/runner --bundle",
     "doc": "jsdoc -c conf.json",
