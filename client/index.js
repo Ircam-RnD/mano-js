@@ -4,42 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _translators = require('../common/translators');
-
-Object.defineProperty(exports, 'rapidMixToXmmTrainingSet', {
-  enumerable: true,
-  get: function get() {
-    return _translators.rapidMixToXmmTrainingSet;
-  }
-});
-Object.defineProperty(exports, 'xmmToRapidMixTrainingSet', {
-  enumerable: true,
-  get: function get() {
-    return _translators.xmmToRapidMixTrainingSet;
-  }
-});
-Object.defineProperty(exports, 'xmmToRapidMixModel', {
-  enumerable: true,
-  get: function get() {
-    return _translators.xmmToRapidMixModel;
-  }
-});
-Object.defineProperty(exports, 'rapidMixToXmmModel', {
-  enumerable: true,
-  get: function get() {
-    return _translators.rapidMixToXmmModel;
-  }
-});
-
-var _constants = require('./common/constants');
-
-Object.defineProperty(exports, 'rapidMixDocVersion', {
-  enumerable: true,
-  get: function get() {
-    return _constants.rapidMixDocVersion;
-  }
-});
-
 var _ProcessedSensors = require('./ProcessedSensors');
 
 Object.defineProperty(exports, 'ProcessedSensors', {
@@ -76,5 +40,41 @@ Object.defineProperty(exports, 'XmmProcessor', {
   }
 });
 
+var _translators = require('../common/translators');
+
+Object.defineProperty(exports, 'rapidMixToXmmTrainingSet', {
+  enumerable: true,
+  get: function get() {
+    return _translators.rapidMixToXmmTrainingSet;
+  }
+});
+Object.defineProperty(exports, 'xmmToRapidMixTrainingSet', {
+  enumerable: true,
+  get: function get() {
+    return _translators.xmmToRapidMixTrainingSet;
+  }
+});
+Object.defineProperty(exports, 'xmmToRapidMixModel', {
+  enumerable: true,
+  get: function get() {
+    return _translators.xmmToRapidMixModel;
+  }
+});
+Object.defineProperty(exports, 'rapidMixToXmmModel', {
+  enumerable: true,
+  get: function get() {
+    return _translators.rapidMixToXmmModel;
+  }
+});
+
+var _constants = require('../common/constants');
+
+Object.defineProperty(exports, 'rapidMixDocVersion', {
+  enumerable: true,
+  get: function get() {
+    return _constants.rapidMixDocVersion;
+  }
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInZhbGlkYXRvcnMuanMiXSwibmFtZXMiOlsicmFwaWRNaXhUb1htbVRyYWluaW5nU2V0IiwieG1tVG9SYXBpZE1peFRyYWluaW5nU2V0IiwieG1tVG9SYXBpZE1peE1vZGVsIiwicmFwaWRNaXhUb1htbU1vZGVsIiwicmFwaWRNaXhEb2NWZXJzaW9uIiwiZGVmYXVsdCJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7d0JBQ0VBLHdCOzs7Ozs7d0JBQ0FDLHdCOzs7Ozs7d0JBQ0FDLGtCOzs7Ozs7d0JBQ0FDLGtCOzs7Ozs7Ozs7c0JBR09DLGtCOzs7Ozs7Ozs7cURBRUFDLE87Ozs7Ozs7OztpREFDQUEsTzs7Ozs7Ozs7O3NEQUNBQSxPOzs7Ozs7Ozs7aURBQ0FBLE8iLCJmaWxlIjoidmFsaWRhdG9ycy5qcyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCB7XG4gIHJhcGlkTWl4VG9YbW1UcmFpbmluZ1NldCxcbiAgeG1tVG9SYXBpZE1peFRyYWluaW5nU2V0LFxuICB4bW1Ub1JhcGlkTWl4TW9kZWwsXG4gIHJhcGlkTWl4VG9YbW1Nb2RlbCxcbn0gZnJvbSAnLi4vY29tbW9uL3RyYW5zbGF0b3JzJztcblxuZXhwb3J0IHsgcmFwaWRNaXhEb2NWZXJzaW9uIH0gZnJvbSAnLi9jb21tb24vY29uc3RhbnRzJztcblxuZXhwb3J0IHsgZGVmYXVsdCBhcyBQcm9jZXNzZWRTZW5zb3JzIH0gZnJvbSAnLi9Qcm9jZXNzZWRTZW5zb3JzJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgVHJhaW5pbmdEYXRhIH0gZnJvbSAnLi9UcmFpbmluZ0RhdGEnO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBUcmFpbmluZ1NldFJlYWRlciB9IGZyb20gJy4vVHJhaW5pbmdTZXRSZWFkZXInO1xuZXhwb3J0IHsgZGVmYXVsdCBhcyBYbW1Qcm9jZXNzb3IgfSBmcm9tICcuL1htbVByb2Nlc3Nvcic7XG4iXX0=
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInZhbGlkYXRvcnMuanMiXSwibmFtZXMiOlsiZGVmYXVsdCIsInJhcGlkTWl4VG9YbW1UcmFpbmluZ1NldCIsInhtbVRvUmFwaWRNaXhUcmFpbmluZ1NldCIsInhtbVRvUmFwaWRNaXhNb2RlbCIsInJhcGlkTWl4VG9YbW1Nb2RlbCIsInJhcGlkTWl4RG9jVmVyc2lvbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7cURBQVNBLE87Ozs7Ozs7OztpREFDQUEsTzs7Ozs7Ozs7O3NEQUNBQSxPOzs7Ozs7Ozs7aURBQ0FBLE87Ozs7Ozs7Ozt3QkFHUEMsd0I7Ozs7Ozt3QkFDQUMsd0I7Ozs7Ozt3QkFDQUMsa0I7Ozs7Ozt3QkFDQUMsa0I7Ozs7Ozs7OztzQkFHT0Msa0IiLCJmaWxlIjoidmFsaWRhdG9ycy5qcyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCB7IGRlZmF1bHQgYXMgUHJvY2Vzc2VkU2Vuc29ycyB9IGZyb20gJy4vUHJvY2Vzc2VkU2Vuc29ycyc7XG5leHBvcnQgeyBkZWZhdWx0IGFzIFRyYWluaW5nRGF0YSB9IGZyb20gJy4vVHJhaW5pbmdEYXRhJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgVHJhaW5pbmdTZXRSZWFkZXIgfSBmcm9tICcuL1RyYWluaW5nU2V0UmVhZGVyJztcbmV4cG9ydCB7IGRlZmF1bHQgYXMgWG1tUHJvY2Vzc29yIH0gZnJvbSAnLi9YbW1Qcm9jZXNzb3InO1xuXG5leHBvcnQge1xuICByYXBpZE1peFRvWG1tVHJhaW5pbmdTZXQsXG4gIHhtbVRvUmFwaWRNaXhUcmFpbmluZ1NldCxcbiAgeG1tVG9SYXBpZE1peE1vZGVsLFxuICByYXBpZE1peFRvWG1tTW9kZWwsXG59IGZyb20gJy4uL2NvbW1vbi90cmFuc2xhdG9ycyc7XG5cbmV4cG9ydCB7IHJhcGlkTWl4RG9jVmVyc2lvbiB9IGZyb20gJy4uL2NvbW1vbi9jb25zdGFudHMnO1xuIl19

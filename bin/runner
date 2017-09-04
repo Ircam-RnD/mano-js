@@ -19,7 +19,7 @@ const srcRegExp = new RegExp('^' + srcDir);
 const distDir = path.join(cwd, '.');
 const distRegExp = new RegExp('^' + srcDir);
 
-const clientEntryPoint = path.join(cwd, 'src', 'client', 'index.js');
+const clientEntryPoint = path.join(cwd, 'client', 'index.js');
 
 var umdTarget = path.join(cwd, pkg.name + '.umd.js');
 var minTarget = path.join(cwd, pkg.name + '.min.js');
@@ -83,34 +83,36 @@ function __watch(srcDirectory, distDirectory, watchOptions, babelOptions) {
 function __transpile(srcDirectory, distDirectory, babelOptions) {
   // @todo - delete `disr` directory first
 
-  fileStore.getAll(srcDirectory)
-    .then(files => {
-      const promises = files.map(src => {
-        const startTime = new Date().getTime();
-        const distFilename = src.abs.replace(srcRegExp, distDirectory);
+  return new Promise((resolve, reject) => {
+    fileStore.getAll(srcDirectory)
+      .then(files => {
+        const promises = files.map(src => {
+          const startTime = new Date().getTime();
+          const distFilename = src.abs.replace(srcRegExp, distDirectory);
 
-        return fileStore.get(distFilename)
-          .then(dist => transpiler.transpile(src, dist, babelOptions))
-          .then(([src, dist]) => {
-            const dt = new Date().getTime() - startTime;
-            return log.transpileSuccess(src, dist, dt);
-          })
-          .catch(err => log.transpileError(src, err));
-      });
+          return fileStore.get(distFilename)
+            .then(dist => transpiler.transpile(src, dist, babelOptions))
+            .then(([src, dist]) => {
+              const dt = new Date().getTime() - startTime;
+              return log.transpileSuccess(src, dist, dt);
+            })
+            .catch(err => log.transpileError(src, err));
+        });
 
-      return Promise.all(promises);
-    })
-    // .then(vals => console.log(vals))
-    // .then(vals => { return resolve(vals); })
-    .catch(err => console.error(err.stack));
+        return Promise.all(promises);
+      })
+      // .then(vals => console.log(vals))
+      .then(vals => { return resolve(vals); })
+      // .catch(err => console.error(err.stack));
+  });
 }
 
-function __bundle(entryPoint, outputFile, browserifyOptions) {
-  return transpiler.bundle(entryPoint, umdTarget);
+function __bundle(entryPoint, outFilename, browserifyOptions) {
+  return transpiler.bundle(entryPoint, outFilename, browserifyOptions);
 }
 
-function __uglify(inputFile, outputFile) {
-  return transpiler.uglify(inputFile, outputFile);
+function __uglify(inFilename, outFilename) {
+  return transpiler.uglify(inFilename, outFilename);
 }
 
 /* --------------------------------------------------------------------------
@@ -132,9 +134,9 @@ switch (command) {
 
   case '--bundle':
     __transpile(srcDir, distDir, babelOptions)
-      .then(() => __bundle(entryPoint, umdTarget, browserifyOptions))
+      .then(() => __bundle(clientEntryPoint, umdTarget, browserifyOptions))
       .then(file => __uglify(umdTarget, minTarget))
-      .catch(err => console.error(err.stack));
+      // .catch(err => console.error(err.stack));
     break;
 }
 

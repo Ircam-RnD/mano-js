@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const babel = require('babel-core');
 const browserify = require('browserify');
-var uglify = require('uglify-js');
+const uglify = require('uglify-js');
 const fse = require('fs-extra');
 
 // transpile `src` into `dist`
@@ -52,13 +52,13 @@ module.exports.delete = function(file) {
  */
 module.exports.bundle = function(entryPoint, outFilename, browserifyOptions) {
   return new Promise((resolve, reject) => {
-    if (entryPoint === undefined || !isAllowed(entryPoint))
-      return;
+    // if (entryPoint === undefined || !isAllowed(entryPoint))
+    //   return;
 
     const bundler = browserify(entryPoint, browserifyOptions);
     const startTime = new Date().getTime();
 
-    log.bundleStart(outFilename);
+    // log.bundleStart(outFilename);
     fse.ensureFileSync(outFilename); // ensure file exists
 
     const writeStream = fse.createWriteStream(outFilename);
@@ -66,12 +66,12 @@ module.exports.bundle = function(entryPoint, outFilename, browserifyOptions) {
     bundler
       .bundle()
       .on('error', err => {
-        log.bundleError(outFilename, err);
+        // log.bundleError(outFilename, err);
         return reject(err);
       })
       .on('end', () => {
-        log.bundleSuccess(outFilename, startTime);
-        // return resolve();
+        // log.bundleSuccess(outFilename, startTime);
+        return resolve();
       })
       .pipe(writeStream);
 
@@ -97,6 +97,6 @@ module.exports.uglify = function(inFilename, outFilename) {
     if (err)
       return console.error(err.message);
 
-    log.uglifySuccess(inFilename, outFilename, startTime);
+    // log.uglifySuccess(inFilename, outFilename, startTime);
   });
 }
