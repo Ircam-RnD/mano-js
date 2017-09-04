@@ -81,7 +81,7 @@ function __watch(srcDirectory, distDirectory, watchOptions, babelOptions) {
 }
 
 function __transpile(srcDirectory, distDirectory, babelOptions) {
-  // @todo - delete `disr` directory first
+  // @todo - delete `dist` directory first
 
   return new Promise((resolve, reject) => {
     fileStore.getAll(srcDirectory)
@@ -101,18 +101,45 @@ function __transpile(srcDirectory, distDirectory, babelOptions) {
 
         return Promise.all(promises);
       })
-      // .then(vals => console.log(vals))
-      .then(vals => { return resolve(vals); })
-      // .catch(err => console.error(err.stack));
+      .then(() => { return resolve(); })
+      .catch(err => console.error(err.stack));
   });
 }
 
 function __bundle(entryPoint, outFilename, browserifyOptions) {
-  return transpiler.bundle(entryPoint, outFilename, browserifyOptions);
+  const startTime = new Date().getTime();
+  const promises = [
+    fileStore.get(entryPoint),
+    fileStore.get(outFilename),
+  ];
+
+  return Promise.all(promises)
+    .then(([src, dist]) => {
+      return transpiler.bundle(src, dist, browserifyOptions);
+    })
+    .then(([src, dist]) => {
+      const dt = new Date().getTime() - startTime;
+      return log.bundleSuccess(src, dist, dt);
+    })
+    .catch(err => log.bundleError(src, dist));
 }
 
 function __uglify(inFilename, outFilename) {
-  return transpiler.uglify(inFilename, outFilename);
+  const startTime = new Date().getTime();
+  const promises = [
+    fileStore.get(inFilename),
+    fileStore.get(outFilename),
+  ];
+
+  return Promise.all(promises)
+    .then(([src, dist]) => {
+      return transpiler.uglify(src, dist);
+    })
+    .then(([src, dist]) => {
+      const dt = new Date().getTime() - startTime;
+      return log.uglifySuccess(src, dist, dt);
+    })
+    .catch(err => log.uglifyError(src, dist));
 }
 
 /* --------------------------------------------------------------------------
@@ -135,8 +162,8 @@ switch (command) {
   case '--bundle':
     __transpile(srcDir, distDir, babelOptions)
       .then(() => __bundle(clientEntryPoint, umdTarget, browserifyOptions))
-      .then(file => __uglify(umdTarget, minTarget))
-      // .catch(err => console.error(err.stack));
+      .then(() => __uglify(umdTarget, minTarget))
+      .catch(err => console.error(err.stack));
     break;
 }
 

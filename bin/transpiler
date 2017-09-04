@@ -45,58 +45,43 @@ module.exports.delete = function(file) {
 
 /**
  * Transform a given file to it's browserified version, client only.
- * Only clients have their browserified counterparts, each folder in `src/client`
- * is considered has a separate browserified client file. The `index.js` in each
- * folder defines the entry point of the particular client. The browserified
- * file is name after the name of the folder.
  */
-module.exports.bundle = function(entryPoint, outFilename, browserifyOptions) {
+module.exports.bundle = function(src, dist, browserifyOptions) {
   return new Promise((resolve, reject) => {
-    // if (entryPoint === undefined || !isAllowed(entryPoint))
-    //   return;
-
-    const bundler = browserify(entryPoint, browserifyOptions);
-    const startTime = new Date().getTime();
-
-    // log.bundleStart(outFilename);
-    fse.ensureFileSync(outFilename); // ensure file exists
-
-    const writeStream = fse.createWriteStream(outFilename);
+    const bundler = browserify(src.abs, browserifyOptions);
+    // const startTime = new Date().getTime();
+    fse.ensureFileSync(dist.abs); // ensure file exists
+    const writeStream = fse.createWriteStream(dist.abs);
 
     bundler
       .bundle()
       .on('error', err => {
-        // log.bundleError(outFilename, err);
         return reject(err);
       })
       .on('end', () => {
-        // log.bundleSuccess(outFilename, startTime);
-        return resolve();
+        return resolve([src, dist]);
       })
       .pipe(writeStream);
 
     writeStream.on('finish', () => {
-      return resolve();
-      /*
-      if (callback)
-        callback();
-      */
+      // return resolve([src, dist]);
     });
   });
 }
 
 /**
- * Uglify the `inFilename` into `outFilename`.
+ * Uglify the `scr` into `dist`.
  */
-module.exports.uglify = function(inFilename, outFilename) {
-  var result = uglify.minify(inFilename);
-  var startTime = new Date().getTime();
-
-
-  fse.outputFile(outFilename, result.code, function(err) {
-    if (err)
-      return console.error(err.message);
-
-    // log.uglifySuccess(inFilename, outFilename, startTime);
+module.exports.uglify = function(src, dist) {
+  return new Promise((resolve, reject) => {
+    var result = uglify.minify(src.abs);
+    console.log(result);
+    fse.outputFile(dist.abs, result.code, function(err) { 
+      if (err) {
+        return reject(err.message);
+      } else {
+        resolve([src, dist]);
+      }
+    });
   });
 }
