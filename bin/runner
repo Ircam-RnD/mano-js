@@ -19,7 +19,7 @@ const srcRegExp = new RegExp('^' + srcDir);
 const distDir = path.join(cwd, '.');
 const distRegExp = new RegExp('^' + srcDir);
 
-const clientEntryPoint = path.join(cwd, 'src', 'client', 'index.js');
+const clientEntryPoint = path.join(cwd, 'client', 'index.js');
 
 var umdTarget = path.join(cwd, pkg.name + '.umd.js');
 var minTarget = path.join(cwd, pkg.name + '.min.js');
@@ -81,36 +81,65 @@ function __watch(srcDirectory, distDirectory, watchOptions, babelOptions) {
 }
 
 function __transpile(srcDirectory, distDirectory, babelOptions) {
-  // @todo - delete `disr` directory first
+  // @todo - delete `dist` directory first
 
-  fileStore.getAll(srcDirectory)
-    .then(files => {
-      const promises = files.map(src => {
-        const startTime = new Date().getTime();
-        const distFilename = src.abs.replace(srcRegExp, distDirectory);
+  return new Promise((resolve, reject) => {
+    fileStore.getAll(srcDirectory)
+      .then(files => {
+        const promises = files.map(src => {
+          const startTime = new Date().getTime();
+          const distFilename = src.abs.replace(srcRegExp, distDirectory);
 
-        return fileStore.get(distFilename)
-          .then(dist => transpiler.transpile(src, dist, babelOptions))
-          .then(([src, dist]) => {
-            const dt = new Date().getTime() - startTime;
-            return log.transpileSuccess(src, dist, dt);
-          })
-          .catch(err => log.transpileError(src, err));
-      });
+          return fileStore.get(distFilename)
+            .then(dist => transpiler.transpile(src, dist, babelOptions))
+            .then(([src, dist]) => {
+              const dt = new Date().getTime() - startTime;
+              return log.transpileSuccess(src, dist, dt);
+            })
+            .catch(err => log.transpileError(src, err));
+        });
 
-      return Promise.all(promises);
+        return Promise.all(promises);
+      })
+      .then(() => { return resolve(); })
+      .catch(err => console.error(err.stack));
+  });
+}
+
+function __bundle(entryPoint, outFilename, browserifyOptions) {
+  const startTime = new Date().getTime();
+  const promises = [
+    fileStore.get(entryPoint),
+    fileStore.get(outFilename),
+  ];
+
+  return Promise.all(promises)
+    .then(([src, dist]) => {
+      return transpiler.bundle(src, dist, browserifyOptions);
     })
-    // .then(vals => console.log(vals))
-    // .then(vals => { return resolve(vals); })
-    .catch(err => console.error(err.stack));
+    .then(([src, dist]) => {
+      const dt = new Date().getTime() - startTime;
+      return log.bundleSuccess(src, dist, dt);
+    })
+    .catch(err => log.bundleError(src, dist));
 }
 
-function __bundle(entryPoint, outputFile, browserifyOptions) {
-  return transpiler.bundle(entryPoint, umdTarget);
-}
+function __uglify(inFilename, outFilename) {
+  const startTime = new Date().getTime();
+  const promises = [
+    fileStore.get(inFilename),
+    fileStore.get(outFilename),
+  ];
 
-function __uglify(inputFile, outputFile) {
-  return transpiler.uglify(inputFile, outputFile);
+  return Promise.all(promises)
+    .then(([src, dist]) => {
+      return transpiler.uglify(src, dist);
+    })
+    .then(([src, dist]) => {
+      const dt = new Date().getTime() - startTime;
+      return log.uglifySuccess(src, dist, dt);
+    })
+    .catch(err => log.uglifyError(src, dist));
 }
 
 /* --------------------------------------------------------------------------
@@ -132,8 +161,8 @@ switch (command) {
 
   case '--bundle':
     __transpile(srcDir, distDir, babelOptions)
-      .then(() => __bundle(entryPoint, umdTarget, browserifyOptions))
-      .then(file => __uglify(umdTarget, minTarget))
+      .then(() => __bundle(clientEntryPoint, umdTarget, browserifyOptions))
+      .then(() => __uglify(umdTarget, minTarget))
       .catch(err => console.error(err.stack));
     break;
 }
