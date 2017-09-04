@@ -11,22 +11,26 @@ const xmmToRapidMixTrainingSet = xmmSet => {
 const rapidMixToXmmTrainingSet = rmSet => {
   const payload = rmSet.payload;
 
-  const phraseMaker = new Xmm.PhraseMaker({
+  const config = {
     bimodal: payload.outputDimension > 0,
     dimension: payload.inputDimension + payload.outputDimension,
     dimensionInput: (payload.outputDimension > 0) ? payload.inputDimension : 0,
-  });
+  };
+
+  const phraseMaker = new Xmm.PhraseMaker(config);
   const setMaker = new Xmm.SetMaker();
 
-  for (let i in payload.data) {
-    phraseMaker.reset();
-    phraseMaker.setConfig({ label: payload.data[i].label });
+  for (let i = 0; i < payload.data.length; i++) {
+    const datum = payload.data[i];
 
-    for (let j = 0; j < payload.data[i].input.length; j++) {
-      let vector = payload.data[i].input[j];
+    phraseMaker.reset();
+    phraseMaker.setConfig({ label: datum.label });
+
+    for (let j = 0; j < datum.input.length; j++) {
+      let vector = datum.input[j];
 
       if (payload.outputDimension > 0)
-        vector = vector.concat(payload.data[i].output[j]);
+        vector = vector.concat(datum.output[j]);
 
       phraseMaker.addObservation(vector);
     }

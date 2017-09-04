@@ -1,4 +1,4 @@
-import tv4 from 'tv4';
+// import tv4 from 'tv4';
 
 export const knownTargets = {
   xmm: [ 'gmm', 'gmr', 'hhmm', 'hhmr' ]

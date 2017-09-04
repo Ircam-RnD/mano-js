@@ -31,11 +31,11 @@ class XmmProcessor {
   } = {}) {
     // RapidMix config object
     this.apiEndPoint = apiEndPoint;
+
     this._config = {};
-    this.setConfig(defaultXmmConfig);
-    // this._config = defaultXmmConfig;
-    // this._likelihoodWindow = defaultLikelihoodWindow;
     this._modelType = type || 'gmm';
+
+    this.setConfig(defaultXmmConfig);
     this._updateDecoder();
   }
 
@@ -48,7 +48,7 @@ class XmmProcessor {
       default:
         this._decoder = new Xmm.GmmDecoder(this._likelihoodWindow);
         break;
-    }    
+    }
   }
 
   /**
@@ -64,6 +64,7 @@ class XmmProcessor {
         configuration: this.getConfig(),
         trainingSet: trainingSet
       };
+
       const xhr = isNode() ? new XHR() : new XMLHttpRequest();
 
       xhr.open('post', this.apiEndPoint, true);
@@ -86,7 +87,13 @@ class XmmProcessor {
       } else { // use xhr v2
         xhr.onload = function() {
           if (xhr.status === 200) {
-            resolve(JSON.parse(xhr.response).data);
+            let json = xhr.response;
+
+            try {
+              json = JSON.parse(json);
+            } catch (err) {};
+
+            resolve(json.data);
           } else {
             throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
           }
@@ -134,7 +141,7 @@ class XmmProcessor {
         this._modelType = newModel;
         this._updateDecoder();
       }
-    }      
+    }
 
     for (let key of Object.keys(config)) {
       const val = config[key];
@@ -170,7 +177,7 @@ class XmmProcessor {
         version: '1.0.0'
       },
       payload: this._config,
-    };      
+    };
   }
 
   /**
