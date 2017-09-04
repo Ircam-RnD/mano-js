@@ -6,32 +6,39 @@ import XmmProcessor from '../../../../client/XmmProcessor';
 
 let state = 'stop';
 
+const $result = document.querySelector('#result');
+const $state = document.querySelector('#state');
+
 const socket = sio();
 const trainingData = new TrainingData(8);
-const xmmProcessor = new XmmProcessor('gmm', { apiEndPoint: '/train' });
+const xmmProcessor = new XmmProcessor({ apiEndPoint: '/train' });
 
 socket.on('stop', () => {
   state = 'stop';
   trainingData.stopRecording();
   const trainingSet = trainingData.getTrainingSet();
-  xmmProcessor.train(trainingSet);
+  xmmProcessor.train(trainingSet)
+    .then(() => $state.innerText = 'state: model updated');
 });
 
 socket.on('record', label => {
   state = 'record';
   trainingData.startRecording(label);
-  // xmmProcessor.train(trainingSet);
+  $state.innerText = 'state: record';
 });
 
-socket.on('play', () => state = 'play');
+socket.on('play', () => {
+  state = 'play';
+  $state.innerText = 'state: play';
+});
 
+$state.innerText = 'state: ' + state;
 
 const socketReceive = new lfo.source.SocketReceive({ port: 5010 });
 const bridge = new lfo.sink.Bridge({
   processFrame: frame => {
     const data = [];
-
-    // cast from Float32Array to Array (xmm-client requirement for now)
+    // cast from Float32Array to Array (should not be necessary)
     for (let i = 0; i < frame.data.length; i++)
       data[i] = frame.data[i];
 
@@ -39,7 +46,9 @@ const bridge = new lfo.sink.Bridge({
       trainingData.addElement(data);
     } else if (state === 'play') {
       const res = xmmProcessor.run(data);
-      console.log(res);
+      const likeliest = res.likeliest;
+
+      $result.innerText = likeliest;
     }
   }
 });

@@ -50,7 +50,7 @@ const xmmToRapidMixModel = xmmModel => {
     docType: 'rapid-mix:model',
     docVersion: rapidMixDocVersion,
     target: {
-      name: 'xmm:${modelType}',
+      name: `xmm:${modelType}`,
       version: '1.0.0'
     },
     payload: xmmModel,

@@ -100,11 +100,17 @@ function __transpile(srcDirectory, distDirectory, babelOptions) {
 
       return Promise.all(promises);
     })
+    // .then(vals => console.log(vals))
+    // .then(vals => { return resolve(vals); })
     .catch(err => console.error(err.stack));
 }
 
-function __bundle(srcDirectory, distDir, babelOptions, browserifyOptions) {
+function __bundle(entryPoint, outputFile, browserifyOptions) {
+  return transpiler.bundle(entryPoint, umdTarget);
+}
 
+function __uglify(inputFile, outputFile) {
+  return transpiler.uglify(inputFile, outputFile);
 }
 
 /* --------------------------------------------------------------------------
@@ -125,7 +131,10 @@ switch (command) {
     break;
 
   case '--bundle':
-    __bundle(srcDir, distDir, babelOptions, browserifyOptions);
+    __transpile(srcDir, distDir, babelOptions)
+      .then(() => __bundle(entryPoint, umdTarget, browserifyOptions))
+      .then(file => __uglify(umdTarget, minTarget))
+      .catch(err => console.error(err.stack));
     break;
 }
 

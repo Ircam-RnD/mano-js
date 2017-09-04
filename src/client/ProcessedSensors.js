@@ -144,8 +144,8 @@ class ProcessedSensors {
   }
 
   /** @private */
-  _emit(data) {
-    this._listeners.forEach(listener => listener(data));
+  _emit(frame) {
+    this._listeners.forEach(listener => listener(frame.data));
   }
 
 }

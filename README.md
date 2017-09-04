@@ -12,62 +12,36 @@
 ## Examples
 
 ```js
-const trainingData = new TrainingData();
-const imlMotion = new ImlMotion('hmm');
-
-imlMotion.setConfig({ 
+const processedSensors = new ProcessedSensors();
+const trainingData = new TrainingData(8);
+const xmmProcessor = new XmmProcessor({ apiEndPoint: '/train' });
+xmmProcessor.setconfig({
   // ...
 });
 
-const sensors = new PreProcessedSensors();
-sensors.addListener(data => trainingData.addElement(data));
+processedSensors.init()
+  .then(run)
+  .catch(err => console.error(err.stack));
 
-$start.addListener('click', () => {
-  sensors.start();
-  trainingData.startRecording('label');
-});
-
-$stop.addListener('click', () => {
-  sensors.stop();
-  trainingData.stopRecording();
-
-  // training set is RapidMix compliant
-  const trainingSet = trainingData.getTrainingSet();
-  imlMotion
-    .train(trainingSet)
-    .then(model => {
-      // model is RapidMix compliant
-      console.log('model updated');
-    });
-});
-
-
-// offline API (with Reader)
-// given some trainingSet
-
+function run() {
+  if (record) {
+    trainingData.startRecording(label);
+    processedSensors.removeListener(xmmProcessor.run); // optionnal
+    processedSensors.addListener(trainingData.addElement);
+  } else if (train) {
+    training.stopRecording();
+    const trainingSet = trainingData.getTrainingSet();
+    xmmProcessor.train(trainingSet);
+  } else if (play) {
+    processedSensors.removeListener(trainingData.addElement);
+    processedSensors.addListener(xmmProcessor.run);
+  }
+}
 ```
 
 ```js
 
-class TrainingSetReader {
-  constructor() {
-    // use lfo reader internally
-  }
-
-  play(exampleIndex) {
-
-  }
-
-  pause() {
-
-  }
-
-  stop() {
-    
-  }
-}
-
-class PreProcessingChain() {
+class ProcessingChain() {
   constructor() {
 
   }
@@ -97,7 +71,7 @@ class TrainingData {
   getTrainingSet() {}
 }
 
-class ImlMotion {
+class XmmProcessor {
   constructor(type) {
     // RapidMix config object
     this.config = null;

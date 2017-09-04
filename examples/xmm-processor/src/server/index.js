@@ -30,7 +30,8 @@ portfinder.getPortPromise()
       basedir: path.join(cwd, 'src', 'client'),
       autoreload: true,
     }));
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({limit: '50mb'}));
+    app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
     app.use(connectRoute(router => {
       const serve = (name, req, res) => {
@@ -59,14 +60,9 @@ portfinder.getPortPromise()
           if (err)
             console.error(err.stack);
 
-          console.log(model);
           const rapidModel = translators.xmmToRapidMixModel(model);
-          // console.log(rapidModel);
-
-          // res.status(200);
-          // res.json(rapidModel);
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(rapidModel));
+          res.end(JSON.stringify({ model: rapidModel }));
         });
       });
 

@@ -24,7 +24,7 @@ function app() {
   eventIn.connect(socketSend);
   // eventIn.connect(logger);
 
-  processedSensors.addListener(frame => eventIn.processFrame(frame));
+  processedSensors.addListener(data => eventIn.process(null, data));
 
   // ---------------------------------------------------------------
   // CONTROLS
