@@ -34,7 +34,7 @@ class TrainingData {
   }
 
   /**
-   * Start recording a new example
+   * Start recording a new example.
    *
    * @param {String} label - Label of the example to be recorded.
    */
@@ -49,7 +49,7 @@ class TrainingData {
   }
 
   /**
-   * Add an element to the current recording (if recording is active)
+   * Add an element to the current recording (if recording is active).
    *
    * @param {Float32Array|Array} inputVector - Input element
    * @param {Float32Array|Array} outputVector - Output element (for regression)
@@ -67,14 +67,14 @@ class TrainingData {
   }
 
   /**
-   * Stop the current recording example
+   * Stop the current recording example.
    */
   stopRecording() {
     this.currentExample = null;
   }
 
   /**
-   * Return the rapidMix compliant training set in JSON format
+   * Return the rapidMix compliant training set in JSON format.
    *
    * @return {Object} - Training set.
    */

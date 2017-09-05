@@ -121,7 +121,7 @@ function __bundle(entryPoint, outFilename, browserifyOptions) {
       const dt = new Date().getTime() - startTime;
       return log.bundleSuccess(src, dist, dt);
     })
-    .catch(err => log.bundleError(src, dist));
+    .catch(err => log.bundleError(entryPoint, outFilename));
 }
 
 function __uglify(inFilename, outFilename) {
@@ -139,7 +139,7 @@ function __uglify(inFilename, outFilename) {
       const dt = new Date().getTime() - startTime;
       return log.uglifySuccess(src, dist, dt);
     })
-    .catch(err => log.uglifyError(src, dist));
+    .catch(err => log.uglifyError(inFilename, outFilename));
 }
 
 /* --------------------------------------------------------------------------
@@ -161,8 +161,8 @@ switch (command) {
 
   case '--bundle':
     __transpile(srcDir, distDir, babelOptions)
-      .then(() => __bundle(clientEntryPoint, umdTarget, browserifyOptions))
-      .then(() => __uglify(umdTarget, minTarget))
+      .then(() => { return __bundle(clientEntryPoint, umdTarget, browserifyOptions); })
+      .then(() => { return __uglify(umdTarget, minTarget); })
       .catch(err => console.error(err.stack));
     break;
 }
