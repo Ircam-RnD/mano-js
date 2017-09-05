@@ -46,7 +46,6 @@ module.exports.delete = function(file) {
 module.exports.bundle = function(src, dist, browserifyOptions) {
   return new Promise((resolve, reject) => {
     const bundler = browserify(src.abs, browserifyOptions);
-    // const startTime = new Date().getTime();
     fse.ensureFileSync(dist.abs); // ensure file exists
     const writeStream = fse.createWriteStream(dist.abs);
 
@@ -55,9 +54,7 @@ module.exports.bundle = function(src, dist, browserifyOptions) {
       .on('error', err => {
         return reject(err);
       })
-      .on('end', () => {
-        // return resolve([src, dist]);
-      })
+      .on('end', () => { /*do nothing*/ })
       .pipe(writeStream);
 
     writeStream.on('finish', () => {
@@ -67,7 +64,7 @@ module.exports.bundle = function(src, dist, browserifyOptions) {
 }
 
 /**
- * Uglify the `scr` into `dist`.
+ * Uglify `scr` into `dist`.
  */
 module.exports.uglify = function(src, dist) {
   return new Promise((resolve, reject) => {

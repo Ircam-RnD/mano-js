@@ -20,7 +20,7 @@ const defaultXmmConfig = {
 };
 
 /**
- * Representation of a gesture model. A instance of `XmmPorcessor` can
+ * Representation of a gesture model. A instance of `XmmProcessor` can
  * train a model from examples and can perform classification and/or
  * regression depending on the chosen algorithm.
  *
@@ -35,7 +35,6 @@ class XmmProcessor {
   constructor({
     url = 'https://como.ircam.fr/api/v1/train',
   } = {}) {
-    // RapidMix config object
     this.url = url;
 
     this._config = {};
@@ -64,7 +63,7 @@ class XmmProcessor {
    * the training is performed server-side and rely on an XHR call.
    *
    * @param {JSON} trainingSet - RapidMix compliant JSON formatted training set
-   * @return {Promise} - Promise that resolve when the model is updated
+   * @return {Promise} - Promise that resolves when the model is updated.
    */
   train(trainingSet) {
     // REST request / response - RapidMix
@@ -124,15 +123,17 @@ class XmmProcessor {
   /**
    * Perform the calssification or the regression of the given vector.
    *
-   * @param {Float32Array|Array} vector - Input vector for the decoding
-   * @return {Object} results - Object containing the decoding results
+   * @param {Float32Array|Array} vector - Input vector for the decoding.
+   * @return {Object} results - Object containing the decoding results.
    */
   run(vector) {
     return this._decoder.filter(vector);
   }
 
   /**
-   * @param {Object} config - RapidMix configuration object (or payload)
+   * Set the model configuration parameters (or a subset of them).
+   *
+   * @param {Object} config - RapidMix configuration object (or payload), or subset of parameters.
    */
   setConfig(config = {}) {
     // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
@@ -186,7 +187,7 @@ class XmmProcessor {
   /**
    * RapidMix compliant configuration object.
    *
-   * @return {Object} - RapidMix Configuration object
+   * @return {Object} - RapidMix Configuration object.
    */
   getConfig() {
     return {
@@ -201,7 +202,7 @@ class XmmProcessor {
   }
 
   /**
-   * Use the given RapidMix model object for the deciding
+   * Use the given RapidMix model object for the decoding.
    *
    * @param {Object} model - RapidMix Model object.
    */
@@ -210,7 +211,7 @@ class XmmProcessor {
   }
 
   /**
-   * Retrive the model in RapidMix model format.
+   * Retrieve the model in RapidMix model format.
    *
    * @return {Object} - Current RapidMix Model object.
    */
