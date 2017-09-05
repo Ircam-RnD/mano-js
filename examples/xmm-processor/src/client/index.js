@@ -11,7 +11,7 @@ const $state = document.querySelector('#state');
 
 const socket = sio();
 const trainingData = new TrainingData(8);
-const xmmProcessor = new XmmProcessor({ apiEndPoint: '/train' });
+const xmmProcessor = new XmmProcessor({ url: '/train' });
 
 socket.on('stop', () => {
   state = 'stop';

@@ -3,7 +3,7 @@ import * as lfoMotion from 'lfo-motion';
 
 /**
  * High-level abstraction that listen for raw sensors (accelerometers and
- * gyroscpes) and apply a set of preprocessing / filtering on it.
+ * gyroscopes) and apply a set of preprocessing / filtering on it.
  *
  * The output is composed of 8 values:
  * - IntensityNorm

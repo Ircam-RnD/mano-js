@@ -22,7 +22,7 @@
     "source-map-support": "^0.4.16",
     "three": "^0.86.0",
     "uws": "^8.14.1",
-    "waves-lfo": "^1.1.1"
+    "waves-lfo": "^1.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
