@@ -22,7 +22,7 @@
     "lfo-motion": "github:ircam-rnd/lfo-motion",
     "taffydb": "^2.7.3",
     "tv4": "1.3.0",
-    "waves-lfo": "^1.1.1",
+    "waves-lfo": "^1.1.2",
     "xmlhttprequest": "1.8.0",
     "xmm-client": "github:ircam-rnd/xmm-client"
   },
