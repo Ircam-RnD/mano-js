@@ -62,7 +62,7 @@ portfinder.getPortPromise()
 
           const rapidModel = translators.xmmToRapidMixModel(model);
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ model: rapidModel }));
+          res.end(JSON.stringify({ data: { model: rapidModel }}));
         });
       });
 
