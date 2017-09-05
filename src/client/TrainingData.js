@@ -70,6 +70,10 @@ class TrainingData {
    * Stop the current recording example.
    */
   stopRecording() {
+    if (this.currentExample.input.length === 0) {
+      this.examples.pop();
+    }
+    
     this.currentExample = null;
   }
 
