@@ -88,9 +88,9 @@ class XmmProcessor {
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-              const response = JSON.parse(xhr.responseText).data;
-              this._decoder.setModel(response.model.payload);
-              resolve(response);
+              const json = JSON.parse(xhr.responseText).data;
+              this._decoder.setModel(json.model.payload);
+              resolve(json);
             } else {
               throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
             }
@@ -99,19 +99,16 @@ class XmmProcessor {
       } else { // use xhr v2
         xhr.onload = () => {
           if (xhr.status === 200) {
-            let json = xhr.response;
-
-            try {
-              json = JSON.parse(json);
-            } catch (err) {};
-
-            this._decoder.setModel(json.model.payload);
+            const json = xhr.response;
+            this._decoder.setModel(json.data.model.payload);
             resolve(json.data);
           } else {
+            console.log(xhr.response);
             throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
           }
         }
         xhr.onerror = () => {
+          console.log(xhr.response);
           throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
         }
       }
@@ -128,6 +125,15 @@ class XmmProcessor {
    */
   run(vector) {
     return this._decoder.filter(vector);
+  }
+
+  /**
+   * Reset the inner model's decoding state.
+   */
+  reset() {
+    if (this._decoder.reset) {
+      this._decoder.reset();
+    }
   }
 
   /**
