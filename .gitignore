@@ -1,5 +1,6 @@
 **/.DS_Store
 **/Thumbs.db
 
+test/
 node_modules/
 npm-debug.log
