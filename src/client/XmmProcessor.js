@@ -88,9 +88,9 @@ class XmmProcessor {
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-              const json = JSON.parse(xhr.responseText).data;
-              this._decoder.setModel(json.model.payload);
-              resolve(json);
+              const body = JSON.parse(xhr.responseText);
+              this._decoder.setModel(body.model.payload);
+              resolve(body);
             } else {
               throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
             }
@@ -99,9 +99,9 @@ class XmmProcessor {
       } else { // use xhr v2
         xhr.onload = () => {
           if (xhr.status === 200) {
-            const json = xhr.response;
-            this._decoder.setModel(json.data.model.payload);
-            resolve(json.data);
+            const body = xhr.response;
+            this._decoder.setModel(body.model.payload);
+            resolve(body);
           } else {
             console.log(xhr.response);
             throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
