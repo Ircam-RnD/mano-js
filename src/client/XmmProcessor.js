@@ -124,6 +124,10 @@ class XmmProcessor {
    * @return {Object} results - Object containing the decoding results.
    */
   run(vector) {
+    if (vector instanceof Float32Array) {
+      vector = Array.from(vector);
+    }
+
     return this._decoder.filter(vector);
   }
 

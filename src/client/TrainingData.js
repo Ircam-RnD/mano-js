@@ -57,6 +57,12 @@ class TrainingData {
   addElement(inputVector, outputVector = null) {
     this._checkDimensions(inputVector, outputVector);
 
+    if (inputVector instanceof Float32Array)
+      inputVector = Array.from(inputVector);
+
+    if (outputVector instanceof Float32Array)
+      outputVector = Array.from(outputVector);
+
     if (this.currentExample) {
       this.currentExample.input.push(inputVector);
 
@@ -83,6 +89,7 @@ class TrainingData {
    */
   setTrainingSet(trainingSet) {
     const set = trainingSet.payload;
+
     this.inputDimension = set.inputDimension;
     this.outputDimension = set.outputDimension;
     this.data = set.data;
