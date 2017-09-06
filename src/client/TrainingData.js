@@ -78,6 +78,18 @@ class TrainingData {
   }
 
   /**
+   * Sets internal data from another training set.
+   * @param {Object} trainingSet - A rapidMix compliant training set.
+   */
+  setTrainingSet(trainingSet) {
+    const set = trainingSet.payload;
+    this.inputDimension = set.inputDimension;
+    this.outputDimension = set.outputDimension;
+    this.data = set.data;
+    this.columnNames = set.columnNames;
+  }
+
+  /**
    * Return the rapidMix compliant training set in JSON format.
    *
    * @return {Object} - Training set.
