@@ -24,13 +24,13 @@ const isArray = v => {
  *   .then(() => processedSensors.start());
  */
 class TrainingData {
-  constructor(inputDimension = null, outputDimension = null) {
+  constructor(inputDimension = null, outputDimension = null, columnNames = []) {
     // this._empty = true;
     this.inputDimension = inputDimension;
     this.outputDimension = outputDimension;
     this.examples = [];
     this.currentExample = null;
-    // this.columnNames = [];
+    this.columnNames = columnNames;
   }
 
   /**
@@ -92,6 +92,42 @@ class TrainingData {
         data: this.examples
       }
     };
+  }
+
+  /**
+   * Clear the whole training set.
+   */
+  clear() {
+    this.examples = [];
+  }
+
+  /**
+   * Remove all recordings of a certain label.
+   * @param {String} label - The label of the recordings to be removed. 
+   */
+  deleteRecordingsOfLabel(label) {
+    for (let i = this.examples.length - 1; i >= 0; i--) {
+      if (this.examples[i].label === label) {
+        this.examples.splice(i, 1);
+      }
+    }
+  }
+
+  /**
+   * Remove recordings by index.
+   * @param {Number} index - The index of the recording to be removed.
+   */
+  deleteRecording(index) {
+    if (index < this.examples.length && index > 0) {
+      this.examples.splice(index, 1);
+    }
+  }
+
+  /**
+   * Get the number of recordings.
+   */
+  get length() {
+    return this.examples.length;
   }
 
   /** @private */
