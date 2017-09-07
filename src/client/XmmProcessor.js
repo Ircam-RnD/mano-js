@@ -39,6 +39,7 @@ class XmmProcessor {
 
     this._config = {};
     this._decoder = null;
+    this._model = null;
     this._modelType = null;
     this._likelihoodWindow = null;
 
@@ -63,7 +64,8 @@ class XmmProcessor {
    * the training is performed server-side and rely on an XHR call.
    *
    * @param {JSON} trainingSet - RapidMix compliant JSON formatted training set
-   * @return {Promise} - Promise that resolves when the model is updated.
+   * @return {Promise} - Promise that resolves on the API response (RapidMix API
+   *  response format), when the model is updated.
    */
   train(trainingSet) {
     // REST request / response - RapidMix
@@ -90,6 +92,7 @@ class XmmProcessor {
             if (xhr.status === 200) {
               const body = JSON.parse(xhr.responseText);
               this._decoder.setModel(body.model.payload);
+              this._model = body.model;
               resolve(body);
             } else {
               throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
@@ -101,6 +104,7 @@ class XmmProcessor {
           if (xhr.status === 200) {
             const body = xhr.response;
             this._decoder.setModel(body.model.payload);
+            this._model = body.model;
             resolve(body);
           } else {
             console.log(xhr.response);
@@ -217,7 +221,8 @@ class XmmProcessor {
    * @param {Object} model - RapidMix Model object.
    */
   setModel(model) {
-    this._decoder.setModel(model);
+    this._model = model;
+    this._decoder.setModel(model.payload);
   }
 
   /**
@@ -226,7 +231,7 @@ class XmmProcessor {
    * @return {Object} - Current RapidMix Model object.
    */
   getModel() {
-    return this._decoder.getModel();
+    return this._model;
   }
 }
 
