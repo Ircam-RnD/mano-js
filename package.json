@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/Ircam-RnD/iml-motion"
   },
-  "license": "GPL-3.0",
+  "license": "BSD-3-Clause",
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "lfo-motion": "github:ircam-rnd/lfo-motion",
