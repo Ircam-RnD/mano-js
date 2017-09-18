@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Documentation - Source: common/TrainingData.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/overrides.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <!-- if home page assume a title is already present in README -->
+    
+    <h1 class="page-title">Source: common/TrainingData.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { rapidMixDocVersion, rapidMixDefaultLabel } from '../common/constants';
+
+// source : https://stackoverflow.com/questions/15251879/how-to-check-if-a-variable-is-a-typed-array-in-javascript
+const isArray = v => {
+  return v.constructor === Float32Array || Array.isArray(v);
+};
+
+/**
+ * Recording and format input examples, generate a RapidMix compliant training set.
+ *
+ * @param {Number} [inputDimension=null] - Input dimension
+ *  (if `null`, is guessed from the first recorded element)
+ * @param {Number} [outputDimension=null] - Output dimension.
+ *  (if `null`, is guessed from the first recorded element).
+ *
+ * @example
+ * import { ProcessedSensors, TrainingData } from 'iml-motion';
+ *
+ * const processedSensors = new ProcessedSensors();
+ * const trainingData = new TrainingData(8);
+ *
+ * processedSensors.addListener(trainingData.addElement);
+ * processedSensors.init()
+ *   .then(() => processedSensors.start());
+ */
+class TrainingData {
+  constructor(inputDimension = null, outputDimension = null, columnNames = []) {
+    // this._empty = true;
+    this.inputDimension = inputDimension;
+    this.outputDimension = outputDimension;
+    this.examples = [];
+    this.currentExample = null;
+    this.columnNames = columnNames;
+  }
+
+  /**
+   * Start recording a new example.
+   *
+   * @param {String} label - Label of the example to be recorded.
+   */
+  startRecording(label = null) {
+    this.examples.push({
+      label: label ? label : rapidMixDefaultLabel,
+      input: [],
+      output: []
+    });
+
+    this.currentExample = this.examples[this.examples.length - 1];
+  }
+
+  /**
+   * Add an element to the current recording (if recording is active).
+   *
+   * @param {Float32Array|Array} inputVector - Input element
+   * @param {Float32Array|Array} outputVector - Output element (for regression)
+   */
+  addElement(inputVector, outputVector = null) {
+    this._checkDimensions(inputVector, outputVector);
+
+    if (inputVector instanceof Float32Array)
+      inputVector = Array.from(inputVector);
+
+    if (outputVector instanceof Float32Array)
+      outputVector = Array.from(outputVector);
+
+    if (this.currentExample) {
+      this.currentExample.input.push(inputVector);
+
+      if (this.outputDimension > 0) {
+        this.currentExample.output.push(outputVector);
+      }
+    }
+  }
+
+  /**
+   * Stop the current recording example.
+   */
+  stopRecording() {
+    if (this.currentExample.input.length === 0) {
+      this.examples.pop();
+    }
+    
+    this.currentExample = null;
+  }
+
+  /**
+   * Sets internal data from another training set.
+   * @param {Object} trainingSet - A rapidMix compliant training set.
+   */
+  setTrainingSet(trainingSet) {
+    const set = trainingSet.payload;
+
+    this.inputDimension = set.inputDimension;
+    this.outputDimension = set.outputDimension;
+    this.data = set.data;
+    this.columnNames = set.columnNames;
+  }
+
+  /**
+   * Return the rapidMix compliant training set in JSON format.
+   *
+   * @return {Object} - Training set.
+   */
+  getTrainingSet() {
+    return {
+      docType: 'rapid-mix:training-set',
+      docVersion: rapidMixDocVersion,
+      payload: {
+        inputDimension: this.inputDimension,
+        outputDimension: this.outputDimension,
+        data: this.examples
+      }
+    };
+  }
+
+  /**
+   * Clear the whole training set.
+   */
+  clear() {
+    this.examples = [];
+  }
+
+  /**
+   * Remove all recordings of a certain label.
+   * @param {String} label - The label of the recordings to be removed. 
+   */
+  deleteRecordingsOfLabel(label) {
+    for (let i = this.examples.length - 1; i >= 0; i--) {
+      if (this.examples[i].label === label) {
+        this.examples.splice(i, 1);
+      }
+    }
+  }
+
+  /**
+   * Remove recordings by index.
+   * @param {Number} index - The index of the recording to be removed.
+   */
+  deleteRecording(index) {
+    if (index &lt; this.examples.length &amp;&amp; index > 0) {
+      this.examples.splice(index, 1);
+    }
+  }
+
+  /**
+   * Get the number of recordings.
+   */
+  get length() {
+    return this.examples.length;
+  }
+
+  /** @private */
+  _checkDimensions(inputVector, outputVector) {
+    if (!isArray(inputVector) || (outputVector &amp;&amp; !isArray(outputVector))) {
+      throw new Error('inputFrame and outputFrame must be arrays');
+    }
+    // set this back to true where appropriate if we add removePhrase etc methods
+    if (!this.inputDimension || !this.outputDimension) {
+      this.inputDimension = inputVector.length;
+      this.outputDimension = outputVector ? outputVector.length : 0;
+      // this._empty = false;
+    } else if (inputVector.length != this.inputDimension ||
+              outputVector.length != this.outputDimension) {
+      throw new Error('dimensions mismatch');
+    }
+  }
+}
+
+export default TrainingData;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rapidMixToXmmTrainingSet">rapidMixToXmmTrainingSet</a></li><li><a href="global.html#xmmToRapidMixModel">xmmToRapidMixModel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Sep 18 2017 16:15:28 GMT+0200 (CEST)
+    
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

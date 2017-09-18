@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Documentation - Source: common/XmmProcessor.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/overrides.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <!-- if home page assume a title is already present in README -->
+    
+    <h1 class="page-title">Source: common/XmmProcessor.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { XMLHttpRequest as XHR } from 'xmlhttprequest';
+import * as Xmm from 'xmm-client';
+import { rapidMixDocVersion } from '../common/constants';
+import { rapidMixToXmmTrainingSet } from '../common/translators';
+import { knownTargets } from '../common/validators';
+
+const isNode = new Function("try {return this===global;}catch(e){return false;}");
+
+const defaultXmmConfig = {
+  modelType: 'gmm',
+  gaussians: 1,
+  absoluteRegularization: 0.01,
+  relativeRegularization: 0.01,
+  covarianceMode: 'full',
+  hierarchical: true,
+  states: 1,
+  transitionMode: 'leftright',
+  regressionEstimator: 'full',
+  likelihoodWindow: 10,
+};
+
+/**
+ * Representation of a gesture model. A instance of `XmmProcessor` can
+ * train a model from examples and can perform classification and/or
+ * regression depending on the chosen algorithm.
+ *
+ * The training is currently based on the presence of a remote server-side
+ * API, that must be able to process rapidMix compliant JSON formats.
+ *
+ * @param {Object} options - Override default parameters
+ * @param {String} [options.url='https://como.ircam.fr/api/v1/train'] - Url
+ *  of the training end point.
+ */
+class XmmProcessor {
+  constructor({
+    url = 'https://como.ircam.fr/api/v1/train',
+  } = {}) {
+    this.url = url;
+
+    this._config = {};
+    this._decoder = null;
+    this._model = null;
+    this._modelType = null;
+    this._likelihoodWindow = null;
+
+    this.setConfig(defaultXmmConfig);
+    this._updateDecoder();
+  }
+
+  _updateDecoder() {
+    switch (this._modelType) {
+      case 'hhmm':
+        this._decoder = new Xmm.HhmmDecoder(this._likelihoodWindow);
+        break;
+      case 'gmm':
+      default:
+        this._decoder = new Xmm.GmmDecoder(this._likelihoodWindow);
+        break;
+    }
+  }
+
+  /**
+   * Train the model according to the given `TrainingSet`. In this implmentation
+   * the training is performed server-side and rely on an XHR call.
+   *
+   * @param {JSON} trainingSet - RapidMix compliant JSON formatted training set
+   * @return {Promise} - Promise that resolves on the API response (RapidMix API
+   *  response format), when the model is updated.
+   */
+  train(trainingSet) {
+    // REST request / response - RapidMix
+    return new Promise((resolve, reject) => {
+      const trainingData = {
+        docType: 'rapid-mix:rest-api-request',
+        docVersion: '1.0.0',
+        configuration: this.getConfig(),
+        trainingSet: trainingSet
+      };
+
+      const xhr = isNode() ? new XHR() : new XMLHttpRequest();
+
+      xhr.open('post', this.url, true);
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      const errorMsg = 'an error occured while training the model. ';
+
+      if (isNode()) { // XMLHttpRequest module only supports xhr v1
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              const body = JSON.parse(xhr.responseText);
+              this._decoder.setModel(body.model.payload);
+              this._model = body.model;
+              resolve(body);
+            } else {
+              throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
+            }
+          }
+        }
+      } else { // use xhr v2
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            const body = xhr.response;
+            this._decoder.setModel(body.model.payload);
+            this._model = body.model;
+            resolve(body);
+          } else {
+            console.log(xhr.response);
+            throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+          }
+        }
+        xhr.onerror = () => {
+          console.log(xhr.response);
+          throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+        }
+      }
+
+      xhr.send(JSON.stringify(trainingData));
+    });
+  }
+
+  /**
+   * Perform the calssification or the regression of the given vector.
+   *
+   * @param {Float32Array|Array} vector - Input vector for the decoding.
+   * @return {Object} results - Object containing the decoding results.
+   */
+  run(vector) {
+    if (vector instanceof Float32Array) {
+      vector = Array.from(vector);
+    }
+
+    return this._decoder.filter(vector);
+  }
+
+  /**
+   * Reset the inner model's decoding state.
+   */
+  reset() {
+    if (this._decoder.reset) {
+      this._decoder.reset();
+    }
+  }
+
+  /**
+   * Set the model configuration parameters (or a subset of them).
+   *
+   * @param {Object} config - RapidMix configuration object (or payload), or subset of parameters.
+   */
+  setConfig(config = {}) {
+    // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
+    if (config.docType === 'rapid-mix:configuration' &amp;&amp; config.docVersion &amp;&amp; config.payload &amp;&amp;
+        config.target &amp;&amp; config.target.name &amp;&amp; config.target.name.split(':')[0] === 'xmm') {
+      const target = config.target.name.split(':');
+      config = config.payload;
+      if (target.length > 1 &amp;&amp; knownTargets.xmm.indexOf(target[1]) > 0) {
+        if (this._modelType !== target[1]) {
+          this._modelType = target[1];
+          this._updateDecoder();
+        }
+      }
+    }
+
+    if (config.modelType &amp;&amp; knownTargets['xmm'].indexOf(config.modelType) > -1) {
+      const val = config.modelType;
+      const newModel = (val === 'gmr') ? 'gmm' : ((val === 'hhmr') ? 'hhmm' : val);
+
+      if (newModel !== this._modelType) {
+        this._modelType = newModel;
+        this._updateDecoder();
+      }
+    }
+
+    for (let key of Object.keys(config)) {
+      const val = config[key];
+
+      if ((key === 'gaussians' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) ||
+          (key === 'absoluteRegularization' &amp;&amp; typeof val === 'number' &amp;&amp; val > 0) ||
+          (key === 'relativeRegularization' &amp;&amp; typeof val === 'number' &amp;&amp; val > 0) ||
+          (key === 'covarianceMode' &amp;&amp; typeof val === 'string' &amp;&amp;
+            ['full', 'diagonal'].indexOf(val) > -1) ||
+          (key === 'hierarchical' &amp;&amp; typeof val === 'boolean') ||
+          (key === 'states' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) ||
+          (key === 'transitionMode' &amp;&amp; typeof val === 'string' &amp;&amp;
+            ['leftright', 'ergodic'].indexOf(val) > -1) ||
+          (key === 'regressionEstimator' &amp;&amp; typeof val === 'string' &amp;&amp;
+            ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
+        this._config[key] = val;
+      } else if (key === 'likelihoodWindow' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) {
+        this._likelihoodWindow = val;
+
+        if (this._decoder !== null) {
+          this._decoder.setLikelihoodWindow(this._likelihoodWindow);
+        }
+      }
+    }
+  }
+
+  /**
+   * RapidMix compliant configuration object.
+   *
+   * @return {Object} - RapidMix Configuration object.
+   */
+  getConfig() {
+    return {
+      docType: 'rapid-mix:configuration',
+      docVersion: rapidMixDocVersion,
+      target: {
+        name: `xmm:${this._modelType}`,
+        version: '1.0.0'
+      },
+      payload: this._config,
+    };
+  }
+
+  /**
+   * Use the given RapidMix model object for the decoding.
+   *
+   * @param {Object} model - RapidMix Model object.
+   */
+  setModel(model) {
+    this._model = model;
+    this._decoder.setModel(model.payload);
+  }
+
+  /**
+   * Retrieve the model in RapidMix model format.
+   *
+   * @return {Object} - Current RapidMix Model object.
+   */
+  getModel() {
+    return this._model;
+  }
+}
+
+export default XmmProcessor;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rapidMixToXmmTrainingSet">rapidMixToXmmTrainingSet</a></li><li><a href="global.html#xmmToRapidMixModel">xmmToRapidMixModel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Sep 18 2017 16:15:28 GMT+0200 (CEST)
+    
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
