@@ -79,7 +79,7 @@ class TrainingData {
     if (this.currentExample.input.length === 0) {
       this.examples.pop();
     }
-    
+
     this.currentExample = null;
   }
 
@@ -92,7 +92,7 @@ class TrainingData {
 
     this.inputDimension = set.inputDimension;
     this.outputDimension = set.outputDimension;
-    this.data = set.data;
+    this.examples = set.data;
     this.columnNames = set.columnNames;
   }
 
@@ -122,9 +122,9 @@ class TrainingData {
 
   /**
    * Remove all recordings of a certain label.
-   * @param {String} label - The label of the recordings to be removed. 
+   * @param {String} label - The label of the recordings to be removed.
    */
-  deleteRecordingsOfLabel(label) {
+  deleteRecordingsByLabel(label) {
     for (let i = this.examples.length - 1; i >= 0; i--) {
       if (this.examples[i].label === label) {
         this.examples.splice(i, 1);
