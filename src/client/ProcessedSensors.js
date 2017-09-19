@@ -33,27 +33,27 @@ class ProcessedSensors {
     this._emit = this._emit.bind(this);
 
     // create the lfo graph
-    const motionInput = new lfoMotion.source.MotionInput();
+    this.motionInput = new lfoMotion.source.MotionInput();
 
-    const sampler = new lfoMotion.operator.Sampler({
+    this.sampler = new lfoMotion.operator.Sampler({
       frameRate: frameRate,
     });
 
-    const accSelect = new lfo.operator.Select({ indexes: [0, 1, 2] });
+    this.accSelect = new lfo.operator.Select({ indexes: [0, 1, 2] });
 
     // intensity
-    const intensity = new lfoMotion.operator.Intensity({
+    this.intensity = new lfoMotion.operator.Intensity({
       feedback: 0.7,
       gain: 0.07,
     });
 
-    const intensityNormSelect = new lfo.operator.Select({ index: 0 });
+    this.intensityNormSelect = new lfo.operator.Select({ index: 0 });
 
     // boost
-    const intensityClip = new lfo.operator.Clip({ min: 0, max: 1 });
-    const intensityPower = new lfo.operator.Power({ exponent: 0.25 });
-    const powerClip = new lfo.operator.Clip({ min: 0.15, max: 1 });
-    const powerScale = new lfo.operator.Scale({
+    this.intensityClip = new lfo.operator.Clip({ min: 0, max: 1 });
+    this.intensityPower = new lfo.operator.Power({ exponent: 0.25 });
+    this.powerClip = new lfo.operator.Clip({ min: 0.15, max: 1 });
+    this.powerScale = new lfo.operator.Scale({
       inputMin: 0.15,
       inputMax: 1,
       outputMin: 0,
@@ -61,58 +61,58 @@ class ProcessedSensors {
     });
 
     // bandpass
-    const normalizeAcc = new lfo.operator.Multiplier({ factor: 1 / 9.81 });
-    const bandpass = new lfo.operator.Biquad({
+    this.normalizeAcc = new lfo.operator.Multiplier({ factor: 1 / 9.81 });
+    this.bandpass = new lfo.operator.Biquad({
       type: 'bandpass',
       q: 1,
       f0: 5,
     });
 
     // orientation filter
-    const orientation = new lfoMotion.operator.Orientation();
+    this.orientation = new lfoMotion.operator.Orientation();
 
     // merge and output
-    const merger = new lfo.operator.Merger({
+    this.merger = new lfo.operator.Merger({
       frameSizes: [1, 1, 3, 3],
     });
 
-    const bridge = new lfo.sink.Bridge({
+    this.bridge = new lfo.sink.Bridge({
       processFrame: this._emit,
       finalizeStream: this._emit,
     });
 
-    motionInput.connect(sampler);
+    this.motionInput.connect(this.sampler);
     // for intensity and bandpass
-    sampler.connect(accSelect);
+    this.sampler.connect(this.accSelect);
     // intensity branch
-    accSelect.connect(intensity);
-    intensity.connect(intensityNormSelect);
-    intensityNormSelect.connect(merger);
+    this.accSelect.connect(this.intensity);
+    this.intensity.connect(this.intensityNormSelect);
+    this.intensityNormSelect.connect(this.merger);
     // boost branch
-    intensityNormSelect.connect(intensityClip);
-    intensityClip.connect(intensityPower);
-    intensityPower.connect(powerClip);
-    powerClip.connect(powerScale);
-    powerScale.connect(merger);
+    this.intensityNormSelect.connect(this.intensityClip);
+    this.intensityClip.connect(this.intensityPower);
+    this.intensityPower.connect(this.powerClip);
+    this.powerClip.connect(this.powerScale);
+    this.powerScale.connect(this.merger);
     // biquad branch
-    accSelect.connect(normalizeAcc);
-    normalizeAcc.connect(bandpass);
-    bandpass.connect(merger);
+    this.accSelect.connect(this.normalizeAcc);
+    this.normalizeAcc.connect(this.bandpass);
+    this.bandpass.connect(this.merger);
     // orientation
-    sampler.connect(orientation);
-    orientation.connect(merger);
+    this.sampler.connect(this.orientation);
+    this.orientation.connect(this.merger);
 
-    merger.connect(bridge);
+    this.merger.connect(this.bridge);
 
-    this._motionInput = motionInput;
+    // this._motionInput = motionInput;
 
     this._listeners = new Set();
   }
 
   init() {
-    const promise = this._motionInput.init();
+    const promise = this.motionInput.init();
     promise.then(() => {
-      this.frameRate = this._motionInput.streamParams.frameRate;
+      this.frameRate = this.motionInput.streamParams.frameRate;
     });
 
     return promise;
@@ -122,14 +122,14 @@ class ProcessedSensors {
    * Start listening to the sensors
    */
   start() {
-    this._motionInput.start();
+    this.motionInput.start();
   }
 
   /**
    * Stop listening to the sensors
    */
   stop() {
-    this._motionInput.stop();
+    this.motionInput.stop();
   }
 
   /**
