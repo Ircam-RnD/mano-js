@@ -76,11 +76,13 @@ class TrainingData {
    * Stop the current recording example.
    */
   stopRecording() {
-    if (this.currentExample.input.length === 0) {
-      this.examples.pop();
-    }
+    if (this.currentExample !== null) {
 
-    this.currentExample = null;
+      if (this.currentExample.input.length === 0)
+        this.examples.pop();
+
+      this.currentExample = null;
+    }
   }
 
   /**

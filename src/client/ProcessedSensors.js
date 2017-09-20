@@ -67,6 +67,7 @@ class ProcessedSensors {
       q: 1,
       f0: 5,
     });
+    this.bandpassGain = new lfo.operator.Multiplier({ factor: 1 });
 
     // orientation filter
     this.orientation = new lfoMotion.operator.Orientation();
@@ -97,7 +98,8 @@ class ProcessedSensors {
     // biquad branch
     this.accSelect.connect(this.normalizeAcc);
     this.normalizeAcc.connect(this.bandpass);
-    this.bandpass.connect(this.merger);
+    this.bandpass.connect(this.bandpassGain);
+    this.bandpassGain.connect(this.merger);
     // orientation
     this.sampler.connect(this.orientation);
     this.orientation.connect(this.merger);
