@@ -119,7 +119,10 @@ class TrainingData {
    * Clear the whole training set.
    */
   clear() {
+    this.inputDimension = null;
+    this.outputDimension = null;
     this.examples = [];
+    this.currentExample = null;
   }
 
   /**
