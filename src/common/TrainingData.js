@@ -52,7 +52,7 @@ class TrainingData {
    * Add an element to the current recording (if recording is active).
    *
    * @param {Float32Array|Array} inputVector - Input element
-   * @param {Float32Array|Array} outputVector - Output element (for regression)
+   * @param {Float32Array|Array} [outputVector=null] - Output element (for regression)
    */
   addElement(inputVector, outputVector = null) {
     this._checkDimensions(inputVector, outputVector);
@@ -87,6 +87,7 @@ class TrainingData {
 
   /**
    * Sets internal data from another training set.
+   *
    * @param {Object} trainingSet - A rapidMix compliant training set.
    */
   setTrainingSet(trainingSet) {
@@ -116,6 +117,24 @@ class TrainingData {
   }
 
   /**
+   * Return an array of the current training set labels.
+   *
+   * @return {Array.String} - Training set labels.
+   */
+  getTrainingSetLabels() {
+    const labels = [];
+
+    for (let i = 0; i < this.examples.length; i++) {
+      const label = this.examples[i].label;
+
+      if (labels.indexOf(label) === -1)
+        labels.push(label);
+    }
+
+    return labels;
+  }
+
+  /**
    * Clear the whole training set.
    */
   clear() {
@@ -127,6 +146,7 @@ class TrainingData {
 
   /**
    * Remove all recordings of a certain label.
+   *
    * @param {String} label - The label of the recordings to be removed.
    */
   deleteRecordingsByLabel(label) {
@@ -139,6 +159,7 @@ class TrainingData {
 
   /**
    * Remove recordings by index.
+   *
    * @param {Number} index - The index of the recording to be removed.
    */
   deleteRecording(index) {
