@@ -153,9 +153,10 @@ class XmmProcessor {
     // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
     if (config.docType === 'rapid-mix:configuration' && config.docVersion && config.payload &&
         config.target && config.target.name && config.target.name.split(':')[0] === 'xmm') {
+
       const target = config.target.name.split(':');
       config = config.payload;
-      if (target.length > 1 && knownTargets.xmm.indexOf(target[1]) > 0) {
+      if (target.length > 1 && knownTargets.xmm.indexOf(target[1]) > -1) {
         if (this._modelType !== target[1]) {
           this._modelType = target[1];
           this._updateDecoder();
