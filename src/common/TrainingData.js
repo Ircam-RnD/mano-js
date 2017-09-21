@@ -119,7 +119,7 @@ class TrainingData {
   /**
    * Return an array of the current training set labels.
    *
-   * @return {Array.String} - Training set labels.
+   * @return {Array.String} - Training set sorted labels.
    */
   getTrainingSetLabels() {
     const labels = [];
@@ -131,7 +131,7 @@ class TrainingData {
         labels.push(label);
     }
 
-    return labels;
+    return labels.sort();
   }
 
   /**
