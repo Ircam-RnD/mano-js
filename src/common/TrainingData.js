@@ -121,7 +121,7 @@ class TrainingData {
    *
    * @return {Array.String} - Training set sorted labels.
    */
-  getTrainingSetLabels() {
+  getLabels() {
     const labels = [];
 
     for (let i = 0; i < this.examples.length; i++) {
