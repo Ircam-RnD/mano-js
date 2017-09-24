@@ -106,8 +106,6 @@ class ProcessedSensors {
 
     this.merger.connect(this.bridge);
 
-    // this._motionInput = motionInput;
-
     this._listeners = new Set();
   }
 
