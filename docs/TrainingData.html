@@ -34,7 +34,7 @@
     
         <h2>TrainingData</h2>
         
-            <div class="class-description"><p>Manage and format a set of recorded examples, maintain a rapidmix compliant
+            <div class="class-description"><p>Manage and format a set of recorded examples, maintain a RapidMix compliant
 training set.</p></div>
         
     
@@ -306,7 +306,7 @@ processedSensors.init()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line366">line 366</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line346">line 346</a>
     </li></ul></dd>
     
 
@@ -346,7 +346,9 @@ Valid argument combinations are :</p>
 <li>(inputVector)</li>
 <li>(inputVector, outputVector)</li>
 <li>(label, inputVector)</li>
-<li>(label, inputVector, outputVector).</li>
+<li>(label, inputVector, outputVector).
+Meant to be a shortcut to avoid creating examples of length 1
+when adding single elements as examples.</li>
 </ul>
 </div>
 
@@ -414,7 +416,7 @@ Valid argument combinations are :</p>
             
                 <td class="default">
                 
-                    rapidmixDefaultLabel
+                    rapidMixDefaultLabel
                 
                 </td>
             
@@ -546,7 +548,7 @@ Valid argument combinations are :</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line175">line 175</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line177">line 177</a>
     </li></ul></dd>
     
 
@@ -577,14 +579,14 @@ Valid argument combinations are :</p>
 
     
 
-    <h4 class="name" id="addPhrase"><span class="type-signature"></span>addPhrase<span class="signature">(phrase)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addExample"><span class="type-signature"></span>addExample<span class="signature">(example)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Add a phrase to the training set.</p>
+    <p>Add an example to the training set.</p>
 </div>
 
 
@@ -620,7 +622,7 @@ Valid argument combinations are :</p>
 
         <tr>
             
-                <td class="name"><code>phrase</code></td>
+                <td class="name"><code>example</code></td>
             
 
             <td class="type">
@@ -636,7 +638,7 @@ Valid argument combinations are :</p>
 
             
 
-            <td class="description last"><p>A rapidmix formatted phrase.</p></td>
+            <td class="description last"><p>A RapidMix formatted example.</p></td>
         </tr>
 
     
@@ -677,7 +679,138 @@ Valid argument combinations are :</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line225">line 225</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line227">line 227</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="addTrainingSet"><span class="type-signature"></span>addTrainingSet<span class="signature">(trainingSet)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Add all examples from another training set.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>trainingSet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A RapidMix compliant training set.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line243">line 243</a>
     </li></ul></dd>
     
 
@@ -759,7 +892,7 @@ Valid argument combinations are :</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line312">line 312</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line316">line 316</a>
     </li></ul></dd>
     
 
@@ -841,7 +974,7 @@ Valid argument combinations are :</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line296">line 296</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line300">line 300</a>
     </li></ul></dd>
     
 
@@ -903,7 +1036,7 @@ Valid argument combinations are :</p>
 
 
 <div class="description">
-    <p>Return the rapidMix compliant training set in JSON format.</p>
+    <p>Return the RapidMix compliant training set in JSON format.</p>
 </div>
 
 
@@ -947,7 +1080,7 @@ Valid argument combinations are :</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line271">line 271</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line283">line 283</a>
     </li></ul></dd>
     
 
@@ -1002,14 +1135,14 @@ Valid argument combinations are :</p>
 
     
 
-    <h4 class="name" id="removeElementsByLabel"><span class="type-signature"></span>removeElementsByLabel<span class="signature">(label)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="removeExamplesByLabel"><span class="type-signature"></span>removeExamplesByLabel<span class="signature">(label)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Remove all phrases of a certain label.</p>
+    <p>Remove all examples of a certain label.</p>
 </div>
 
 
@@ -1102,7 +1235,7 @@ Valid argument combinations are :</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line344">line 344</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line335">line 335</a>
     </li></ul></dd>
     
 
@@ -1192,7 +1325,7 @@ Valid argument combinations are :</p>
 
             
 
-            <td class="description last"><p>A rapidMix compliant training set.</p></td>
+            <td class="description last"><p>A RapidMix compliant training set.</p></td>
         </tr>
 
     
@@ -1233,7 +1366,7 @@ Valid argument combinations are :</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line257">line 257</a>
+        <a href="common_TrainingData.js.html">common/TrainingData.js</a>, <a href="common_TrainingData.js.html#line264">line 264</a>
     </li></ul></dd>
     
 
@@ -1275,14 +1408,14 @@ Valid argument combinations are :</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Phrase.html">Phrase</a></li><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rapidMixToXmmTrainingSet">rapidMixToXmmTrainingSet</a></li><li><a href="global.html#xmmToRapidMixModel">xmmToRapidMixModel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Example.html">Example</a></li><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rapidMixToXmmTrainingSet">rapidMixToXmmTrainingSet</a></li><li><a href="global.html#xmmToRapidMixModel">xmmToRapidMixModel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
     
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Oct 09 2017 15:25:47 GMT+0200 (CEST)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 12 2017 06:20:39 GMT+0200 (CEST)
     
 </footer>
 

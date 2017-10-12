@@ -111,9 +111,10 @@ class ProcessedSensors {
 
   init() {
     const promise = this.motionInput.init();
-    promise.then(() => {
+    // promise.then(() => {
       this.frameRate = this.motionInput.streamParams.frameRate;
-    });
+    // })
+    // .catch(err => console.error(err.stack));
 
     return promise;
   }

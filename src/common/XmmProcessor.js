@@ -150,6 +150,9 @@ class XmmProcessor {
    * @param {Object} config - RapidMix configuration object (or payload), or subset of parameters.
    */
   setConfig(config = {}) {
+    if (!config)
+      return;
+
     // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
     if (config.docType === 'rapid-mix:configuration' && config.docVersion && config.payload &&
         config.target && config.target.name && config.target.name.split(':')[0] === 'xmm') {
@@ -222,6 +225,19 @@ class XmmProcessor {
    * @param {Object} model - RapidMix Model object.
    */
   setModel(model) {
+    if (!model) {
+      this.model = null;
+      this._decoder.setModel(null);
+      return;
+    }
+
+    const targets = model.target.name.split(':');
+
+    if (targets[0] === 'xmm')
+      this._modelType = targets[1] === 'hhmm' ? targets[1] : 'gmm';
+
+    this._updateDecoder();
+
     this._model = model;
     this._decoder.setModel(model.payload);
   }

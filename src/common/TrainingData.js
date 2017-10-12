@@ -1,4 +1,4 @@
-import { rapidmixDocVersion, rapidmixDefaultLabel } from '../common/constants';
+import { rapidMixDocVersion, rapidMixDefaultLabel } from '../common/constants';
 
 // source : https://stackoverflow.com/questions/15251879/how-to-check-if-a-variable-is-a-typed-array-in-javascript
 const isArray = v => {
@@ -10,7 +10,7 @@ const isArray = v => {
 //================================== PHRASE ==================================//
 
 /**
- * Class modeling a phrase (time series of vectors that may represent a gesture).
+ * Class modeling an example (time series of vectors that may represent a gesture).
  * If no parameters are given, the dimensions will be guessed from the first
  * added element after instantiation of the class and after each call to clear.
  * If parameters are given, they will be used to strictly check any new element,
@@ -21,22 +21,22 @@ const isArray = v => {
  * @param {Number} [outputDimension=null] - If defined, definitive output dimension
  * that will be checked to validate any new element added.
  */
-class Phrase {
+class Example {
   constructor(inputDimension = null, outputDimension = null) {
     if (inputDimension !== null) {
       this.fixedDimensions = true;
       this.inputDimension = inputDimension;
-      this.outputDimension = outpuDimension !== null ? outputDimension : 0;
+      this.outputDimension = outputDimension !== null ? outputDimension : 0;
     } else {
       this.fixedDimensions = false;
     }
 
-    this.label = rapidmixDefaultLabel;
+    this.label = rapidMixDefaultLabel;
     this._init();
   }
 
   /**
-   * Append an element to the current phrase.
+   * Append an element to the current example.
    *
    * @param {Array.Number|Float32Array|Float64Array} inputVector - The input
    * part of the element to add.
@@ -63,14 +63,14 @@ class Phrase {
   }
 
   /**
-   * Reinit the internal variables so that we are ready to record a new phrase.
+   * Reinit the internal variables so that we are ready to record a new example.
    */
   clear() {
     this._init();
   }
 
   /**
-   * Set the phrase's current label.
+   * Set the example's current label.
    *
    * @param {String} label - The new label to assign to the class.
    */
@@ -79,14 +79,14 @@ class Phrase {
   }
 
   /**
-   * Get the phrase in rapidmix format.
+   * Get the example in RapidMix format.
    *
-   * @returns {Object} A rapidmix compliant phrase object.
+   * @returns {Object} A RapidMix compliant example object.
    */
-  getPhrase() {
+  getExample() {
     return {
-      docType: 'rapid-mix:phrase',
-      docVersion: rapidmixDocVersion,
+      docType: 'rapid-mix:example',
+      docVersion: rapidMixDocVersion,
       payload: {
         label: this.label,
         // inputDimension: this.inputDimension,
@@ -99,7 +99,7 @@ class Phrase {
 
   /** @private */
   _init() {
-    if (!fixedDimensions) {
+    if (!this.fixedDimensions) {
       this.inputDimension = null;
       this.outputDimension = null;
     }
@@ -128,7 +128,7 @@ class Phrase {
 //============================== TRAINING DATA ===============================//
 
 /**
- * Manage and format a set of recorded examples, maintain a rapidmix compliant
+ * Manage and format a set of recorded examples, maintain a RapidMix compliant
  * training set.
  *
  * @param {Number} [inputDimension=null] - Input dimension
@@ -151,7 +151,7 @@ class TrainingData {
     if (inputDimension !== null) {
       this.fixedDimensions = true;
       this.inputDimension = inputDimension;
-      this.outputDimension = outpuDimension !== null ? outputDimension : 0;
+      this.outputDimension = outputDimension !== null ? outputDimension : 0;
     } else {
       this.fixedDimensions = false;
     }
@@ -167,15 +167,17 @@ class TrainingData {
    * - (inputVector, outputVector)
    * - (label, inputVector)
    * - (label, inputVector, outputVector).
+   * Meant to be a shortcut to avoid creating examples of length 1
+   * when adding single elements as examples.
    *
-   * @param {String} [label=rapidmixDefaultLabel] - The label of the new element.
+   * @param {String} [label=rapidMixDefaultLabel] - The label of the new element.
    * @param {Array.Number|Float32Array|Float64Array} inputVector - The input part of the new element.
    * @param {Array.Number|Float32Array|Float64Array} [outputVector=null] - The output part of the new element.
    */
   addElement(...args) {
     args = args.length > 3 ? args.slice(0, 3) : args;
 
-    let label = rapidmixDefaultLabel;
+    let label = rapidMixDefaultLabel;
     let inputVector = null;
     let outputVector = null;
 
@@ -211,40 +213,45 @@ class TrainingData {
         break;
     }
 
-    const p = new Phrase();
-    p.setLabel(label);
-    p.addElement(inputVector, outputVector);
-    this.addPhrase(p.getPhrase());
+    const e = new Example();
+    e.setLabel(label);
+    e.addElement(inputVector, outputVector);
+    this.addPhrase(e.getExample());
   }
 
   /**
-   * Add a phrase to the training set.
+   * Add an example to the training set.
    *
-   * @param {Object} phrase - A rapidmix formatted phrase.
+   * @param {Object} example - A RapidMix formatted example.
    */
-  addPhrase(phrase) {
-    const p = phrase.payload;
-    this._checkDimensions(p.input[0], p.output[0]);
+  addExample(example) {
+    const e = example.payload;
+    this._checkDimensions(e.input[0], e.output[0]);
 
     this.data.push({
-      label: p.label,
-      input: p.input,
-      output: p.output,
+      label: e.label,
+      input: e.input,
+      output: e.output,
     });
   }
 
+  /**
+   * Add all examples from another training set.
+   *
+   * @param {Object} trainingSet - A RapidMix compliant training set.
+   */
   addTrainingSet(trainingSet) {
-    const phrases = trainingSet.payload.data;
-    let p = phrases[0];
-    this._checkDimensions(p.input[0], p.output[0]);
+    const examples = trainingSet.payload.data;
+    let e = examples[0];
+    this._checkDimensions(e.input[0], e.output[0]);
 
-    for (let i = 0; i < phrases.length; i++) {
-      p = phrases[i];
+    for (let i = 0; i < examples.length; i++) {
+      e = examples[i];
 
       this.data.push({
-        label: p.label,
-        input: p.input,
-        output: p.output,
+        label: e.label,
+        input: e.input,
+        output: e.output,
       });
     }
   }
@@ -252,9 +259,14 @@ class TrainingData {
   /**
    * Sets internal data from another training set.
    *
-   * @param {Object} trainingSet - A rapidMix compliant training set.
+   * @param {Object} trainingSet - A RapidMix compliant training set.
    */
   setTrainingSet(trainingSet) {
+    if (!trainingSet) {
+      this._init();
+      return;
+    }
+
     const set = trainingSet.payload;
 
     this.inputDimension = set.inputDimension;
@@ -264,19 +276,11 @@ class TrainingData {
   }
 
   /**
-   * Return the rapidMix compliant training set in JSON format.
+   * Return the RapidMix compliant training set in JSON format.
    *
    * @return {Object} - Training set.
    */
-  getTrainingSet(fragmented = false) {
-    // const fragments = [];
-
-    // for (let i = 0; i < this.data.length; i++) {
-    //   if (fragmented) {
-    //     fragments.push(this.data[i]);
-    //   }
-    // }
-
+  getTrainingSet() {
     return {
       docType: 'rapid-mix:training-set',
       docVersion: rapidMixDocVersion,
@@ -315,7 +319,7 @@ class TrainingData {
 
   /** @private */
   _init() {
-    if (!fixedDimensions) {
+    if (!this.fixedDimensions) {
       this.inputDimension = null;
       this.outputDimension = null;
     }
@@ -323,42 +327,18 @@ class TrainingData {
     this.data = [];
   }
 
-  /***
-   * Remove all recordings of a certain label.
-   *
-   * @param {String} label - The label of the recordings to be removed.
-   */
-  // deleteRecordingsByLabel(label) {
-  //   for (let i = this.examples.length - 1; i >= 0; i--) {
-  //     if (this.examples[i].label === label) {
-  //       this.examples.splice(i, 1);
-  //     }
-  //   }
-  // }
-
   /**
-   * Remove all phrases of a certain label.
+   * Remove all examples of a certain label.
    *
    * @param {String} label - The label of the recordings to be removed.
    */
-  removeElementsByLabel(label) {
+  removeExamplesByLabel(label) {
     for (let i = 0; i < this.data.length; i++) {
       if (this.data[i].label === label) {
         this.data.splice(i, 1);
       }
     }
   }
-
-  /***
-   * Remove recordings by index.
-   *
-   * @param {Number} index - The index of the recording to be removed.
-   */
-  // deleteRecording(index) {
-  //   if (index < this.examples.length && index > 0) {
-  //     this.examples.splice(index, 1);
-  //   }
-  // }
 
   /**
    * Get the number of recordings.
@@ -384,4 +364,4 @@ class TrainingData {
   }
 }
 
-export { Phrase, TrainingData };
+export { Example, TrainingData };

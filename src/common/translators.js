@@ -10,7 +10,7 @@ const xmmToRapidMixTrainingSet = xmmSet => {
 }
 
 /**
- * Convert a RapidMix training set Object to an XMM training Object.
+ * Convert a RapidMix training set Object to an XMM training set Object.
  */
 const rapidMixToXmmTrainingSet = rmSet => {
   const payload = rmSet.payload;
@@ -48,7 +48,7 @@ const rapidMixToXmmTrainingSet = rmSet => {
 /* * * * * * * * * * * * * * * * * Model * * * * * * * * * * * * * * * * * * */
 
 /**
- * Convert a XMM model Object to a RapidMix training Object.
+ * Convert an XMM model Object to a RapidMix model Object.
  */
 const xmmToRapidMixModel = xmmModel => {
   const modelType = xmmModel.configuration.default_parameters.states ? 'hhmm' : 'gmm';
