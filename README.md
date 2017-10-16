@@ -1,4 +1,4 @@
-# iml-motion
+# mano-js
 
 > set of classes targeted at gesture modeling and recognition
 

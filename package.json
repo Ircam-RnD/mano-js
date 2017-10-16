@@ -1,6 +1,5 @@
 {
-  "name": "iml-motion",
-  "version": "1.0.0",
+  "name": "mano-js",
   "description": "set of classes targeted at gesture modelling and recognition",
   "main": "client/index.js",
   "standalone": "imlMotion",
