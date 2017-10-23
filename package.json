@@ -2,7 +2,8 @@
   "name": "mano-js",
   "description": "set of classes targeted at gesture modelling and recognition",
   "main": "client/index.js",
-  "standalone": "imlMotion",
+  "standalone": "mano",
+  "version": "1.0.0",
   "scripts": {
     "bundle": "node ./bin/runner --bundle",
     "doc": "jsdoc -c conf.json",
@@ -13,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ircam-RnD/iml-motion"
+    "url": "https://github.com/Ircam-RnD/mano-js"
   },
   "license": "BSD-3-Clause",
   "dependencies": {
