@@ -1,6 +1,10 @@
 **/.DS_Store
 **/Thumbs.db
 
+# ignore bundled files, only include them into releases
+mano-js.min.js
+mano-js.umd.js
+
 test/
 node_modules/
 npm-debug.log

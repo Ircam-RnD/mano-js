@@ -161,7 +161,7 @@ class TrainingData {
   }
 
   /**
-   * Add an element to the training set.
+   * Add an example of length 1 containing the input element data to the training set.
    * Valid argument combinations are :
    * - (inputVector)
    * - (inputVector, outputVector)
