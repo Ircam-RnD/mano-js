@@ -1,6 +1,6 @@
 {
   "name": "mano-js",
-  "description": "set of classes targeted at gesture modelling and recognition",
+  "description": "set of classes targeted at sensors processing, gesture modelling and recognition",
   "main": "client/index.js",
   "standalone": "mano",
   "version": "1.0.0",
