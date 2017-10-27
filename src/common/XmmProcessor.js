@@ -71,7 +71,7 @@ class XmmProcessor {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
       const trainingData = {
-        docType: 'rapid-mix:rest-api-request',
+        docType: 'rapid-mix:ml:http-request',
         docVersion: '1.0.0',
         configuration: this.getConfig(),
         trainingSet: trainingSet
@@ -128,11 +128,11 @@ class XmmProcessor {
    * @return {Object} results - Object containing the decoding results.
    */
   run(vector) {
-    if (vector instanceof Float32Array) {
+    if (vector instanceof Float32Array || vector instanceof Float64Array) {
       vector = Array.from(vector);
     }
 
-    return this._decoder.filter(vector);
+    return this._decoder.filter(vector, (err, res) => console.log(err, res));
   }
 
   /**
@@ -154,7 +154,7 @@ class XmmProcessor {
       return;
 
     // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
-    if (config.docType === 'rapid-mix:configuration' && config.docVersion && config.payload &&
+    if (config.docType === 'rapid-mix:ml:configuration' && config.docVersion && config.payload &&
         config.target && config.target.name && config.target.name.split(':')[0] === 'xmm') {
 
       const target = config.target.name.split(':');
@@ -209,7 +209,7 @@ class XmmProcessor {
    */
   getConfig() {
     return {
-      docType: 'rapid-mix:configuration',
+      docType: 'rapid-mix:ml:configuration',
       docVersion: rapidMixDocVersion,
       target: {
         name: `xmm:${this._modelType}`,

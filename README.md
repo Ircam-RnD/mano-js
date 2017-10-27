@@ -11,7 +11,7 @@
 ```js
 const processedSensors = new ProcessedSensors();
 const trainingData = new TrainingData(8);
-const xmmProcessor = new XmmProcessor({ apiEndPoint: '/train' });
+const xmmProcessor = new XmmProcessor({ url: '/train' });
 xmmProcessor.setconfig({
   // ...
 });

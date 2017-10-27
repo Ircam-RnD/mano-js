@@ -7,7 +7,7 @@ const isArray = v => {
          Array.isArray(v);
 };
 
-//================================== PHRASE ==================================//
+//================================== EXAMPLE =================================//
 
 /**
  * Class modeling an example (time series of vectors that may represent a gesture).
@@ -216,7 +216,7 @@ class TrainingData {
     const e = new Example();
     e.setLabel(label);
     e.addElement(inputVector, outputVector);
-    this.addPhrase(e.getExample());
+    this.addExample(e.getExample());
   }
 
   /**
@@ -227,6 +227,10 @@ class TrainingData {
   addExample(example) {
     const e = example.payload;
     this._checkDimensions(e.input[0], e.output[0]);
+
+    if (e.input.length === 0) {
+      throw new Error('examples must contain at least one input vector');
+    }
 
     this.data.push({
       label: e.label,
@@ -352,7 +356,7 @@ class TrainingData {
     if (!isArray(inputVector) || (outputVector && !isArray(outputVector))) {
       throw new Error('inputFrame and outputFrame must be arrays');
     }
-    // set this back to true where appropriate if we add removePhrase etc methods
+    // set this back to true where appropriate if we add removeExample etc methods
     if (!this.inputDimension || !this.outputDimension) {
       this.inputDimension = inputVector.length;
       this.outputDimension = outputVector ? outputVector.length : 0;
