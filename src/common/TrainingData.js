@@ -345,6 +345,15 @@ class TrainingData {
   }
 
   /**
+   * Remove example at index.
+   *
+   * @param {Number} index - The index of the example to remove.
+   */
+  removeExampleAtIndex(index) {
+    this.data.splice(index, 1);
+  }
+
+  /**
    * Get the number of recordings.
    */
   get length() {
