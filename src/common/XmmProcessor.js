@@ -107,12 +107,10 @@ class XmmProcessor {
             this._model = body.model;
             resolve(body);
           } else {
-            console.log(xhr.response);
             throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
           }
         }
         xhr.onerror = () => {
-          console.log(xhr.response);
           throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
         }
       }
@@ -132,7 +130,7 @@ class XmmProcessor {
       vector = Array.from(vector);
     }
 
-    return this._decoder.filter(vector, (err, res) => console.log(err, res));
+    return this._decoder.filter(vector);
   }
 
   /**
