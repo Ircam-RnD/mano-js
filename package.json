@@ -22,7 +22,7 @@
     "lfo-motion": "github:ircam-rnd/lfo-motion",
     "waves-lfo": "^1.1.2",
     "xmlhttprequest": "1.8.0",
-    "xmm-client": "github:ircam-rnd/xmm-client#v0.3.2"
+    "xmm-client": "ircam-rnd/xmm-client#v0.3.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

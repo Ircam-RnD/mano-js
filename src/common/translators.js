@@ -54,7 +54,7 @@ const xmmToRapidMixModel = xmmModel => {
   const modelType = xmmModel.configuration.default_parameters.states ? 'hhmm' : 'gmm';
 
   return {
-    docType: 'rapid-mix:model',
+    docType: 'rapid-mix:ml:model',
     docVersion: rapidMixDocVersion,
     target: {
       name: `xmm:${modelType}`,
