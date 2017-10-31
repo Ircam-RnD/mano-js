@@ -20,6 +20,9 @@ import * as translators from '../../../../common/translators';
 const cwd = process.cwd();
 portfinder.basePort = 3000;
 
+const gx = new xmm('gmm');
+const hx = new xmm('hhmm');
+
 portfinder.getPortPromise()
   .then(port => {
     const app = connect();
@@ -54,7 +57,9 @@ portfinder.getPortPromise()
         const algo = config.target.name.split(':')[1];
         const trainingSet = translators.rapidMixToXmmTrainingSet(body.trainingSet);
 
-        const _xmm = new xmm(algo, config.payload);
+        // const _xmm = new xmm(algo, config.payload);
+        const _xmm = algo === 'hhmm' ? hx : gx;
+        _xmm.setConfig(config.payload);
         _xmm.setTrainingSet(trainingSet);
         _xmm.train((err, model) => {
           if (err)

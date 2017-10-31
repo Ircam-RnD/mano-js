@@ -1,4 +1,4 @@
-import { rapidMixDocVersion, rapidMixDefaultLabel } from '../common/constants';
+import { constants as rapidMixConstants } from 'rapid-mix-adapters';
 
 // source : https://stackoverflow.com/questions/15251879/how-to-check-if-a-variable-is-a-typed-array-in-javascript
 const isArray = v => {
@@ -31,7 +31,7 @@ class Example {
       this.fixedDimensions = false;
     }
 
-    this.label = rapidMixDefaultLabel;
+    this.label = rapidMixConstants.rapidMixDefaultLabel;
     this._init();
   }
 
@@ -86,7 +86,7 @@ class Example {
   getExample() {
     return {
       docType: 'rapid-mix:example',
-      docVersion: rapidMixDocVersion,
+      docVersion: rapidMixConstants.rapidMixDocVersion,
       payload: {
         label: this.label,
         // inputDimension: this.inputDimension,
@@ -177,7 +177,7 @@ class TrainingData {
   addElement(...args) {
     args = args.length > 3 ? args.slice(0, 3) : args;
 
-    let label = rapidMixDefaultLabel;
+    let label = rapidMixConstants.rapidMixDefaultLabel;
     let inputVector = null;
     let outputVector = null;
 
@@ -287,7 +287,7 @@ class TrainingData {
   getTrainingSet() {
     return {
       docType: 'rapid-mix:training-set',
-      docVersion: rapidMixDocVersion,
+      docVersion: rapidMixConstants.rapidMixDocVersion,
       payload: {
         inputDimension: this.inputDimension,
         outputDimension: this.outputDimension,

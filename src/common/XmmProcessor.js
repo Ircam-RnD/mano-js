@@ -1,10 +1,13 @@
 import { XMLHttpRequest as XHR } from 'xmlhttprequest';
 import * as Xmm from 'xmm-client';
-import { rapidMixDocVersion } from '../common/constants';
-import { rapidMixToXmmTrainingSet } from '../common/translators';
-import { knownTargets } from '../common/validators';
+import { constants as rapidMixConstants } from 'rapid-mix-adapters';
+// import { translators as rapidMixTranslators } from 'rapid-mix-adapters';
 
 const isNode = new Function("try {return this===global;}catch(e){return false;}");
+
+const knownTargets = {
+  xmm: [ 'gmm', 'gmr', 'hhmm', 'hhmr' ]
+};
 
 const defaultXmmConfig = {
   modelType: 'gmm',
@@ -72,7 +75,7 @@ class XmmProcessor {
     return new Promise((resolve, reject) => {
       const trainingData = {
         docType: 'rapid-mix:ml:http-request',
-        docVersion: '1.0.0',
+        docVersion: rapidMixConstants.rapidMixDocVersion,
         configuration: this.getConfig(),
         trainingSet: trainingSet
       };
@@ -208,7 +211,7 @@ class XmmProcessor {
   getConfig() {
     return {
       docType: 'rapid-mix:ml:configuration',
-      docVersion: rapidMixDocVersion,
+      docVersion: rapidMixConstants.rapidMixDocVersion,
       target: {
         name: `xmm:${this._modelType}`,
         version: '1.0.0'
