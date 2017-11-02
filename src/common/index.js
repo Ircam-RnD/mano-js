@@ -1,14 +1,3 @@
-export { Example, TrainingData } from './TrainingData';
+export { default as Example } from './Example';
+export { default as TrainingData } from './TrainingData';
 export { default as XmmProcessor } from './XmmProcessor';
-
-// export {
-//   rapidMixToXmmTrainingSet,
-//   xmmToRapidMixTrainingSet,
-//   xmmToRapidMixModel,
-//   rapidMixToXmmModel,
-// } from './translators';
-
-// export {
-//   rapidMixDocVersion,
-//   rapidMixDefaultLabel,
-// } from './constants';
