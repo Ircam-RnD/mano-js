@@ -337,11 +337,7 @@ class TrainingData {
    * @param {String} label - The label of the recordings to be removed.
    */
   removeExamplesByLabel(label) {
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.data[i].label === label) {
-        this.data.splice(i, 1);
-      }
-    }
+    this.data = this.data.filter(datum => datum.label !== label);
   }
 
   /**
