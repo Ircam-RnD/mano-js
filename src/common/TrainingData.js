@@ -1,4 +1,5 @@
 import { constants as rapidMixConstants } from 'rapid-mix-adapters';
+import Example from './Example';
 
 // source : https://stackoverflow.com/questions/15251879/how-to-check-if-a-variable-is-a-typed-array-in-javascript
 const isArray = v => {

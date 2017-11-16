@@ -5,6 +5,6 @@
 mano-js.min.js
 mano-js.umd.js
 
-test/
+# test/
 node_modules/
 npm-debug.log
