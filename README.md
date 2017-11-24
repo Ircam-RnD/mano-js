@@ -1,10 +1,20 @@
-# mano-js
+# `mano-js`
 
-> set of classes targeted at gesture modeling and recognition
+> `mano-js` is a library targeted at sensor processing  and gesture 
+> modeling and recognition. The library is designed to offer a high-level 
+> client-side wrapper of [waves-lfo](https://github.com/wavesjs/waves-lfo), 
+> [lfo-motion](https://github.com/ircam-rnd/lfo-motion), 
+> [xmm-client](https://github.com/Ircam-RnD/xmm-client). 
 
-## Todos
+## Overview
 
-- define minimal set of parameters that should be exposed
+![scheme](https://cdn.rawgit.com/ircam-rnd/mano-js/master/resources/overview.png)
+
+## Install
+
+```sh
+npm install [--save --save-exact] ircam-rnd/mano-js
+```
 
 ## Example
 
@@ -12,6 +22,7 @@
 const processedSensors = new ProcessedSensors();
 const trainingData = new TrainingData(8);
 const xmmProcessor = new XmmProcessor({ url: '/train' });
+
 xmmProcessor.setconfig({
   // ...
 });
@@ -38,3 +49,13 @@ function run() {
   }
 }
 ```
+
+## Server-side considerations
+
+By default, the training is achieved by calling the dedicated service available at `https://como.ircam.fr/api/v1/train`, however a similar service can be simply deployed by using the [xmm-node](Ircam-RnD/xmm-node) and [rapid-mix adapters](https://github.com/Ircam-RnD/rapid-mix-adapters) librairies.
+
+An concrete example of such solution is available in `examples/mano-js-example`.
+
+## Acknowledgements
+
+The library as been developped at [Ircam - Centre Pompidou](https://www.ircam.fr/) by Joseph Larralde and Benjamin Matuszewski in the framework of the EU H2020 project Rapid-Mix.
