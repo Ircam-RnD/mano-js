@@ -104,8 +104,8 @@ class Example {
    */
   toJSON() {
     return {
-      docType: 'rapid-mix:example',
-      docVersion: rapidMixConstants.rapidMixDocVersion,
+      docType: 'rapid-mix:ml-example',
+      docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
       payload: {
         label: this.label,
         // inputDimension: this.inputDimension,

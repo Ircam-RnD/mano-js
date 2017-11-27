@@ -109,7 +109,7 @@ class XmmProcessor {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
       const trainingData = {
-        docType: 'rapid-mix:ml:http-request',
+        docType: 'rapid-mix:ml-http-request',
         docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
         configuration: this.getConfig(),
         trainingSet: trainingSet
@@ -178,7 +178,7 @@ class XmmProcessor {
    */
   getConfig() {
     return {
-      docType: 'rapid-mix:ml:configuration',
+      docType: 'rapid-mix:ml-configuration',
       docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
       target: {
         name: `xmm:${this._modelType}`,
@@ -198,7 +198,7 @@ class XmmProcessor {
       return;
 
     // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
-    if (config.docType === 'rapid-mix:ml:configuration' && config.docVersion && config.payload &&
+    if (config.docType === 'rapid-mix:ml-configuration' && config.docVersion && config.payload &&
         config.target && config.target.name && config.target.name.split(':')[0] === 'xmm') {
 
       const target = config.target.name.split(':');

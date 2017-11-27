@@ -134,7 +134,7 @@ class TrainingSet {
    */
   toJSON() {
     return {
-      docType: 'rapid-mix:training-set',
+      docType: 'rapid-mix:ml-training-set',
       docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
       payload: {
         inputDimension: this.inputDimension,
