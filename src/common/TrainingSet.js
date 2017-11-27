@@ -18,16 +18,24 @@ const isArray = v => {
  *  (if `null`, is guessed from the first recorded element).
  *
  * @example
- * import { ProcessedSensors, TrainingData } from 'iml-motion';
+ * import * as mano from 'mano-js/client';
  *
- * const processedSensors = new ProcessedSensors();
- * const trainingData = new TrainingData(8);
+ * const example = new mano.Example();
+ * const trainingSet = new mano.TrainingSet();
+ * const xmmProcessor = new mano.XmmProcesssor();
  *
- * processedSensors.addListener(trainingData.addElement);
- * processedSensors.init()
- *   .then(() => processedSensors.start());
+ * example.setLabel('test');
+ * example.addElement([0, 1, 2, 3]);
+ * const rapidMixJsonExample = example.toJSON();
+ *
+ * trainingSet.addExample(rapidMixJsonExample);
+ * const rapidMixJsonTrainingSet = trainingSet.toJSON();
+ *
+ * xmmProcessor
+ *   .train(rapidMixJsonTrainingSet)
+ *   .then(() => { ... });
  */
-class TrainingData {
+class TrainingSet {
   constructor(inputDimension = null, outputDimension = null, columnNames = []) {
     if (inputDimension !== null) {
       this.fixedDimensions = true;
@@ -38,72 +46,32 @@ class TrainingData {
     }
 
     this.columnNames = columnNames;
-    this._init();
+    this.clear();
   }
 
   /**
-   * Add an example of length 1 containing the input element data to the training set.
-   * Valid argument combinations are :
-   * - (inputVector)
-   * - (inputVector, outputVector)
-   * - (label, inputVector)
-   * - (label, inputVector, outputVector).
-   * Meant to be a shortcut to avoid creating examples of length 1
-   * when adding single elements as examples.
-   *
-   * @param {String} [label=rapidMixDefaultLabel] - The label of the new element.
-   * @param {Array.Number|Float32Array|Float64Array} inputVector - The input part of the new element.
-   * @param {Array.Number|Float32Array|Float64Array} [outputVector=null] - The output part of the new element.
+   * Get the number of examples.
    */
-  addElement(...args) {
-    args = args.length > 3 ? args.slice(0, 3) : args;
+  get length() {
+    return this.data.length;
+  }
 
-    let label = rapidMixConstants.rapidMixDefaultLabel;
-    let inputVector = null;
-    let outputVector = null;
-
-    switch (args.length) {
-      case 0:
-        throw new Error('addElement needs at least an array as argument');
-        break;
-      case 1:
-        if (isArray(args[0]))
-          inputVector = args[0];
-        else
-          throw new Error('single argument must be an array');
-        break;
-      case 2:
-        if (typeof args[0] === 'string' && isArray(args[1])) {
-          label = args[0];
-          inputVector = args[1];
-        } else if (isArray(args[0]) && isArray(args[1])) {
-          inputVector = args[0];
-          outputVector = args[1];
-        } else {
-          throw new Error('two arguments can only be either label and inputVector, or inputVector and outputVector');
-        }
-        break;
-      case 3:
-        if (typeof args[0] === 'string' && isArray(args[1]) && isArray(args[2])) {
-          label = args[0];
-          inputVector = args[1];
-          outputVector = args[2];
-        } else {
-          throw new Error('three arguments must be label, inputVector and outputVector');
-        }
-        break;
+  /**
+   * Clear the training set.
+   */
+  clear() {
+    if (!this.fixedDimensions) {
+      this.inputDimension = null;
+      this.outputDimension = null;
     }
 
-    const e = new Example();
-    e.setLabel(label);
-    e.addElement(inputVector, outputVector);
-    this.addExample(e.getExample());
+    this.data = [];
   }
 
   /**
    * Add an example to the training set.
    *
-   * @param {Object} example - A RapidMix formatted example.
+   * @param {JSON} example - A RapidMix formatted example.
    */
   addExample(example) {
     const e = example.payload;
@@ -121,9 +89,9 @@ class TrainingData {
   }
 
   /**
-   * Add all examples from another training set.
+   * Add all examples from another RapidMix JSON training set.
    *
-   * @param {Object} trainingSet - A RapidMix compliant training set.
+   * @param {JSON} trainingSet - A RapidMix compliant training set.
    */
   addTrainingSet(trainingSet) {
     const examples = trainingSet.payload.data;
@@ -142,15 +110,14 @@ class TrainingData {
   }
 
   /**
-   * Sets internal data from another training set.
+   * Initialize from another RapidMix JSON training set. If `null`, clear the
+   * trainingSet.
    *
-   * @param {Object} trainingSet - A RapidMix compliant training set.
+   * @param {JSON} trainingSet - A RapidMix compliant training set.
    */
-  setTrainingSet(trainingSet) {
-    if (!trainingSet) {
-      this._init();
-      return;
-    }
+  setTrainingSet(trainingSet = null) {
+    if (trainingSet === null)
+      return this.clear();
 
     const set = trainingSet.payload;
 
@@ -163,9 +130,9 @@ class TrainingData {
   /**
    * Return the RapidMix compliant training set in JSON format.
    *
-   * @return {Object} - Training set.
+   * @return {JSON} - Training set.
    */
-  getTrainingSet() {
+  toJSON() {
     return {
       docType: 'rapid-mix:training-set',
       docVersion: rapidMixConstants.rapidMixDocVersion,
@@ -196,23 +163,6 @@ class TrainingData {
   }
 
   /**
-   * Clear the whole training set.
-   */
-  clear() {
-    this._init();
-  }
-
-  /** @private */
-  _init() {
-    if (!this.fixedDimensions) {
-      this.inputDimension = null;
-      this.outputDimension = null;
-    }
-
-    this.data = [];
-  }
-
-  /**
    * Remove all examples of a certain label.
    *
    * @param {String} label - The label of the recordings to be removed.
@@ -230,13 +180,6 @@ class TrainingData {
     this.data.splice(index, 1);
   }
 
-  /**
-   * Get the number of recordings.
-   */
-  get length() {
-    return this.data.length;
-  }
-
   /** @private */
   _checkDimensions(inputVector, outputVector) {
     if (!isArray(inputVector) || (outputVector && !isArray(outputVector))) {
@@ -248,10 +191,10 @@ class TrainingData {
       this.outputDimension = outputVector ? outputVector.length : 0;
       // this._empty = false;
     } else if (inputVector.length != this.inputDimension ||
-              outputVector.length != this.outputDimension) {
+               outputVector.length != this.outputDimension) {
       throw new Error('dimensions mismatch');
     }
   }
 }
 
-export default TrainingData;
+export default TrainingSet;

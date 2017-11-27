@@ -8,16 +8,29 @@ const isArray = v => {
 };
 
 /**
- * Class modeling an example (time series of vectors that may represent a gesture).
+ * Class that represents a training example (e.g. time serie of vectors
+ * that represents a gesture).
  * If no parameters are given, the dimensions will be guessed from the first
  * added element after instantiation of the class and after each call to clear.
  * If parameters are given, they will be used to strictly check any new element,
  * anytime.
  *
  * @param {Number} [inputDimension=null] - If defined, definitive input dimension
- * that will be checked to validate any new element added.
+ *    that will be checked to validate any new element added.
  * @param {Number} [outputDimension=null] - If defined, definitive output dimension
- * that will be checked to validate any new element added.
+ *    that will be checked to validate any new element added.
+ *
+ * @example
+ * import * as mano from 'mano-js/client';
+ *
+ * const example = new mano.Example();
+ * const trainingSet = new mano.TrainingSet();
+ *
+ * example.setLabel('test');
+ * example.addElement([0, 1, 2, 3]);
+ * const rapidMixJsonExample = example.toJSON();
+ *
+ * trainingSet.addExample(rapidMixJsonExample);
  */
 class Example {
   constructor(inputDimension = null, outputDimension = null) {
@@ -30,11 +43,35 @@ class Example {
     }
 
     this.label = rapidMixConstants.rapidMixDefaultLabel;
-    this._init();
+    this.clear();
+
+    this.addElement = this.addElement.bind(this);
   }
 
   /**
-   * Append an element to the current example.
+   * Clear the internal variables so that we are ready to record a new example.
+   */
+  clear() {
+    if (!this.fixedDimensions) {
+      this.inputDimension = null;
+      this.outputDimension = null;
+    }
+
+    this.input = [];
+    this.output = [];
+  }
+
+  /**
+   * Set the example's current label.
+   *
+   * @param {String} label - The new label to assign to the class.
+   */
+  setLabel(label) {
+    this.label = label;
+  }
+
+  /**
+   * Add an element to the current example.
    *
    * @param {Array.Number|Float32Array|Float64Array} inputVector - The input
    * part of the element to add.
@@ -61,27 +98,11 @@ class Example {
   }
 
   /**
-   * Reinit the internal variables so that we are ready to record a new example.
-   */
-  clear() {
-    this._init();
-  }
-
-  /**
-   * Set the example's current label.
-   *
-   * @param {String} label - The new label to assign to the class.
-   */
-  setLabel(label) {
-    this.label = label;
-  }
-
-  /**
-   * Get the example in RapidMix format.
+   * Get the example in RapidMix JSON format.
    *
    * @returns {Object} A RapidMix compliant example object.
    */
-  getExample() {
+  toJSON() {
     return {
       docType: 'rapid-mix:example',
       docVersion: rapidMixConstants.rapidMixDocVersion,
@@ -93,17 +114,6 @@ class Example {
         output: this.output.slice(0),
       }
     };
-  }
-
-  /** @private */
-  _init() {
-    if (!this.fixedDimensions) {
-      this.inputDimension = null;
-      this.outputDimension = null;
-    }
-
-    this.input = [];
-    this.output = [];
   }
 
   /** @private */

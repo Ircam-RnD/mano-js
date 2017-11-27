@@ -46,11 +46,13 @@ class XmmProcessor {
     this._modelType = null;
     this._likelihoodWindow = null;
 
+    this.run = this.run.bind(this);
+
     this.setConfig(defaultXmmConfig);
-    this._updateDecoder();
+    this._setDecoder();
   }
 
-  _updateDecoder() {
+  _setDecoder() {
     switch (this._modelType) {
       case 'hhmm':
         this._decoder = new Xmm.HhmmDecoder(this._likelihoodWindow);
@@ -60,6 +62,14 @@ class XmmProcessor {
         this._decoder = new Xmm.GmmDecoder(this._likelihoodWindow);
         break;
     }
+  }
+
+  /**
+   * Reset the model's temporal decoding state. Is only valid on `hhmm` decoder.
+   */
+  reset() {
+    if (this._decoder.reset)
+      this._decoder.reset();
   }
 
   /**
@@ -137,12 +147,20 @@ class XmmProcessor {
   }
 
   /**
-   * Reset the inner model's decoding state.
+   * RapidMix compliant configuration object.
+   *
+   * @return {Object} - RapidMix Configuration object.
    */
-  reset() {
-    if (this._decoder.reset) {
-      this._decoder.reset();
-    }
+  getConfig() {
+    return {
+      docType: 'rapid-mix:ml:configuration',
+      docVersion: rapidMixConstants.rapidMixDocVersion,
+      target: {
+        name: `xmm:${this._modelType}`,
+        version: '1.0.0'
+      },
+      payload: this._config,
+    };
   }
 
   /**
@@ -163,7 +181,7 @@ class XmmProcessor {
       if (target.length > 1 && knownTargets.xmm.indexOf(target[1]) > -1) {
         if (this._modelType !== target[1]) {
           this._modelType = target[1];
-          this._updateDecoder();
+          this._setDecoder();
         }
       }
     }
@@ -174,7 +192,7 @@ class XmmProcessor {
 
       if (newModel !== this._modelType) {
         this._modelType = newModel;
-        this._updateDecoder();
+        this._setDecoder();
       }
     }
 
@@ -204,20 +222,12 @@ class XmmProcessor {
   }
 
   /**
-   * RapidMix compliant configuration object.
+   * Retrieve the model in RapidMix model format.
    *
-   * @return {Object} - RapidMix Configuration object.
+   * @return {Object} - Current RapidMix Model object.
    */
-  getConfig() {
-    return {
-      docType: 'rapid-mix:ml:configuration',
-      docVersion: rapidMixConstants.rapidMixDocVersion,
-      target: {
-        name: `xmm:${this._modelType}`,
-        version: '1.0.0'
-      },
-      payload: this._config,
-    };
+  getModel() {
+    return this._model;
   }
 
   /**
@@ -233,23 +243,19 @@ class XmmProcessor {
     }
 
     const targets = model.target.name.split(':');
+    const lib = targets[0];
+    const algo = targets[1];
 
-    if (targets[0] === 'xmm')
-      this._modelType = targets[1] === 'hhmm' ? targets[1] : 'gmm';
+    if (lib === 'xmm') {
+      this._modelType = algo === 'hhmm' ? algo : 'gmm';
 
-    this._updateDecoder();
+      this._setDecoder();
 
-    this._model = model;
-    this._decoder.setModel(model.payload);
-  }
-
-  /**
-   * Retrieve the model in RapidMix model format.
-   *
-   * @return {Object} - Current RapidMix Model object.
-   */
-  getModel() {
-    return this._model;
+      this._model = model;
+      this._decoder.setModel(model.payload);
+    } else {
+      throw new Error(`Invalid type ${lib}`);
+    }
   }
 }
 
