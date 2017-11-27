@@ -19,35 +19,32 @@ npm install [--save --save-exact] ircam-rnd/mano-js
 ## Example
 
 ```js
-const processedSensors = new ProcessedSensors();
-const trainingData = new TrainingData(8);
-const xmmProcessor = new XmmProcessor({ url: '/train' });
+import * as mano from 'mano-js/client';
 
-xmmProcessor.setconfig({
-  // ...
-});
+const processedSensors = new mano.ProcessedSensors();
+const example = new mano.Example();
+const trainingSet = new mano.TrainingSet();
+const xmmProcessor = new mano.XmmProcesssor();
 
-processedSensors.init()
-  .then(run)
-  .catch(err => console.error(err.stack));
+example.setLabel('test');
+processedSensors.addListener(example.addElement);
 
-function run() {
-  if (record) {
-    trainingData.startRecording(label);
-    processedSensors.removeListener(xmmProcessor.run); // optionnal
-    processedSensors.addListener(trainingData.addElement);
-    processedSensors.start();
-  } else if (train) {
-    processedSensors.stop();
-    training.stopRecording();
-    const trainingSet = trainingData.getTrainingSet();
-    xmmProcessor.train(trainingSet);
-  } else if (play) {
-    processedSensors.removeListener(trainingData.addElement);
-    processedSensors.addListener(xmmProcessor.run);
-    processedSensors.start();
-  }
-}
+// later...
+processedSensors.removeListener(example.addElement);
+const rapidMixJsonExample = example.toJSON();
+
+trainingSet.addExample(rapidMixJsonExample);
+const rapidMixJsonTrainingSet = trainingSet.toJSON();
+
+xmmProcessor
+  .train(rapidMixJsonTrainingSet)
+  .then(() => {
+    // start decoding
+    processedSensors.addListener(data => {
+      const results = xmmProcessor.run(data);
+      console.log(results);
+    });
+  });
 ```
 
 ## Server-side considerations

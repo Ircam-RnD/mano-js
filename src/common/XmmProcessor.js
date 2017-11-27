@@ -33,6 +33,34 @@ const defaultXmmConfig = {
  * @param {Object} options - Override default parameters
  * @param {String} [options.url='https://como.ircam.fr/api/v1/train'] - Url
  *  of the training end point.
+ *
+ * @example
+ * import * as mano from 'mano-js/client';
+ *
+ * const processedSensors = new mano.ProcessedSensors();
+ * const example = new mano.Example();
+ * const trainingSet = new mano.TrainingSet();
+ * const xmmProcessor = new mano.XmmProcesssor();
+ *
+ * example.setLabel('test');
+ * processedSensors.addListener(example.addElement);
+ *
+ * // later
+ * processedSensors.removeListener(example.addElement);
+ * const rapidMixJsonExample = example.toJSON();
+ *
+ * trainingSet.addExample(rapidMixJsonExample);
+ * const rapidMixJsonTrainingSet = trainingSet.toJSON();
+ *
+ * xmmProcessor
+ *   .train(rapidMixJsonTrainingSet)
+ *   .then(() => {
+ *     // start decoding
+ *     processedSensors.addListener(data => {
+ *       const results = xmmProcessor.run(data);
+ *       console.log(results);
+ *     });
+ *   });
  */
 class XmmProcessor {
   constructor({
@@ -45,8 +73,6 @@ class XmmProcessor {
     this._model = null;
     this._modelType = null;
     this._likelihoodWindow = null;
-
-    this.run = this.run.bind(this);
 
     this.setConfig(defaultXmmConfig);
     this._setDecoder();

@@ -18,6 +18,7 @@
     "connect-route": "^0.1.5",
     "ejs-template": "^0.1.0",
     "osc": "^2.2.0",
+    "rapid-mix-adapters": "github:Ircam-RnD/rapid-mix-adapters",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
     "source-map-support": "^0.4.15",
