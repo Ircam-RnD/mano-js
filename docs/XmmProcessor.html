@@ -218,7 +218,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line37">line 37</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -241,6 +241,36 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>import * as mano from 'mano-js/client';
+
+const processedSensors = new mano.ProcessedSensors();
+const example = new mano.Example();
+const trainingSet = new mano.TrainingSet();
+const xmmProcessor = new mano.XmmProcesssor();
+
+example.setLabel('test');
+processedSensors.addListener(example.addElement);
+
+// later
+processedSensors.removeListener(example.addElement);
+const rapidMixJsonExample = example.toJSON();
+
+trainingSet.addExample(rapidMixJsonExample);
+const rapidMixJsonTrainingSet = trainingSet.toJSON();
+
+xmmProcessor
+  .train(rapidMixJsonTrainingSet)
+  .then(() => {
+    // start decoding
+    processedSensors.addListener(data => {
+      const results = xmmProcessor.run(data);
+      console.log(results);
+    });
+  });</code></pre>
 
 
 
@@ -318,7 +348,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line211">line 211</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line180">line 180</a>
     </li></ul></dd>
     
 
@@ -424,7 +454,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line251">line 251</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line255">line 255</a>
     </li></ul></dd>
     
 
@@ -486,7 +516,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
 
 
 <div class="description">
-    <p>Reset the inner model's decoding state.</p>
+    <p>Reset the model's temporal decoding state. Is only valid on <code>hhmm</code> decoder.</p>
 </div>
 
 
@@ -530,7 +560,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line142">line 142</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -664,7 +694,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line131">line 131</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -817,7 +847,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line153">line 153</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -948,7 +978,7 @@ API, that must be able to process rapidMix compliant JSON formats.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line228">line 228</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line264">line 264</a>
     </li></ul></dd>
     
 
@@ -1080,7 +1110,7 @@ the training is performed server-side and rely on an XHR call.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line73">line 73</a>
+        <a href="common_XmmProcessor.js.html">common/XmmProcessor.js</a>, <a href="common_XmmProcessor.js.html#line109">line 109</a>
     </li></ul></dd>
     
 
@@ -1147,14 +1177,14 @@ response format), when the model is updated.</li>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Example.html">Example</a></li><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingData.html">TrainingData</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Example.html">Example</a></li><li><a href="ProcessedSensors.html">ProcessedSensors</a></li><li><a href="TrainingSet.html">TrainingSet</a></li><li><a href="XmmProcessor.html">XmmProcessor</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
     
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Nov 06 2017 15:43:04 GMT+0100 (CET)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Nov 27 2017 13:07:35 GMT+0100 (CET)
     
 </footer>
 
