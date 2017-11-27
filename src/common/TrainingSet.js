@@ -1,4 +1,4 @@
-import { constants as rapidMixConstants } from 'rapid-mix-adapters';
+import rapidMixAdapters from 'rapid-mix-adapters';
 import Example from './Example';
 
 // source : https://stackoverflow.com/questions/15251879/how-to-check-if-a-variable-is-a-typed-array-in-javascript
@@ -135,7 +135,7 @@ class TrainingSet {
   toJSON() {
     return {
       docType: 'rapid-mix:training-set',
-      docVersion: rapidMixConstants.rapidMixDocVersion,
+      docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
       payload: {
         inputDimension: this.inputDimension,
         outputDimension: this.outputDimension,

@@ -1,4 +1,4 @@
-import { constants as rapidMixConstants } from 'rapid-mix-adapters';
+import rapidMixAdapters from 'rapid-mix-adapters';
 
 // source : https://stackoverflow.com/questions/15251879/how-to-check-if-a-variable-is-a-typed-array-in-javascript
 const isArray = v => {
@@ -42,7 +42,7 @@ class Example {
       this.fixedDimensions = false;
     }
 
-    this.label = rapidMixConstants.rapidMixDefaultLabel;
+    this.label = rapidMixAdapters.RAPID_MIX_DEFAULT_LABEL;
     this.clear();
 
     this.addElement = this.addElement.bind(this);
