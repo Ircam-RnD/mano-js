@@ -1,0 +1,52 @@
+{
+  "name": "soundworks-template",
+  "authors": [
+    "Benjamin Matuszewski",
+    "Sébastien Robaszkiewicz",
+    "Norbert Schnell"
+  ],
+  "description": "Soundworks application template.",
+  "license": "BSD-3-Clause",
+  "version": "2.0.0",
+  "scripts": {
+    "minify": "node ./bin/runner --minify",
+    "prewatch": "npm run transpile",
+    "start": "node ./bin/runner --start",
+    "transpile": "node ./bin/runner --transpile",
+    "watch": "node ./bin/runner --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/collective-soundworks/soundworks-template"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.6.1",
+    "body-parser": "^1.18.2",
+    "chalk": "^2.3.0",
+    "connect": "^3.6.5",
+    "connect-route": "^0.1.5",
+    "debug": "^2.6.4",
+    "express": "^4.16.2",
+    "mano-js": "github:ircam-rnd/mano-js",
+    "portfinder": "^1.0.13",
+    "rapid-mix-adapters": "github:ircam-rnd/rapid-mix-adapters",
+    "serve-favicon": "^2.4.5",
+    "serve-static": "^1.13.1",
+    "source-map-support": "^0.4.0",
+    "xmm-node": "github:ircam-rnd/xmm-node"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-es2015": "^6.24.1",
+    "browserify": "^14.3.0",
+    "colors": "^1.1.2",
+    "fs-extra": "^2.1.2",
+    "klaw": "^1.3.1",
+    "node-sass": "^4.5.2",
+    "uglify-js": "^3.0.6",
+    "watch": "^1.0.1",
+    "watchify": "^3.7.0"
+  }
+}
