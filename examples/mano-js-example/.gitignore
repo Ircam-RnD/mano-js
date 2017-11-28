@@ -1,0 +1,8 @@
+# Transpiled files and dependencies
+/node_modules
+/dist
+
+# ignore junk files
+npm-debug.log
+.DS_Store
+Thumbs.db
