@@ -3,7 +3,7 @@ import TrainingSet from '../src/common/TrainingSet';
 import XmmProcessor from '../src/common/XmmProcessor';
 import test from 'tape';
 
-test('basic TrainingData tests', (t) => {
+test('basic machine learning tests', (t) => {
 
   t.plan(6);
 

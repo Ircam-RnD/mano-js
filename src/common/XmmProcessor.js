@@ -108,12 +108,20 @@ class XmmProcessor {
   train(trainingSet) {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
-      const trainingData = {
-        docType: 'rapid-mix:ml-http-request',
-        docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
-        configuration: this.getConfig(),
-        trainingSet: trainingSet
-      };
+      const trainingData = rapidMixAdapters.createComoHttpRequest(this.getConfig, trainingSet);
+
+      // const trainingData = {
+      //   docType: 'rapid-mix:ml-http-request',
+      //   docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
+      //   target: {
+      //     name: 'como-web-service',
+      //     version: '1.0.0'
+      //   }
+      //   payload: {
+      //     configuration: this.getConfig(),
+      //     trainingSet: trainingSet
+      //   }
+      // };
 
       const xhr = isNode() ? new XHR() : new XMLHttpRequest();
 
@@ -129,8 +137,8 @@ class XmmProcessor {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
               const body = JSON.parse(xhr.responseText);
-              this._decoder.setModel(body.model.payload);
-              this._model = body.model;
+              this._model = body.payload.model;
+              this._decoder.setModel(this._model.payload);
               resolve(body);
             } else {
               throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.responseText}`);
@@ -141,8 +149,8 @@ class XmmProcessor {
         xhr.onload = () => {
           if (xhr.status === 200) {
             const body = xhr.response;
-            this._decoder.setModel(body.model.payload);
-            this._model = body.model;
+            this._model = body.payload.model;
+            this._decoder.setModel(this._model.payload);
             resolve(body);
           } else {
             throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
@@ -177,15 +185,18 @@ class XmmProcessor {
    * @return {Object} - RapidMix Configuration object.
    */
   getConfig() {
-    return {
-      docType: 'rapid-mix:ml-configuration',
-      docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
-      target: {
-        name: `xmm:${this._modelType}`,
-        version: '1.0.0'
-      },
-      payload: this._config,
-    };
+    return rapidMixAdapters.xmmToRapidMixConfiguration(Object.assign({}, this._config, {
+      modelType: this._modelType
+    }));
+    // return {
+    //   docType: 'rapid-mix:ml-configuration',
+    //   docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
+    //   target: {
+    //     name: `xmm:${this._modelType}`,
+    //     version: '1.0.0'
+    //   },
+    //   payload: this._config,
+    // };
   }
 
   /**
@@ -276,7 +287,8 @@ class XmmProcessor {
 
       this._setDecoder();
       this._model = model;
-      this._decoder.setModel(model.payload);
+      // this._decoder.setModel(model.payload);
+      this._decoder.setModel(rapidMixAdapters.rapidMixToXmmModel(model));
     } else {
       throw new Error(`Invalid type ${lib}`);
     }
