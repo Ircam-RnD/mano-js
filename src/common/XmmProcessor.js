@@ -108,7 +108,7 @@ class XmmProcessor {
   train(trainingSet) {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
-      const trainingData = rapidMixAdapters.createComoHttpRequest(this.getConfig, trainingSet);
+      const trainingData = rapidMixAdapters.createComoHttpRequest(this.getConfig(), trainingSet);
 
       // const trainingData = {
       //   docType: 'rapid-mix:ml-http-request',
