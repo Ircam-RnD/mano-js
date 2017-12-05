@@ -3,7 +3,7 @@
   "description": "set of classes targeted at sensors processing, gesture modelling and recognition",
   "main": "client/index.js",
   "standalone": "mano",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "scripts": {
     "bundle": "node ./bin/runner --bundle",
     "doc": "jsdoc -c conf.json",
