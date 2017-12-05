@@ -109,19 +109,7 @@ class XmmProcessor {
     // REST request / response - RapidMix
     return new Promise((resolve, reject) => {
       const trainingData = rapidMixAdapters.createComoHttpRequest(this.getConfig(), trainingSet);
-
-      // const trainingData = {
-      //   docType: 'rapid-mix:ml-http-request',
-      //   docVersion: rapidMixAdapters.RAPID_MIX_DOC_VERSION,
-      //   target: {
-      //     name: 'como-web-service',
-      //     version: '1.0.0'
-      //   }
-      //   payload: {
-      //     configuration: this.getConfig(),
-      //     trainingSet: trainingSet
-      //   }
-      // };
+      console.log(trainingData);
 
       const xhr = isNode() ? new XHR() : new XMLHttpRequest();
 
@@ -185,7 +173,7 @@ class XmmProcessor {
    * @return {Object} - RapidMix Configuration object.
    */
   getConfig() {
-    return rapidMixAdapters.xmmToRapidMixConfiguration(Object.assign({}, this._config, {
+    return rapidMixAdapters.xmmToRapidMixConfig(Object.assign({}, this._config, {
       modelType: this._modelType
     }));
     // return {

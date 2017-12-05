@@ -23,6 +23,7 @@ test('basic machine learning tests', (t) => {
   t.equal(rapidMixJsonTrainingSet.payload.outputDimension, 4, 'outputDimension should be defined by first recorded element');
   t.equal(rapidMixJsonTrainingSet.payload.data.length, 1, 'just checking the number of recorded phrases');
 
+  // const gmmProcessor = new XmmProcessor({ url: 'http://localhost:8000/train' });
   const gmmProcessor = new XmmProcessor();
 
   gmmProcessor.setConfig({
