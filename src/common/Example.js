@@ -98,9 +98,9 @@ class Example {
   }
 
   /**
-   * Get the example in RapidMix JSON format.
+   * Get the example in rapid-mix JSON format.
    *
-   * @returns {Object} A RapidMix compliant example object.
+   * @returns {Object} A rapid-mix compliant example object.
    */
   toJSON() {
     return {

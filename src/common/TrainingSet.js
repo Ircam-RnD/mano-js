@@ -9,7 +9,7 @@ const isArray = v => {
 };
 
 /**
- * Manage and format a set of recorded examples, maintain a RapidMix compliant
+ * Manage and format a set of recorded examples, maintain a rapid-mix compliant
  * training set.
  *
  * @param {Number} [inputDimension=null] - Input dimension
@@ -71,7 +71,7 @@ class TrainingSet {
   /**
    * Add an example to the training set.
    *
-   * @param {JSON} example - A RapidMix formatted example.
+   * @param {JSON} example - A rapid-mix formatted example.
    */
   addExample(example) {
     const e = example.payload;
@@ -89,9 +89,9 @@ class TrainingSet {
   }
 
   /**
-   * Add all examples from another RapidMix JSON training set.
+   * Add all examples from another rapid-mix JSON training set.
    *
-   * @param {JSON} trainingSet - A RapidMix compliant training set.
+   * @param {JSON} trainingSet - A rapid-mix compliant training set.
    */
   addTrainingSet(trainingSet) {
     const examples = trainingSet.payload.data;
@@ -110,10 +110,10 @@ class TrainingSet {
   }
 
   /**
-   * Initialize from another RapidMix JSON training set. If `null`, clear the
+   * Initialize from another rapid-mix JSON training set. If `null`, clear the
    * trainingSet.
    *
-   * @param {JSON} trainingSet - A RapidMix compliant training set.
+   * @param {JSON} trainingSet - A rapid-mix compliant training set.
    */
   setTrainingSet(trainingSet = null) {
     if (trainingSet === null)
@@ -128,7 +128,7 @@ class TrainingSet {
   }
 
   /**
-   * Return the RapidMix compliant training set in JSON format.
+   * Return the rapid-mix compliant training set in JSON format.
    *
    * @return {JSON} - Training set.
    */
@@ -147,7 +147,7 @@ class TrainingSet {
   /**
    * Return an array of the current training set labels.
    *
-   * @return {Array.String} - Training set sorted labels.
+   * @return {Array.String} - Sorted labels of the training set.
    */
   getLabels() {
     const labels = [];
