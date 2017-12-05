@@ -46,12 +46,10 @@ function train(req, res) {
       console.error(err.stack);
 
     // create a RAPID-MIX JSON compliant response
-    const rapidMixModel = rapidMixAdapters.xmmToRapidMixModel(model);
-    const rapidMixHttpResponse = {
-      docType: 'rapid-mix:ml:http-response',
-      docVersion: '1.0.0',
-      model: rapidMixModel,
-    };
+    const rapidMixHttpResponse = rapidMixAdapters.createComoHttpResponse(
+      req.body.configuration,
+      rapidMixAdapters.xmmToRapidMixModel(model),
+    );
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(rapidMixHttpResponse));
