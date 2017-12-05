@@ -1,7 +1,8 @@
-# Tutorial
+# mano-js - Tutorial
 
 This tutorial explains the basic concepts and use of the `mano-js` library, a high-level library dedicated to the interactive machine learning of gesture in the browser.
 A running example of the features discussed here can be found in `./examples/mano-js-example`.
+
 
 ## Install
 
@@ -11,31 +12,34 @@ In order to use the library, it must be installed using a tool such as `npm` or 
 npm install [--save --save-exact] mano-js
 ```
 
+
 ## Import
 
 ```js
 import * as mano from 'mano-js/client';
 ```
 
+
 ## Overview
 
-The library exposes four main classes, that communicate data struuctures between each other using the RAPID-MIX JSON formalism (cf. [RAPID-MIX JSON Specification](https://www.doc.gold.ac.uk/eavi/rapidmixapi.com/index.php/documentation/json-documentation/):
+The library exposes four main classes that share data structures between each other using the RAPID-MIX JSON formalism (cf. [RAPID-MIX JSON Specification](https://www.doc.gold.ac.uk/eavi/rapidmixapi.com/index.php/documentation/json-documentation/):
 
 #### `XmmProcessor` 
 
-Is a class dedicated to the training and decoding of time series data representing gestures. An important aspect of this classe is that it relies on a server-side service based on [xmm-node](https://github.com/Ircam-RnD/xmm-node), that we will describe later.
+Class dedicated to the training and decoding of time series data representing gestures. An important aspect of this classe is that it relies on a server-side service based on [xmm-node](https://github.com/Ircam-RnD/xmm-node), that we will describe later.
 
 #### `TrainingSet`
 
-Is a class that represent a collection of examples associated to user-defined labels.
+Class that represents a collection of examples associated to user-defined labels.
 
 #### `Example`
 
-Is a class that represent a single gesture recording associated to a particular label.
+Class that represents a single gesture recording associated to a particular label.
 
 #### `Processed Sensors`
 
-Is a class that provides high-level a set of several features extracted from the data provided by the `DeviceMotion` event provided by the browsers (cf. [https://w3c.github.io/deviceorientation/spec-source-orientation.html#devicemotion](https://w3c.github.io/deviceorientation/spec-source-orientation.html#devicemotion)).
+Class that provides a set of high-level features extracted from the data provided by the `DeviceMotion` event provided by the browsers (cf. [https://w3c.github.io/deviceorientation/spec-source-orientation.html#devicemotion](https://w3c.github.io/deviceorientation/spec-source-orientation.html#devicemotion)).
+
 
 ## Basic Usage
 
@@ -96,6 +100,7 @@ processedSensors.addListener(data => {
 });
 ```
 
+
 ## Server-side considerations
 
 A `mano.XmmProcessor` instance, relies on a server-side counterpart for the training of the model. By default, it works by calling (through an Ajax POST call) a publicly exposed end-point: `'https://como.ircam.fr/api/v1/train'`.
@@ -113,11 +118,14 @@ import rapidMixAdapters from 'rapid-mix-adapters';
 import xmm from 'xmm-node';
 
 // instanciate a xmm instance for each alogrithm 
-const xmms = [
+const xmms = {
   'xmm:gmm': new xmm('gmm'),
   'xmm:hhmm': new xmm('hhmm'),
-];
+};
 
+// register a POST route that correspond to the `url` parameter given
+// to the client-side `mano.XmmProcessor` 
+// (i.e. `new mano.XmmProcessor({ url: '/:train' })`)
 app.post('/train', (res, res) => {
   // convert configuration and `TrainingSet` from RAPID-MIX to XMM formalisms
   const xmmConfig = rapidMixAdapters.rapidMixToXmmConfig(req.body.configuration);
@@ -145,15 +153,4 @@ app.post('/train', (res, res) => {
   });
 });
 ```
-
-
-
-
-
-
-
-
-
-
-
 

@@ -13,16 +13,30 @@ const processedSensors = new mano.ProcessedSensors();
 const trainingSet = new mano.TrainingSet();
 const xmmProcessor = new mano.XmmProcessor({ url: '/train' });
 
+/**
+ * Change default configuration
+ */
+xmmProcessor.setConfig({
+  modelType: 'hhmm',
+  gaussians: 5,
+  covarianceMode: 'diagonal',
+  likelihoodWindow: 12,
+});
+
+/**
+ * Initialize and start sensors
+ */
 processedSensors
   .init()
   .then(() => processedSensors.start());
-
 
 /**
  * Function that creates a new `mano.Example` and add its `addElement` method
  * as a callback of the processed sensors.
  */
-function record() {
+function record(label) {
+  // disable decoding
+  processedSensors.removeListener(decode);
   // start recording
   example = new mano.Example();
   example.setLabel(label);
@@ -47,7 +61,16 @@ function train() {
   trainingSet.addExample(rapidMixJSONExample);
 
   const rapidMixJSONTrainingSet = trainingSet.toJSON();
-  return xmmProcessor.train(rapidMixJSONTrainingSet);
+  const promise = xmmProcessor.train(rapidMixJSONTrainingSet);
+
+  promise
+    .then((res) => {
+      // (re)enable decoding
+      processedSensors.addListener(decode);
+    })
+    .catch(err => console.error(err.stack));
+
+  return promise;
 }
 
 /**
@@ -56,11 +79,15 @@ function train() {
  */
 function decode(data) {
   const results = xmmProcessor.run(data);
+  // feedback of the likeliest recognised label
   const likeliest = results.likeliest;
   $result.textContent = likeliest;
 }
 
-// main logic
+
+/**
+ * Handle application logic
+ */
 $recordBtn.addEventListener('click', () => {
   $error.textContent = '';
 
@@ -73,23 +100,20 @@ $recordBtn.addEventListener('click', () => {
         $error.textContent = error;
       } else {
         state = 'recording';
-        $recordBtn.textContent = 'stop';
+        $recordBtn.textContent = 'Stop';
 
-        processedSensors.removeListener(decode);
-        record();
+        record(label);
       }
       break;
     case 'recording':
       state = 'training';
-      $recordBtn.textContent = 'training';
+      $recordBtn.textContent = 'Training';
 
       train().then(() => {
         state = 'idle';
 
         $label.value = '';
-        $recordBtn.textContent = 'record';
-        // (re)enable decoding
-        processedSensors.addListener(decode);
+        $recordBtn.textContent = 'Record';
       });
       break;
   }

@@ -12,22 +12,40 @@ import xmm from 'xmm-node';
 
 const port = 3000;
 
-// use only default configuration (gmm)
-const gmmXmm = new xmm('gmm');
 
 /**
- * Simple server-side endpoint for `mano.XmmProcessor`
+ * instanciate a `xmm` instance for each alogrithm
+ */
+const xmms = {
+  'xmm:gmm': new xmm('gmm'),
+  'xmm:hhmm': new xmm('hhmm'),
+};
+
+/**
+ * open a 'POST' route for the training. The route should correspond to the
+ * `url` parameter passed to `mano.XmmProcessor`
+ *
+ * @example
+ * // cf. src/client/index.js
+ * const xmmProcessor = new mano.XmmProcessor({ url: '/train' });
  */
 function train(req, res) {
+  // convert configuration and `TrainingSet` from RAPID-MIX to XMM formalisms
   const xmmConfig = rapidMixAdapters.rapidMixToXmmConfig(req.body.configuration);
   const xmmTrainingSet = rapidMixAdapters.rapidMixToXmmTrainingSet(req.body.trainingSet);
 
-  gmmXmm.setConfig(xmmConfig);
-  gmmXmm.setTrainingSet(xmmTrainingSet);
-  gmmXmm.train((err, model) => {
+  // find which instance of XMM should be used ('gmm' or  'hhmm')
+  const target = req.body.configuration.target.name;
+  console.log(target);
+  const xmm = xmms[target];
+
+  xmm.setConfig(xmmConfig);
+  xmm.setTrainingSet(xmmTrainingSet);
+  xmm.train((err, model) => {
     if (err)
       console.error(err.stack);
 
+    // create a RAPID-MIX JSON compliant response
     const rapidMixModel = rapidMixAdapters.xmmToRapidMixModel(model);
     const rapidMixHttpResponse = {
       docType: 'rapid-mix:ml:http-response',
@@ -39,6 +57,7 @@ function train(req, res) {
     res.end(JSON.stringify(rapidMixHttpResponse));
   });
 }
+
 
 /**
  * Server boilerplate code
