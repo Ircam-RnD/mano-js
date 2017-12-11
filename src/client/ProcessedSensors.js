@@ -109,14 +109,14 @@ class ProcessedSensors {
     this._listeners = new Set();
   }
 
+  /**
+   * Initialize the sensors
+   * @return Promise
+   */
   init() {
-    const promise = this.motionInput.init();
-
-    promise
-      .then(() => this.frameRate = this.motionInput.streamParams.frameRate)
-      .catch(err => console.error(err.stack));
-
-    return promise;
+    // do not override frameRate with values from motionInput as
+    // we resampler overrides the source sampleRate, cf. `constructor`
+    return this.motionInput.init();
   }
 
   /**
