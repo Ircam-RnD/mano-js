@@ -36,9 +36,7 @@ import rapidMixAdapters from 'rapid-mix-adapters';
 
 const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
-const knownTargets = {
-  xmm: [ 'gmm', 'gmr', 'hhmm', 'hhmr' ]
-};
+const knownTargets = [ 'gmm', 'gmr', 'hhmm', 'hhmr' ];
 
 const defaultXmmConfig = {
   modelType: 'gmm',
@@ -212,32 +210,38 @@ class XmmProcessor {
   /**
    * Set the model configuration parameters (or a subset of them).
    *
-   * @param {Object} config - RapidMix configuration object (or payload), or subset of parameters.
+   * @param {Object} config - RapidMix JSON configuration object or subset of parameters.
    */
   setConfig(config = {}) {
     if (!config)
       return;
 
-    // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
-    if (config.docType === 'rapid-mix:ml-configuration' &amp;&amp; config.docVersion &amp;&amp; config.payload &amp;&amp;
-        config.target &amp;&amp; config.target.name &amp;&amp; config.target.name.split(':')[0] === 'xmm') {
-
-      const target = config.target.name.split(':');
+    if (config.docType === 'rapid-mix:ml-configuration' &amp;&amp;
+        config.docVersion &amp;&amp;
+        config.payload &amp;&amp;
+        config.target &amp;&amp;
+        config.target.name === 'xmm'
+    ) {
       config = config.payload;
-      if (target.length > 1 &amp;&amp; knownTargets.xmm.indexOf(target[1]) > -1) {
-        if (this._modelType !== target[1]) {
-          this._modelType = target[1];
-          this._setDecoder();
-        }
-      }
     }
 
-    if (config.modelType &amp;&amp; knownTargets['xmm'].indexOf(config.modelType) > -1) {
-      const val = config.modelType;
-      const newModel = (val === 'gmr') ? 'gmm' : ((val === 'hhmr') ? 'hhmm' : val);
+    if (config.modelType &amp;&amp; knownTargets.indexOf(config.modelType) > -1) {
+      const modelType = config.modelType;
+      let newModelType = null;
 
-      if (newModel !== this._modelType) {
-        this._modelType = newModel;
+      switch (modelType) {
+        case 'gmm':
+        case 'gmr':
+          newModelType = 'gmm';
+          break;
+        case 'hhmm':
+        case 'hhmr':
+          newModelType = 'hhmm';
+          break;
+      }
+
+      if (newModelType !== this._modelType) {
+        this._modelType = newModelType;
         this._setDecoder();
       }
     }
@@ -246,16 +250,13 @@ class XmmProcessor {
       const val = config[key];
 
       if ((key === 'gaussians' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) ||
-          (key === 'absoluteRegularization' &amp;&amp; typeof val === 'number' &amp;&amp; val > 0) ||
-          (key === 'relativeRegularization' &amp;&amp; typeof val === 'number' &amp;&amp; val > 0) ||
-          (key === 'covarianceMode' &amp;&amp; typeof val === 'string' &amp;&amp;
-            ['full', 'diagonal'].indexOf(val) > -1) ||
+          (key === 'absoluteRegularization' &amp;&amp; Number.isFinite(val) &amp;&amp; val > 0) ||
+          (key === 'relativeRegularization' &amp;&amp; Number.isFinite(val) &amp;&amp; val > 0) ||
+          (key === 'covarianceMode' &amp;&amp; ['full', 'diagonal'].indexOf(val) > -1) ||
           (key === 'hierarchical' &amp;&amp; typeof val === 'boolean') ||
           (key === 'states' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) ||
-          (key === 'transitionMode' &amp;&amp; typeof val === 'string' &amp;&amp;
-            ['leftright', 'ergodic'].indexOf(val) > -1) ||
-          (key === 'regressionEstimator' &amp;&amp; typeof val === 'string' &amp;&amp;
-            ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
+          (key === 'transitionMode' &amp;&amp; ['leftright', 'ergodic'].indexOf(val) > -1) ||
+          (key === 'regressionEstimator' &amp;&amp; ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
         this._config[key] = val;
       } else if (key === 'likelihoodWindow' &amp;&amp; Number.isInteger(val) &amp;&amp; val > 0) {
         this._likelihoodWindow = val;
@@ -265,6 +266,7 @@ class XmmProcessor {
         }
       }
     }
+
   }
 
   /**
@@ -288,19 +290,15 @@ class XmmProcessor {
       return;
     }
 
-    const targets = model.target.name.split(':');
-    const lib = targets[0];
-    const algo = targets[1];
-
-    if (lib === 'xmm') {
-      this._modelType = algo === 'hhmm' ? algo : 'gmm';
+    if (model.target.name === 'xmm') {
+      this._modelType = model.payload.modelType;
+      this._model = model;
+      const xmmModel = rapidMixAdapters.rapidMixToXmmModel(model);
 
       this._setDecoder();
-      this._model = model;
-      // this._decoder.setModel(model.payload);
-      this._decoder.setModel(rapidMixAdapters.rapidMixToXmmModel(model));
+      this._decoder.setModel(xmmModel);
     } else {
-      throw new Error(`Invalid type ${lib}`);
+      throw new Error(`Invalid target name`);
     }
   }
 }
@@ -323,7 +321,7 @@ export default XmmProcessor;
 
 <footer>
     
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Tue Dec 05 2017 17:37:49 GMT+0100 (CET)
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Dec 13 2017 12:53:57 GMT+0100 (CET)
     
 </footer>
 

@@ -5,7 +5,7 @@ import test from 'tape';
 
 test('basic machine learning tests', (t) => {
 
-  t.plan(6);
+  t.plan(8);
 
   const trainingSet = new TrainingSet();
   const example = new Example();
@@ -24,20 +24,28 @@ test('basic machine learning tests', (t) => {
   t.equal(rapidMixJsonTrainingSet.payload.data.length, 1, 'just checking the number of recorded phrases');
 
   // const gmmProcessor = new XmmProcessor({ url: 'http://localhost:8000/train' });
-  const gmmProcessor = new XmmProcessor();
+  const xmmProcessor = new XmmProcessor();
 
-  gmmProcessor.setConfig({
+  xmmProcessor.setConfig({
     modelType: 'gmm',
     absoluteRegularization: 0.1,
     relativeRegularization: 0.1,
   });
   // const myNN = new machineLearning('nn');
 
-  gmmProcessor.train(rapidMixJsonTrainingSet)
+  xmmProcessor.train(rapidMixJsonTrainingSet)
     .then((model) => {
       const res = gmmProcessor.run([1, 2, 3]);
       t.equal(res.likeliest, 'label1', 'likeliest should be found');
       t.deepEqual(res.outputValues, [0, 1, 2, 3], 'regressed values should be equal to those of training set');
     })
     .catch(err => console.error(err.stack));
+
+  // t.equal(xmmProcessor.getConfig().payload.modelType, 'gmm', 'modelType should be gmm');
+
+  // xmmProcessor.setConfig({
+  //   modelType: 'hhmm',
+  // });
+
+  // t.equal(xmmProcessor.getConfig().payload.modelType, 'hhmm', 'modelType should be gmm');
 });

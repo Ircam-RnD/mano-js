@@ -4,9 +4,7 @@ import rapidMixAdapters from 'rapid-mix-adapters';
 
 const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
-const knownTargets = {
-  xmm: [ 'gmm', 'gmr', 'hhmm', 'hhmr' ]
-};
+const knownTargets = [ 'gmm', 'gmr', 'hhmm', 'hhmr' ];
 
 const defaultXmmConfig = {
   modelType: 'gmm',
@@ -180,32 +178,38 @@ class XmmProcessor {
   /**
    * Set the model configuration parameters (or a subset of them).
    *
-   * @param {Object} config - RapidMix configuration object (or payload), or subset of parameters.
+   * @param {Object} config - RapidMix JSON configuration object or subset of parameters.
    */
   setConfig(config = {}) {
     if (!config)
       return;
 
-    // replace later by isValidRapidMixConfiguration (modelType shouldn't be allowed in payload)
-    if (config.docType === 'rapid-mix:ml-configuration' && config.docVersion && config.payload &&
-        config.target && config.target.name && config.target.name.split(':')[0] === 'xmm') {
-
-      const target = config.target.name.split(':');
+    if (config.docType === 'rapid-mix:ml-configuration' &&
+        config.docVersion &&
+        config.payload &&
+        config.target &&
+        config.target.name === 'xmm'
+    ) {
       config = config.payload;
-      if (target.length > 1 && knownTargets.xmm.indexOf(target[1]) > -1) {
-        if (this._modelType !== target[1]) {
-          this._modelType = target[1];
-          this._setDecoder();
-        }
-      }
     }
 
-    if (config.modelType && knownTargets['xmm'].indexOf(config.modelType) > -1) {
-      const val = config.modelType;
-      const newModel = (val === 'gmr') ? 'gmm' : ((val === 'hhmr') ? 'hhmm' : val);
+    if (config.modelType && knownTargets.indexOf(config.modelType) > -1) {
+      const modelType = config.modelType;
+      let newModelType = null;
 
-      if (newModel !== this._modelType) {
-        this._modelType = newModel;
+      switch (modelType) {
+        case 'gmm':
+        case 'gmr':
+          newModelType = 'gmm';
+          break;
+        case 'hhmm':
+        case 'hhmr':
+          newModelType = 'hhmm';
+          break;
+      }
+
+      if (newModelType !== this._modelType) {
+        this._modelType = newModelType;
         this._setDecoder();
       }
     }
@@ -214,16 +218,13 @@ class XmmProcessor {
       const val = config[key];
 
       if ((key === 'gaussians' && Number.isInteger(val) && val > 0) ||
-          (key === 'absoluteRegularization' && typeof val === 'number' && val > 0) ||
-          (key === 'relativeRegularization' && typeof val === 'number' && val > 0) ||
-          (key === 'covarianceMode' && typeof val === 'string' &&
-            ['full', 'diagonal'].indexOf(val) > -1) ||
+          (key === 'absoluteRegularization' && Number.isFinite(val) && val > 0) ||
+          (key === 'relativeRegularization' && Number.isFinite(val) && val > 0) ||
+          (key === 'covarianceMode' && ['full', 'diagonal'].indexOf(val) > -1) ||
           (key === 'hierarchical' && typeof val === 'boolean') ||
           (key === 'states' && Number.isInteger(val) && val > 0) ||
-          (key === 'transitionMode' && typeof val === 'string' &&
-            ['leftright', 'ergodic'].indexOf(val) > -1) ||
-          (key === 'regressionEstimator' && typeof val === 'string' &&
-            ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
+          (key === 'transitionMode' && ['leftright', 'ergodic'].indexOf(val) > -1) ||
+          (key === 'regressionEstimator' && ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
         this._config[key] = val;
       } else if (key === 'likelihoodWindow' && Number.isInteger(val) && val > 0) {
         this._likelihoodWindow = val;
@@ -233,6 +234,7 @@ class XmmProcessor {
         }
       }
     }
+
   }
 
   /**
@@ -256,19 +258,15 @@ class XmmProcessor {
       return;
     }
 
-    const targets = model.target.name.split(':');
-    const lib = targets[0];
-    const algo = targets[1];
-
-    if (lib === 'xmm') {
-      this._modelType = algo === 'hhmm' ? algo : 'gmm';
+    if (model.target.name === 'xmm') {
+      this._modelType = model.payload.modelType;
+      this._model = model;
+      const xmmModel = rapidMixAdapters.rapidMixToXmmModel(model);
 
       this._setDecoder();
-      this._model = model;
-      // this._decoder.setModel(model.payload);
-      this._decoder.setModel(rapidMixAdapters.rapidMixToXmmModel(model));
+      this._decoder.setModel(xmmModel);
     } else {
-      throw new Error(`Invalid type ${lib}`);
+      throw new Error(`Invalid target name`);
     }
   }
 }
