@@ -21,6 +21,7 @@ xmmProcessor.setConfig({
   gaussians: 5,
   covarianceMode: 'diagonal',
   likelihoodWindow: 12,
+  states: 4,
 });
 
 /**

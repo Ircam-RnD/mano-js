@@ -17,8 +17,8 @@ const port = 3000;
  * instanciate a `xmm` instance for each alogrithm
  */
 const xmms = {
-  'xmm:gmm': new xmm('gmm'),
-  'xmm:hhmm': new xmm('hhmm'),
+  'gmm': new xmm('gmm'),
+  'hhmm': new xmm('hhmm'),
 };
 
 /**
@@ -31,13 +31,14 @@ const xmms = {
  */
 function train(req, res) {
   // convert configuration and `TrainingSet` from RAPID-MIX to XMM formalisms
-  const xmmConfig = rapidMixAdapters.rapidMixToXmmConfig(req.body.configuration);
-  const xmmTrainingSet = rapidMixAdapters.rapidMixToXmmTrainingSet(req.body.trainingSet);
+  const payload = req.body.payload;
+  const xmmConfig = rapidMixAdapters.rapidMixToXmmConfig(payload.configuration);
+  const xmmTrainingSet = rapidMixAdapters.rapidMixToXmmTrainingSet(payload.trainingSet);
 
   // find which instance of XMM should be used ('gmm' or  'hhmm')
-  const target = req.body.configuration.target.name;
-  console.log(target);
-  const xmm = xmms[target];
+  // const target = req.body.configuration.target.name;
+  console.log(xmmConfig);
+  const xmm = xmms[xmmConfig.modelType];
 
   xmm.setConfig(xmmConfig);
   xmm.setTrainingSet(xmmTrainingSet);
