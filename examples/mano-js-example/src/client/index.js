@@ -1,4 +1,8 @@
-import * as mano from 'mano-js/client';
+// import * as mano from 'mano-js/client';
+import Example from '../../../../common/Example';
+import TrainingSet from '../../../../common/TrainingSet';
+import XmmProcessor from '../../../../common/XmmProcessor';
+import ProcessedSensors from '../../../../client/ProcessedSensors';
 
 const $error = document.querySelector('#error');
 const $label = document.querySelector('#label');
@@ -9,9 +13,9 @@ const $recordBtn = document.querySelector('#recording-control');
 let state = 'idle';
 let example = null;
 
-const processedSensors = new mano.ProcessedSensors();
-const trainingSet = new mano.TrainingSet();
-const xmmProcessor = new mano.XmmProcessor({ url: '/train' });
+const processedSensors = new ProcessedSensors();
+const trainingSet = new TrainingSet();
+const xmmProcessor = new XmmProcessor({ url: '/train' });
 
 /**
  * Change default configuration
@@ -39,7 +43,8 @@ function record(label) {
   // disable decoding
   processedSensors.removeListener(decode);
   // start recording
-  example = new mano.Example();
+  // example = new mano.Example();
+  example = new Example();
   example.setLabel(label);
 
   processedSensors.addListener(example.addElement);

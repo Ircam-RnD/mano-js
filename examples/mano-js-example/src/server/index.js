@@ -37,7 +37,6 @@ function train(req, res) {
 
   // find which instance of XMM should be used ('gmm' or  'hhmm')
   // const target = req.body.configuration.target.name;
-  console.log(xmmConfig);
   const xmm = xmms[xmmConfig.modelType];
 
   xmm.setConfig(xmmConfig);
