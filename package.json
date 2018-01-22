@@ -26,6 +26,7 @@
     "xmm-client": "github:ircam-rnd/xmm-client#v0.3.4"
   },
   "devDependencies": {
+    "@ircam/jsdoc-template": "1.0.3",
     "babel-core": "6.26.0",
     "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
     "babel-plugin-transform-runtime": "6.23.0",
@@ -34,8 +35,7 @@
     "browserify": "14.4.0",
     "chalk": "2.1.0",
     "fs-extra": "4.0.1",
-    "jsdoc": "3.5.4",
-    "jsdoc-template": "github:ircam-jstools/jsdoc-template",
+    "jsdoc": "3.5.5",
     "klaw": "2.0.0",
     "np": "2.16.0",
     "tap-spec": "4.1.1",
