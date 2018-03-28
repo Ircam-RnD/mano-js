@@ -138,11 +138,11 @@ class XmmProcessor {
             this._decoder.setModel(this._model.payload);
             resolve(body);
           } else {
-            throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+            throw new Error(errorMsg + `response : ${xhr.status} - ${JSON.stringify(xhr.response)}`);
           }
         }
         xhr.onerror = () => {
-          throw new Error(errorMsg + `response : ${xhr.status} - ${xhr.response}`);
+          throw new Error(errorMsg + `response : ${xhr.status} - ${JSON.stringify(xhr.response)}`);
         }
       }
 
@@ -224,7 +224,8 @@ class XmmProcessor {
           (key === 'hierarchical' && typeof val === 'boolean') ||
           (key === 'states' && Number.isInteger(val) && val > 0) ||
           (key === 'transitionMode' && ['leftright', 'ergodic'].indexOf(val) > -1) ||
-          (key === 'regressionEstimator' && ['full', 'windowed', 'likeliest'].indexOf(val) > -1)) {
+          (key === 'regressionEstimator' && ['full', 'windowed', 'likeliest'].indexOf(val) > -1) ||
+          (key === 'multiClassRegressionEstimator' && ['likeliest', 'mixture'].indexOf(val) > -1)) {
         this._config[key] = val;
       } else if (key === 'likelihoodWindow' && Number.isInteger(val) && val > 0) {
         this._likelihoodWindow = val;

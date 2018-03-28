@@ -15,7 +15,7 @@ import xmm from 'xmm-node';
 // not very clean but...
 import { getTranspiler } from '../../bin/runner';
 import * as lfo from 'waves-lfo/node';
-import * as translators from '../../../../common/translators';
+import rapidMixAdapters from 'rapid-mix-adapters';
 
 const cwd = process.cwd();
 portfinder.basePort = 3000;
@@ -52,10 +52,10 @@ portfinder.getPortPromise()
 
       // xmm api end point
       router.post('/train', (req, res, next) => {
-        const body = req.body;
-        const config = body.configuration;
-        const algo = config.target.name.split(':')[1];
-        const trainingSet = translators.rapidMixToXmmTrainingSet(body.trainingSet);
+        const payload = req.body.payload;
+        const config = payload.configuration;
+        const algo = config.payload.modelType;
+        const trainingSet = rapidMixAdapters.rapidMixToXmmTrainingSet(payload.trainingSet);
 
         // const _xmm = new xmm(algo, config.payload);
         const _xmm = algo === 'hhmm' ? hx : gx;
@@ -65,9 +65,12 @@ portfinder.getPortPromise()
           if (err)
             console.error(err.stack);
 
-          const rapidModel = translators.xmmToRapidMixModel(model);
+          const response = rapidMixAdapters.createComoHttpResponse(
+            _xmm.getConfig(),
+            rapidMixAdapters.xmmToRapidMixModel(model)
+          );
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ model: rapidModel }));
+          res.end(JSON.stringify(response));
         });
       });
 

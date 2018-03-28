@@ -1,8 +1,9 @@
 import * as lfo from 'waves-lfo/client';
-import * as controllers from 'basic-controllers';
+import * as controllers from '@ircam/basic-controllers';
 import sio from 'socket.io-client';
-import TrainingData from '../../../../client/TrainingData';
-import XmmProcessor from '../../../../client/XmmProcessor';
+import Example from '../../../../common/Example';
+import TrainingSet from '../../../../common/TrainingSet';
+import XmmProcessor from '../../../../common/XmmProcessor';
 
 let state = 'stop';
 
@@ -10,20 +11,24 @@ const $result = document.querySelector('#result');
 const $state = document.querySelector('#state');
 
 const socket = sio();
-const trainingData = new TrainingData(8);
+const example = new Example(8);
+const trainingSet = new TrainingSet(8);
 const xmmProcessor = new XmmProcessor({ url: '/train' });
 
 socket.on('stop', () => {
   state = 'stop';
-  trainingData.stopRecording();
-  const trainingSet = trainingData.getTrainingSet();
-  xmmProcessor.train(trainingSet)
+  // trainingSet.stopRecording();
+  trainingSet.addExample(example.toJSON());
+  // const trainingSet = trainingSet.getTrainingSet();
+  xmmProcessor.train(trainingSet.toJSON())
     .then(() => $state.innerText = 'state: model updated');
 });
 
 socket.on('record', label => {
   state = 'record';
-  trainingData.startRecording(label);
+  // trainingSet.startRecording(label);
+  example.clear();
+  example.setLabel(label);
   $state.innerText = 'state: record';
 });
 
@@ -43,7 +48,7 @@ const bridge = new lfo.sink.Bridge({
       data[i] = frame.data[i];
 
     if (state === 'record') {
-      trainingData.addElement(data);
+      example.addElement(data);
     } else if (state === 'play') {
       const res = xmmProcessor.run(data);
       const likeliest = res.likeliest;

@@ -9,7 +9,6 @@
   "license": "BSD-3-Clause",
   "version": "2.0.0",
   "scripts": {
-    "minify": "node ./bin/runner --minify",
     "prewatch": "npm run transpile",
     "start": "node ./bin/runner --start",
     "transpile": "node ./bin/runner --transpile",
@@ -29,7 +28,6 @@
     "express": "^4.16.2",
     "mano-js": "github:ircam-rnd/mano-js",
     "portfinder": "^1.0.13",
-    "rapid-mix-adapters": "github:ircam-rnd/rapid-mix-adapters",
     "serve-favicon": "^2.4.5",
     "serve-static": "^1.13.1",
     "source-map-support": "^0.4.0",
