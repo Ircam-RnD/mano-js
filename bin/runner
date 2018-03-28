@@ -21,8 +21,8 @@ const distRegExp = new RegExp('^' + srcDir);
 
 const clientEntryPoint = path.join(cwd, 'client', 'index.js');
 
-var umdTarget = path.join(cwd, pkg.name + '.umd.js');
-var minTarget = path.join(cwd, pkg.name + '.min.js');
+const umdTarget = path.join(cwd, pkg.name + '.umd.js');
+const minTarget = path.join(cwd, pkg.name + '.min.js');
 
 const watchOptions = {
   ignoreDotFiles: true,

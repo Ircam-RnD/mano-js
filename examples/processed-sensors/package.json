@@ -12,12 +12,13 @@
     "postinstall": "npm run bundle"
   },
   "dependencies": {
+    "@ircam/basic-controllers": "^1.0.4",
     "babel-runtime": "^6.26.0",
-    "basic-controllers": "github:ircam-jstools/basic-controllers",
     "connect-route": "^0.1.5",
     "ejs-template": "^0.1.0",
     "iml-motion": "github:ircam-rnd/iml-motion",
     "lfo-motion": "github:ircam-rnd/lfo-motion",
+    "mano-js": "github:ircam-rnd/mano-js",
     "osc": "^2.2.0",
     "source-map-support": "^0.4.16",
     "three": "^0.86.0",

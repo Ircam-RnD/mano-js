@@ -1,6 +1,6 @@
 import * as lfo from 'waves-lfo/client';
-import * as controllers from 'basic-controllers'
-import ProcessedSensors from '../../../../dist/ProcessedSensors';
+import * as controllers from '@ircam/basic-controllers'
+import { ProcessedSensors } from 'mano-js';
 
 const processedSensors = new ProcessedSensors();
 
@@ -19,7 +19,11 @@ onOff.connect(socketSend);
 
 Promise.all([eventIn.init(), processedSensors.init()])
   .then(() => {
-    processedSensors.addListener(frame => eventIn.processFrame(frame));
+    console.log(processedSensors);
+    processedSensors.addListener(frame => {
+      // console.log(frame);
+      eventIn.process(null, frame);
+    });
     // start graphs
     processedSensors.start();
     eventIn.start();

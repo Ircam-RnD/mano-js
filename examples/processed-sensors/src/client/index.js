@@ -1,5 +1,5 @@
 import * as lfo from 'waves-lfo/client';
-import * as controllers from 'basic-controllers';
+import * as controllers from '@ircam/basic-controllers';
 
 const logger = new lfo.sink.Logger({ time: false, data: true });
 
