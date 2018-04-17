@@ -1,6 +1,5 @@
 import * as lfo from 'waves-lfo/client';
 import * as controllers from '@ircam/basic-controllers'
-// import MotionInput from '../../../../dist/source/MotionInput';
 import * as lfoMotion from 'lfo-motion';
 
 const motionInput = new lfoMotion.source.MotionInput();
