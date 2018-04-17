@@ -17,6 +17,7 @@
     "body-parser": "^1.17.2",
     "connect-route": "^0.1.5",
     "ejs-template": "^0.1.0",
+    "mano-js": "github:Ircam-RnD/mano-js",
     "osc": "^2.2.0",
     "rapid-mix-adapters": "github:Ircam-RnD/rapid-mix-adapters",
     "socket.io": "^2.0.3",

@@ -1,8 +1,5 @@
-// import * as mano from 'mano-js/client';
-import Example from '../../../../common/Example';
-import TrainingSet from '../../../../common/TrainingSet';
-import XmmProcessor from '../../../../common/XmmProcessor';
-import ProcessedSensors from '../../../../client/ProcessedSensors';
+import { Example, TrainingSet, XmmProcessor } from 'mano-js/common';
+import { ProcessedSensors } from 'mano-js/client';
 
 const $error = document.querySelector('#error');
 const $label = document.querySelector('#label');

@@ -1,8 +1,9 @@
 import * as lfo from 'waves-lfo/client';
-import * as controllers from 'basic-controllers'
-import MotionInput from '../../../../dist/source/MotionInput';
+import * as controllers from '@ircam/basic-controllers'
+// import MotionInput from '../../../../dist/source/MotionInput';
+import * as lfoMotion from 'lfo-motion';
 
-const motionInput = new MotionInput();
+const motionInput = new lfoMotion.source.MotionInput();
 const onOff = new lfo.operator.OnOff({ state: 'on' });
 const socketSend = new lfo.sink.SocketSend({ port: 5000 });
 const logger = new lfo.sink.Logger({ time: false, data: true });
