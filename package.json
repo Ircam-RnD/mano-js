@@ -3,7 +3,7 @@
   "description": "set of classes targeted at sensors processing, gesture modelling and recognition",
   "main": "client/index.js",
   "standalone": "mano",
-  "version": "1.1.6",
+  "version": "1.1.5",
   "scripts": {
     "bundle": "node ./bin/runner --bundle",
     "doc": "jsdoc -c conf.json",
@@ -19,7 +19,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "babel-runtime": "6.26.0",
-    "lfo-motion": "github:ircam-rnd/lfo-motion#v1.0.6",
+    "lfo-motion": "github:ircam-rnd/lfo-motion#v1.0.2",
     "rapid-mix-adapters": "github:ircam-rnd/rapid-mix-adapters#v1.2.2",
     "waves-lfo": "~1.1.5",
     "xmlhttprequest": "1.8.0",
