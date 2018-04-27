@@ -1,9 +1,7 @@
 import * as lfo from 'waves-lfo/client';
 import * as controllers from '@ircam/basic-controllers';
 import sio from 'socket.io-client';
-import Example from '../../../../common/Example';
-import TrainingSet from '../../../../common/TrainingSet';
-import XmmProcessor from '../../../../common/XmmProcessor';
+import { Example, TrainingSet, XmmProcessor } from 'mano-js/common';
 
 let state = 'stop';
 

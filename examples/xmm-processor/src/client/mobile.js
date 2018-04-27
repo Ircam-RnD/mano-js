@@ -1,7 +1,8 @@
 import * as lfo from 'waves-lfo/client';
 import * as controllers from '@ircam/basic-controllers';
 import sio from 'socket.io-client';
-import ProcessedSensors from '../../../../client/ProcessedSensors';
+// import ProcessedSensors from '../../../../client/ProcessedSensors';
+import { ProcessedSensors } from 'mano-js/client';
 
 const processedSensors = new ProcessedSensors();
 const socket = sio();
