@@ -5,7 +5,7 @@ import * as lfoMotion from 'lfo-motion';
  * High-level abstraction that listen for raw sensors (accelerometers and
  * gyroscopes) and apply a set of preprocessing / filtering on it.
  *
- * The output is composed of 8 values:
+ * The output is composed of 11 values:
  * - IntensityNorm
  * - IntensityNormBoost
  * - BandPass AccX
@@ -14,6 +14,9 @@ import * as lfoMotion from 'lfo-motion';
  * - Orientation X (processed from acc and gyro)
  * - Orientation Y (processed from acc and gyro)
  * - Orientation Z (processed from acc and gyro)
+ * - gyro alpha (yaw)
+ * - gyro beta (pitch)
+ * - gyro gamma (roll)
  *
  * @example
  * import { ProcessedSensors } from 'iml-motion';
@@ -28,6 +31,7 @@ class ProcessedSensors {
   constructor({
     frameRate = 1 / 0.02,
   } = {}) {
+    console.log('here');
     this.frameRate = frameRate;
 
     this._emit = this._emit.bind(this);
@@ -40,6 +44,7 @@ class ProcessedSensors {
     });
 
     this.accSelect = new lfo.operator.Select({ indexes: [0, 1, 2] });
+    this.gyroSelect = new lfo.operator.Select({ indexes: [3, 4, 5] });
 
     // intensity
     this.intensity = new lfoMotion.operator.Intensity({
@@ -74,7 +79,7 @@ class ProcessedSensors {
 
     // merge and output
     this.merger = new lfo.operator.Merger({
-      frameSizes: [1, 1, 3, 3],
+      frameSizes: [1, 1, 3, 3, 3],
     });
 
     this.bridge = new lfo.sink.Bridge({
@@ -103,6 +108,9 @@ class ProcessedSensors {
     // orientation
     this.sampler.connect(this.orientation);
     this.orientation.connect(this.merger);
+    // gyroscpes
+    this.sampler.connect(this.gyroSelect);
+    this.gyroSelect.connect(this.merger);
 
     this.merger.connect(this.bridge);
 

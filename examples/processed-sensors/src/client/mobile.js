@@ -6,7 +6,7 @@ const processedSensors = new ProcessedSensors();
 
 const eventIn = new lfo.source.EventIn({
   frameRate: processedSensors.frameRate,
-  frameSize: 8,
+  frameSize: 11,
   frameType: 'vector',
 });
 
@@ -15,6 +15,7 @@ const socketSend = new lfo.sink.SocketSend({ port: 5000 });
 const logger = new lfo.sink.Logger({ time: false, data: true });
 
 eventIn.connect(onOff);
+// eventIn.connect(logger);
 onOff.connect(socketSend);
 
 Promise.all([eventIn.init(), processedSensors.init()])
@@ -44,4 +45,4 @@ const toggleStream = new controllers.Toggle({
     else
       onOff.setState('off');
   }
-})
+});

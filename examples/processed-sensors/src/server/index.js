@@ -45,6 +45,7 @@ portfinder.getPortPromise()
       router.get('/:name', (req, res, next) => serve(req.params.name, req, res));
     }));
 
+
     console.log('PHONE -----------------------------------------------');
 
     const server = http.createServer(app);
@@ -57,9 +58,10 @@ portfinder.getPortPromise()
     // pipe phone to desktop client
     const socketReceive = new lfo.source.SocketReceive({ port: 5000 });
     const socketSend = new lfo.sink.SocketSend({ port: 5010 });
-    // const logger = new lfo.sink.Logger({ data: false, time: true });
+    const logger = new lfo.sink.Logger({ data: true, time: false });
 
     socketReceive.connect(socketSend);
+    // socketReceive.connect(logger);
 
 
     console.log('R-ioT -----------------------------------------------');
