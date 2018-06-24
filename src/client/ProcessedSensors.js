@@ -31,7 +31,6 @@ class ProcessedSensors {
   constructor({
     frameRate = 1 / 0.02,
   } = {}) {
-    console.log('here');
     this.frameRate = frameRate;
 
     this._emit = this._emit.bind(this);
