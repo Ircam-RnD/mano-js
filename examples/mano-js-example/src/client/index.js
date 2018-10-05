@@ -18,11 +18,13 @@ const xmmProcessor = new XmmProcessor({ url: '/train' });
  * Change default configuration
  */
 xmmProcessor.setConfig({
-  modelType: 'hhmm',
-  gaussians: 5,
-  covarianceMode: 'diagonal',
-  likelihoodWindow: 12,
-  states: 4,
+  modelType: 'gmm',
+  gaussians: 1,
+  absoluteRegularization: 0.01,
+  relativeRegularization: 0.01,
+  covarianceMode: 'full',
+  states: 1,
+  transitionMode: 'ergodic',
 });
 
 /**

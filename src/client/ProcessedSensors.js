@@ -14,9 +14,9 @@ import * as lfoMotion from 'lfo-motion';
  * - Orientation X (processed from acc and gyro)
  * - Orientation Y (processed from acc and gyro)
  * - Orientation Z (processed from acc and gyro)
- * - gyro alpha (yaw)
- * - gyro beta (pitch)
- * - gyro gamma (roll)
+ * - gyro alpha (yaw) - degrees / ms
+ * - gyro beta (pitch) - degrees / ms
+ * - gyro gamma (roll) - degrees / ms
  *
  * @example
  * import { ProcessedSensors } from 'iml-motion';
@@ -76,6 +76,11 @@ class ProcessedSensors {
     // orientation filter
     this.orientation = new lfoMotion.operator.Orientation();
 
+    // gyroscopes scaling
+    this.gyroScale = new lfo.operator.Multiplier({
+      factor: [1/1000, 1/1000, 1/1000],
+    });
+
     // merge and output
     this.merger = new lfo.operator.Merger({
       frameSizes: [1, 1, 3, 3, 3],
@@ -109,7 +114,8 @@ class ProcessedSensors {
     this.orientation.connect(this.merger);
     // gyroscpes
     this.sampler.connect(this.gyroSelect);
-    this.gyroSelect.connect(this.merger);
+    this.gyroSelect.connect(this.gyroScale);
+    this.gyroScale.connect(this.merger);
 
     this.merger.connect(this.bridge);
 

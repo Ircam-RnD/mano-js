@@ -22,7 +22,7 @@ const phoneMuteDisplay = new lfo.operator.Multiplier({
 });
 
 const phoneScaleDisplay = new lfo.operator.Multiplier({
-  factor: [1, 1, 1, 1, 1, 1, 1, 1, 1/360, 1/360, 1/360],
+  factor: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 });
 
 const phoneDisplay = new lfo.sink.BpfDisplay({

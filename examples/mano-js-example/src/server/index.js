@@ -12,7 +12,6 @@ import xmm from 'xmm-node';
 
 const port = 3000;
 
-
 /**
  * instanciate a `xmm` instance for each alogrithm
  */
